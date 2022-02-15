@@ -1,36 +1,38 @@
-import React, { useEffect } from 'react';
 import { MapContainer, ImageOverlay, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import React, { useState } from 'react';
 
-const Dothings = ({ bounds }) => {
-  const map = useMap();
-  // map.fitBounds(bounds);
-  return <></>;
-};
-
-const Map = ({ imagePath }) => {
+const Map = ({ mapImage }) => {
+  const [mapSize, setMapSize] = useState(null);
   const img = new Image();
-  img.src = imagePath;
-  const size = { width: img.width, height: img.height };
-  console.log(size);
-  const bounds = [
-    [0, 0],
-    [size.width, size.width],
-  ];
+  img.src = mapImage;
+  img.onload = function () {
+    setMapSize({
+      width: this.width,
+      height: this.height,
+      bounds: [
+        [0, 0],
+        [this.width, this.height],
+      ],
+    });
+  };
   return (
-    <MapContainer
-      style={{ width: size.width, height: size.width }}
-      center={[size.width / 2, size.height / 2]}
-      zoom={0}
-      attributionControl={false}
-      zoomControl={false}
-      crs={L.CRS.Simple}
-      maxBounds={bounds}
-    >
-      <Dothings bounds={bounds} />
-      <ImageOverlay bounds={bounds} url={imagePath} />
-    </MapContainer>
+    <>
+      {mapSize && (
+        <MapContainer
+          style={{ width: mapSize.width, height: mapSize.width }}
+          center={[mapSize.width / 2, mapSize.height / 2]}
+          zoom={0}
+          attributionControl={false}
+          zoomControl={false}
+          crs={L.CRS.Simple}
+          maxBounds={mapSize.bounds}
+        >
+          <ImageOverlay bounds={mapSize.bounds} url={mapImage} />
+        </MapContainer>
+      )}
+    </>
   );
 };
 
