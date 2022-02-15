@@ -1,4 +1,6 @@
-import logo from './logo.png';
+import logo from './data/logo.png';
+import mapImage from './data/helloWorldMap.png';
+import Map from './Map.js';
 import './App.css';
 
 function App() {
@@ -9,6 +11,9 @@ function App() {
         <img src={logo} className='App-logo' alt='logo' />
         <p>Wololo</p>
       </header>
+      <div style={{ display: 'flex' }}>
+        <Map imagePath={mapImage} />
+      </div>
     </div>
   );
 }
