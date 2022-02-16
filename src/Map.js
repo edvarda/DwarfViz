@@ -1,22 +1,24 @@
-import { MapContainer, ImageOverlay, useMap } from 'react-leaflet';
+import { MapContainer, ImageOverlay } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Map = ({ mapImage }) => {
   const [mapSize, setMapSize] = useState(null);
-  const img = new Image();
-  img.src = mapImage;
-  img.onload = function () {
-    setMapSize({
-      width: this.width,
-      height: this.height,
-      bounds: [
-        [0, 0],
-        [this.width, this.height],
-      ],
-    });
-  };
+  useEffect(() => {
+    const img = new Image();
+    img.src = mapImage;
+    img.onload = function () {
+      setMapSize({
+        width: this.width,
+        height: this.height,
+        bounds: [
+          [0, 0],
+          [this.width, this.height],
+        ],
+      });
+    };
+  }, [mapImage]);
   return (
     <>
       {mapSize && (
