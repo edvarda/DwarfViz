@@ -11,6 +11,7 @@ export const useWorldData = () => {
   useEffect(() => {
     const getStaticData = async () => {
       return {
+        regionsGeoJSON: await import('./data/regions.geo.json'),
         regions: await import('./data/regions.json'),
         mapImageURL: await (await import('./data/image.png')).default,
       };
@@ -18,6 +19,7 @@ export const useWorldData = () => {
     const fetchRemoteData = async () => {
       try {
         return {
+          regionsGeoJSON: await import('./data/regions.geo.json'),
           regions: (await axios.get(`${storytellerURL}/regions`)).data,
           mapImageURL: `${storytellerURL}/map_images/0/image.png`,
         };
