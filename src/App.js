@@ -20,11 +20,6 @@ function App() {
         <div style={{ display: 'flex' }}>
           <Map mapImage={state.mapImageURL} data={state.regionsGeoJSON} />
           <StackedBarChart data={state.regions.data} />
-          {/* <div>
-            {state.regions.data.map((region, i) => (
-              <p key={i}>{`${region.name} – ${region.type} – ${region.evilness}`}</p>
-            ))}
-          </div> */}
         </div>
       )}
     </div>

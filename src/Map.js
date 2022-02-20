@@ -1,5 +1,5 @@
 import { MapContainer, ImageOverlay, GeoJSON } from 'react-leaflet';
-import L from 'leaflet';
+import L, { geoJSON } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import React, { useState, useEffect } from 'react';
 
@@ -27,8 +27,26 @@ const Map = ({ mapImage, data }) => {
     opacity: 1,
     fillOpacity: 0.8,
   };
+  const lineStyle = {
+    color: 'black',
+    weight: 1,
+    fillColor: 'transparent',
+    opacity: 1,
+  };
+  const hoverStyle = {
+    color: 'black',
+    fillColor: '#ff7800',
+    weight: 3,
+    opacity: 1,
+    fillOpacity: 0.5,
+  };
+  const lineStyleError = {
+    color: 'red',
+    weight: 4,
+    opacity: 1,
+  };
 
-  const testData = ((data) => ({ ...data, features: data.features.slice(0, 10) }))(data);
+  const testData = ((data) => ({ ...data, features: data.features.slice(0, 2) }))(data);
   return (
     <>
       {mapSize && (
@@ -42,10 +60,27 @@ const Map = ({ mapImage, data }) => {
           maxBounds={mapSize.bounds}
         >
           <GeoJSON
-            data={testData}
-            pointToLayer={(feature, latlng) => {
-              return L.circleMarker(latlng, geojsonMarkerOptions);
+            data={data}
+            style={(f) => {
+              if (f.properties.isContained) {
+                console.log(f);
+                return lineStyleError;
+              }
+              return lineStyle;
             }}
+            onEachFeature={(feature, layer) => {
+              layer.on({
+                mouseover: (e) => {
+                  layer.setStyle(hoverStyle);
+                },
+                mouseout: (e) => {
+                  layer.setStyle(lineStyle);
+                },
+              });
+            }}
+            // pointToLayer={(feature, latlng) => {
+            //   return L.circleMarker(latlng, geojsonMarkerOptions);
+            // }}
           />
           <ImageOverlay bounds={mapSize.bounds} url={mapImage} />
         </MapContainer>

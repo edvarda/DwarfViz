@@ -14,7 +14,6 @@ const writeJSON = (json) => {
 
 try {
   const directoryPath = process.argv.slice(2)[0];
-
   const jsonPromise = detailMapToGeoJSON(directoryPath);
   jsonPromise.then((json) => {
     writeJSON(json);
