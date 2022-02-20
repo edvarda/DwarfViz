@@ -4,6 +4,7 @@ import './App.css';
 import Map from './Map.js';
 import { useWorldData } from './WorldData';
 import { StackedBarChart } from './StackedBarChart';
+import { TreeMap } from './TreeMap';
 
 function App() {
   const { state, isLoading, isError } = useWorldData();
@@ -20,6 +21,14 @@ function App() {
         <div style={{ display: 'flex' }}>
           <Map mapImage={state.mapImageURL} data={state.regionsGeoJSON} />
           <StackedBarChart data={state.regions.data} />
+          <TreeMap
+            writtenContents={state.writtenContents}
+            poeticForms={state.poeticForms}
+            musicalForms={state.musicalForms}
+            danceForms={state.danceForms}
+            width={400}
+            height={600}
+          ></TreeMap>
         </div>
       )}
     </div>
