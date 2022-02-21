@@ -6,12 +6,14 @@ import React, { useEffect, useRef } from 'react';
 export const TreeMap = ({ writtenContents, poeticForms, musicalForms, danceForms, width, height }) => {
     const svgRef = useRef(null);
     const legendRef = useRef(null);
+    const tooltipRef = useRef(null);
     // console.log(writtenContents);
     function renderTreemap(){
         const svg = d3.select(svgRef.current);
         svg.selectAll('g').remove();    // remove 'g' elements from each svg to ensure that if we pass another data set, text and legends are removed from the previously rendered SVG to avoid left behind elements
         const legendContainer = d3.select(legendRef.current);
         legendContainer.selectAll('g').remove();
+        const tooltip = d3.select(tooltipRef.current);
         svg.attr('width', width).attr('height', height);
         // Before we do any treemapping, handle the data, convert to suitable format
         // Save the amount of occurences of each form of each type of art
@@ -82,9 +84,25 @@ export const TreeMap = ({ writtenContents, poeticForms, musicalForms, danceForms
         const colorScale = d3.scaleOrdinal(d3.schemeCategory10.map(fader));
         block
             .append('rect')
+            .attr('class', 'treemapTile')
             .attr('width', (d) => d.x1 - d.x0)
             .attr('height', (d) => d.y1 - d.y0)
-            .attr('fill', (d) => colorScale(d.data.category)); // d.data.name, category or value
+            .attr('fill', (d) => colorScale(d.data.category))  // d.data.name, category or value
+            .on('mouseover', (artwork) => {                       // mouseover effect for interaction with tiles
+                tooltip.transition()
+                    .style('visibility', 'visible')
+                console.log(artwork);
+                let value = artwork['target']['__data__']['data']['value']
+                tooltip.html(
+                    value + ' works of art.' + '<hr />' + artwork['target']['__data__']['data']['name']
+                )
+    
+                tooltip.attr('data-value', value)
+            })
+            .on('mouseout', (artwork) => {
+                tooltip.transition()
+                    .style('visibility', 'hidden')
+            });
         
         const fontSize = 12;
 
@@ -171,8 +189,9 @@ export const TreeMap = ({ writtenContents, poeticForms, musicalForms, danceForms
 
     return (
         <div>
-            <svg ref={svgRef} />
-            <svg ref={legendRef}/>
+        <svg ref={svgRef} />
+        <svg ref={legendRef}/>
+        <div ref={tooltipRef}></div>
         </div>
     );
 
