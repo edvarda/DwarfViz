@@ -1,5 +1,5 @@
 import { MapContainer, ImageOverlay, GeoJSON } from 'react-leaflet';
-import L, { geoJSON } from 'leaflet';
+import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import React, { useState, useEffect } from 'react';
 
@@ -19,14 +19,7 @@ const Map = ({ mapImage, data }) => {
       });
     };
   }, [mapImage]);
-  const geojsonMarkerOptions = {
-    radius: 1,
-    fillColor: '#ff7800',
-    color: '#000',
-    weight: 1,
-    opacity: 1,
-    fillOpacity: 0.8,
-  };
+
   const lineStyle = {
     color: 'black',
     weight: 1,
@@ -40,13 +33,6 @@ const Map = ({ mapImage, data }) => {
     opacity: 1,
     fillOpacity: 0.5,
   };
-  const lineStyleError = {
-    color: 'red',
-    weight: 4,
-    opacity: 1,
-  };
-
-  const testData = ((data) => ({ ...data, features: data.features.slice(0, 2) }))(data);
   return (
     <>
       {mapSize && (
@@ -62,10 +48,6 @@ const Map = ({ mapImage, data }) => {
           <GeoJSON
             data={data}
             style={(f) => {
-              if (f.properties.isContained) {
-                console.log(f);
-                return lineStyleError;
-              }
               return lineStyle;
             }}
             onEachFeature={(feature, layer) => {
@@ -78,9 +60,6 @@ const Map = ({ mapImage, data }) => {
                 },
               });
             }}
-            // pointToLayer={(feature, latlng) => {
-            //   return L.circleMarker(latlng, geojsonMarkerOptions);
-            // }}
           />
           <ImageOverlay bounds={mapSize.bounds} url={mapImage} />
         </MapContainer>

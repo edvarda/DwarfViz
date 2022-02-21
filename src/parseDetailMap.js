@@ -53,15 +53,14 @@ const detailMapToGeoJSON = async (directoryPath) => {
   ]);
 
   for (let i = 0; i < visited.shape[0]; ++i) {
-    for (let j = 0; j < visited.shape[1]; ++j) {
-      visited.set(i, j, false);
-    }
+    for (let j = 0; j < visited.shape[1]; ++j) {}
   }
 
   for (let i = 0; i < visited.shape[0]; ++i) {
     for (let j = 0; j < visited.shape[1]; ++j) {
       if (!visited.get(i, j)) {
         const colorString = getColorString(i, j, imageArray);
+        const neighbourColors = new Set();
         const coordinatesInBiome = [];
         const queue = [];
         queue.push({ x: i, y: j });
@@ -71,26 +70,32 @@ const detailMapToGeoJSON = async (directoryPath) => {
             for (let dy = -1; dy <= 1; dy++) {
               if (dx === 0 && dy === 0) continue;
               const [nx, ny] = [p.x + dx, p.y + dy];
-              if (isOutOfBounds(nx, ny, imageArray)) continue;
+              if (isOutOfBounds(nx, ny, imageArray)) {
+                neighbourColors.add('borderRegion');
+                continue;
+              }
               if (!visited.get(nx, ny) && getColorString(nx, ny, imageArray) === colorString) {
                 visited.set(nx, ny, true);
                 queue.push({ x: nx, y: ny });
+              } else if (getColorString(nx, ny, imageArray) !== colorString) {
+                neighbourColors.add(getColorString(nx, ny, imageArray));
               }
             }
           }
           coordinatesInBiome.push(p);
         }
-
         const outline = getOutlineOfArea(_.first(coordinatesInBiome), imageArray);
         const pointToCoord = (p) => [p.x, p.y];
         const feature = {
           type: 'Feature',
+          allPoints: coordinatesInBiome,
           geometry: {
             type: 'Polygon',
             coordinates: [outline.map(pointToCoord)],
           },
           properties: {
             biome: colorsToBiomes[colorString],
+            isContained: neighbourColors.size === 1,
           },
         };
         features.push(feature);
@@ -98,22 +103,40 @@ const detailMapToGeoJSON = async (directoryPath) => {
     }
   }
 
-  const countCoords = (sum, feature) => sum + feature.geometry.coordinates[0].length;
-  const points = features.reduce(countCoords, 0);
-  const optimizedFeatures = features.map((feature) => ({
-    ...feature,
-    geometry: {
-      ...feature.geometry,
-      coordinates: removeRedudantCoordsFromPolygon(feature.geometry.coordinates),
-    },
-  }));
+  for (let feature of features.filter((f) => f.properties.isContained === true)) {
+    let startPos;
+    for (let coord of feature.geometry.coordinates[0]) {
+      if (
+        // Find a coordinate directly left of outside region
+        getColorString(coord[0], coord[1], imageArray) !==
+        getColorString(coord[0], coord[1] + 1, imageArray)
+      ) {
+        startPos = { x: coord[0], y: coord[1] + 1 };
+        break;
+      }
+    }
+    const outline = getOutlineOfArea(startPos, imageArray);
+    for (let i = 0; i < features.length; ++i) {
+      const f = features[i];
+      const outlinePoint = outline[0];
+      if (f.allPoints.find((p) => p.x === outlinePoint.x && p.y === outlinePoint.y)) {
+        f.geometry.coordinates.push(outline.reverse().map((p) => [p.x, p.y]));
+        break;
+      }
+    }
+  }
 
-  const optimizedPoints = optimizedFeatures.reduce(countCoords, 0);
-  const saved = points - optimizedPoints;
-  console.log(`Points: ${points}, optimized down to: ${optimizedPoints}. (${saved} eliminated)`);
-
-  console.log(`Features length: ${features.length}`);
-  return { type: 'FeatureCollection', features: optimizedFeatures };
+  features.map((f) => {
+    const { allPoints, ...feature } = f;
+    return feature;
+  });
+  for (let f of features) {
+    f.geometry.coordinates = removeRedudantCoordsFromPolygon(f.geometry.coordinates);
+  }
+  return {
+    type: 'FeatureCollection',
+    features: features,
+  };
 };
 
 const turnLeft = (d) => ({
@@ -131,6 +154,7 @@ const isOutOfBounds = (x, y, imageArray) =>
   x < 0 || x >= imageArray.shape[0] || y < 0 || y >= imageArray.shape[1];
 
 const getOutlineOfArea = (startPos, imageArray) => {
+  const areaColor = getColorString(startPos.x, startPos.y, imageArray);
   const outline = [];
   const peek = (current, d) => {
     const targetX = current.x + d.x;
@@ -148,7 +172,6 @@ const getOutlineOfArea = (startPos, imageArray) => {
 
   let current = startPos;
   let delta = { x: 0, y: -1 };
-  const areaColor = getColorString(current.x, current.y, imageArray);
 
   outline.push(current);
   let boundariesAroundStart = 0;
@@ -171,14 +194,7 @@ const getOutlineOfArea = (startPos, imageArray) => {
       delta = turnLeft(delta); //Turn left if boundary in delta direction
     }
     current = advance(current, delta); // Take a step in delta direction
-
     outline.push(current);
-    // Check if current is colinear with last two points in outline.
-    // If so, shift last point before pushing current.
-    // if (outline.length > 2 && isOnSegment(outline.slice(-3))) {
-    //   outline.splice(outline.length - 2, 1);
-    // }
-
     delta = turnRight(delta);
     delta = turnRight(delta);
     while (peek(current, delta) === areaColor) {
@@ -190,72 +206,20 @@ const getOutlineOfArea = (startPos, imageArray) => {
 };
 
 const removeRedudantCoordsFromPolygon = (polygon) => {
-  const coords = polygon[0];
   const isOnAxisAlignedLine = (triple) => {
     const [p, q, r] = triple;
     if ((p[0] === q[0] && q[0] === r[0]) || (p[1] === q[1] && q[1] === r[1])) {
       return true;
     }
-    return false;
   };
-  for (let i = 0; i < coords.length - 4; ++i) {
-    if (isOnAxisAlignedLine(coords.slice(i, i + 3))) {
-      coords.splice(i + 1, 1);
-    }
-  }
-  return [coords];
-};
-const isPointInPolygon = (point, polygon) => {
-  // Either:
-  // Do this, but for polygon in polygon, restarting every time a degenerate case appears.
-  // OR:
-  // Go back to storing solid regions.
-  // Check if neighbourhood of entire outline of polygon is only 2 colors.
-  // In that case, pick a pixel of the outer color and search through all regions for that pixel.
-  const ray = [];
-  let count = 0;
-  for (let i = point[0]; i > 0; --i) {
-    const raypos = [i, point[1]];
-    ray.push(raypos);
-    const intersection = _.indexOf(polygon, raypos);
-    if (intersection > 0) {
-      if (
-        _.indexOf(polygon, [i + 1, point[1]]) >= 0 &&
-        _.indexOf(polygon, [i - 1, point[1]]) >= 0
-      ) {
-        continue; // dont count middle of intersecting segments. Theres a bug here.
-      } else if (
-        polygon[intersection - 1] &&
-        polygon[intersection + 1] &&
-        ((polygon[intersection - 1][1] > point[1] && polygon[intersection + 1][1] > point[1]) ||
-          (polygon[intersection - 1][1] < point[1] && polygon[intersection + 1][1] < point[1]))
-      ) {
-        continue;
-      } else {
-        count++;
+  for (const outline in polygon) {
+    for (let i = 0; i < outline.length - 4; ++i) {
+      if (isOnAxisAlignedLine(outline.slice(i, i + 3))) {
+        outline.splice(i + 1, 1);
       }
     }
   }
-  if (count % 2 === 1) {
-    console.log('INSIDE');
-  }
-
-  // Now check how many elements in ray exist in polygon.
-  // For every such one, we need to investigate the neighbourhood.
-  // If the ray is on top of a segment of the polygon (more than one in a row?)
-  // : only count once.
-  // If the ray intersects a corner, count twice.
-  // (a corner would have neighbours in polygon with either only higher or lower y components. Since were always casting in x-direction.)
-  return count;
-};
-
-const isContainedByOtherRegion = (thisRegion, imageArray) => {
-  return true;
-};
-
-const containsOtherRegion = (thisRegion, otherRegion) => {
-  // Check if
-  return true;
+  return polygon;
 };
 
 module.exports = { getOutlineOfArea, turnLeft, turnRight, detailMapToGeoJSON };

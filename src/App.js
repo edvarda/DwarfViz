@@ -18,17 +18,21 @@ function App() {
       {isLoading ? (
         <div>Loading...</div>
       ) : (
-        <div style={{ display: 'flex' }}>
-          <Map mapImage={state.mapImageURL} data={state.regionsGeoJSON} />
-          <StackedBarChart data={state.regions.data} />
-          <TreeMap
-            writtenContents={state.writtenContents}
-            poeticForms={state.poeticForms}
-            musicalForms={state.musicalForms}
-            danceForms={state.danceForms}
-            width={400}
-            height={600}
-          ></TreeMap>
+        <div>
+          <div style={{ display: 'flex' }}>
+            <Map mapImage={state.mapImageURL} data={state.regionsGeoJSON} />
+            <TreeMap
+              writtenContents={state.writtenContents}
+              poeticForms={state.poeticForms}
+              musicalForms={state.musicalForms}
+              danceForms={state.danceForms}
+              width={400}
+              height={600}
+            ></TreeMap>
+          </div>
+          <div style={{ display: 'flex' }}>
+            <StackedBarChart data={state.regions.data} />
+          </div>
         </div>
       )}
     </div>
