@@ -18,27 +18,43 @@ export const TreeMap = ({ writtenContents, poeticForms, musicalForms, danceForms
         // Before we do any treemapping, handle the data, convert to suitable format
         // Save the amount of occurences of each form of each type of art
         var poetryDict = new Object(); 
+        var artworks = [];
         var musicDict = new Object(); 
         var danceDict  = new Object(); 
+        console.log(writtenContents);
         for (let i = 0; i < writtenContents.length; i++){
             let formId = writtenContents[i].form_id;
-            let formName = writtenContents[i].form;
+            let formType = writtenContents[i].form;
             if (formId !== null){
-                if (formName === "musical composition"){
-                    // This intializes a dictionary using numeric values first time, next times increments by 1 - counts occurences
-                    musicDict[musicalForms[formId].name] = (musicDict[musicalForms[formId].name] || 0) + 1;
+                let formName = "";
+                if (formType === "musical composition"){
+                    formName = musicalForms[formId].name;
+                // This intializes a dictionary using numeric values first time, next times increments by 1 - counts occurences
+                    musicDict[formName] = (musicDict[formName] || 0) + 1;
                 }
-                else if (formName === "poem"){
-                    poetryDict[poeticForms[formId].name] = (poetryDict[poeticForms[formId].name] || 0) + 1;
+                else if (formType === "poem"){
+                    formName = poeticForms[formId].name;
+                    poetryDict[formName] = (poetryDict[formName] || 0) + 1;
                 }
-                else if (formName === "choreography"){
-                    danceDict[danceForms[formId].name] = (danceDict[danceForms[formId].name] || 0) + 1;
+                else if (formType === "choreography"){
+                    formName = danceForms[formId].name;
+                    danceDict[formName] = (danceDict[formName] || 0) + 1;
                 }
+                // Create artwork object
+                var artwork = {
+                    title: writtenContents[i].title,
+                    author: writtenContents[i].author,
+                    style: writtenContents[i]?.style?.[0]?.label,
+                    category: formType,
+                    formName: formName,
+                    formId: formId
+                };
+                artworks.push(artwork);
             }
         }
         // Now we have know many works there are of each form of art - first turn into proper objects that can be used later
         let root = [danceDict, musicDict, poetryDict];
-        let rootNames = ["dance", "music", "poetry"];
+        let rootNames = ["choreography", "musical composition", "poem"];
         var obj = {name:"Forms of art"};
         obj['children']=[];
         for (let i = 0; i < root.length; i++){
@@ -47,7 +63,9 @@ export const TreeMap = ({ writtenContents, poeticForms, musicalForms, danceForms
                 var internalObj = {
                     name: formName,
                     value: root[i][formName],    // stores count
-                    category: rootNames[i]
+                    category: rootNames[i],
+                    // store list of artworks associated with this form
+                    artworks: artworks.filter(artwork => artwork.category === rootNames[i] && artwork.formName === formName)
                 }
                 forms.push(internalObj);
             }
@@ -56,7 +74,6 @@ export const TreeMap = ({ writtenContents, poeticForms, musicalForms, danceForms
             obj['children'][i]['children'] = forms;
             obj['children'][i]['name'] = rootNames[i];
         }
-        
         let hierarchy = d3.hierarchy(obj, (node) => {
             return node['children']
         }).sum((node) => {
@@ -88,13 +105,13 @@ export const TreeMap = ({ writtenContents, poeticForms, musicalForms, danceForms
             .attr('width', (d) => d.x1 - d.x0)
             .attr('height', (d) => d.y1 - d.y0)
             .attr('fill', (d) => colorScale(d.data.category))  // d.data.name, category or value
-            .on('mouseover', (artwork) => {                       // mouseover effect for interaction with tiles
+            .on('mouseover', (artform) => {                       // mouseover effect for interaction with tiles
                 tooltip.transition()
                     .style('visibility', 'visible')
-                console.log(artwork);
-                let value = artwork['target']['__data__']['data']['value']
+                let data = artform['target']['__data__']['data'];
+                let value = data['value']
                 tooltip.html(
-                    value + ' works of art.' + '<hr />' + artwork['target']['__data__']['data']['name']
+                    value + ' works of art.' + '<hr />' + data['name']
                 )
     
                 tooltip.attr('data-value', value)
