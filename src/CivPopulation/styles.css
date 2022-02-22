@@ -1,0 +1,12 @@
+.title {
+    font-size: 2em;
+    fill: gray; 
+}
+
+.tick line {
+    stroke: #C0C0BB;
+}
+
+rect {
+    fill: steelblue;
+}

@@ -5,6 +5,7 @@ import Map from './Map.js';
 import { useWorldData } from './WorldData';
 import { StackedBarChart } from './StackedBarChart';
 import { TreeMap } from './TreeMap';
+import { CivPopulation } from './CivPopulation/CivPopulation.js';
 
 function App() {
   const { state, isLoading, isError } = useWorldData();
@@ -29,6 +30,9 @@ function App() {
               width={400}
               height={600}
             ></TreeMap>
+          </div>
+          <div>
+            <CivPopulation entityPopulation={state.entityPop} width={450} height={250}/>
           </div>
           <div style={{ display: 'flex' }}>
             <StackedBarChart data={state.regions.data} />

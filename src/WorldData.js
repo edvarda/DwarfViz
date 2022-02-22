@@ -18,6 +18,7 @@ export const useWorldData = () => {
         danceForms:  await (await import('./data/dance_forms.json')).data,
         poeticForms:  await (await import('./data/poetic_forms.json')).data,
         musicalForms:  await (await import('./data/musical_forms.json')).data,
+        entityPop: await (await import('./data/entity_populations.json')).data,
 
       };
     };
