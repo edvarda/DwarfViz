@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/dwarfviz/static/css/main.7babba80.css",
+    "main.js": "/dwarfviz/static/js/main.fe59b18a.js",
+    "static/js/660.b29d72c5.chunk.js": "/dwarfviz/static/js/660.b29d72c5.chunk.js",
+    "static/js/921.30292fdd.chunk.js": "/dwarfviz/static/js/921.30292fdd.chunk.js",
+    "static/js/582.bd30c307.chunk.js": "/dwarfviz/static/js/582.bd30c307.chunk.js",
+    "static/js/769.52b844c4.chunk.js": "/dwarfviz/static/js/769.52b844c4.chunk.js",
+    "static/js/262.e9979b2f.chunk.js": "/dwarfviz/static/js/262.e9979b2f.chunk.js",
+    "static/js/103.07ed5165.chunk.js": "/dwarfviz/static/js/103.07ed5165.chunk.js",
+    "static/js/473.d6019540.chunk.js": "/dwarfviz/static/js/473.d6019540.chunk.js",
+    "static/js/30.d5ae29cb.chunk.js": "/dwarfviz/static/js/30.d5ae29cb.chunk.js",
+    "static/js/787.66ebd713.chunk.js": "/dwarfviz/static/js/787.66ebd713.chunk.js",
+    "static/media/image.png": "/dwarfviz/static/media/image.ffc9a9d246064d983fae.png",
+    "index.html": "/dwarfviz/index.html",
+    "main.7babba80.css.map": "/dwarfviz/static/css/main.7babba80.css.map",
+    "main.fe59b18a.js.map": "/dwarfviz/static/js/main.fe59b18a.js.map",
+    "787.66ebd713.chunk.js.map": "/dwarfviz/static/js/787.66ebd713.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.7babba80.css",
+    "static/js/main.fe59b18a.js"
+  ]
+}
