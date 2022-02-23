@@ -1,4 +1,4 @@
-import './styles.css';
+import './stylesCiv.css';
 import { scaleBand, scaleLinear, max , selectm, format, axisBottom, axisLeft, select} from 'd3';
 import React, { useEffect, useRef } from 'react';
 
@@ -69,6 +69,7 @@ export const CivPopulation = ({entityPopulation, width, height}) => {
         
         g.selectAll('rect').data(processedData)
             .enter().append('rect')
+            .attr('class', 'popBar')
             .attr('y', d => yScale(yValue(d)))
             .attr('width', d => xScale(xValue(d)))
             .attr('height', yScale.bandwidth());
