@@ -10,8 +10,6 @@ import { CivPopulation } from './CivPopulation/CivPopulation.js';
 function App() {
   const { state, isLoading, isError } = useWorldData();
   const { activeData, setActiveData } = useState({});
-
-  console.log('regions: ', state.regions.data.length);
   return (
     <div className='App'>
       <header className='App-header'>
@@ -48,9 +46,6 @@ function App() {
           </div>
           <div>
             <CivPopulation entityPopulation={state.entityPop} width={450} height={250} />
-          </div>
-          <div style={{ display: 'flex' }}>
-            <StackedBarChart data={state.regions.data} />
           </div>
         </div>
       )}
