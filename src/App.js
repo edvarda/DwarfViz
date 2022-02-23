@@ -1,5 +1,5 @@
 import logo from './data/logo.png';
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import Map from './Map.js';
 import { useWorldData } from './WorldData';
@@ -9,6 +9,9 @@ import { CivPopulation } from './CivPopulation/CivPopulation.js';
 
 function App() {
   const { state, isLoading, isError } = useWorldData();
+  const { activeData, setActiveData } = useState({});
+
+  console.log('regions: ', state.regions.data.length);
   return (
     <div className='App'>
       <header className='App-header'>
@@ -21,7 +24,19 @@ function App() {
       ) : (
         <div>
           <div style={{ display: 'flex' }}>
-            <Map mapImage={state.mapImageURL} data={state.regionsGeoJSON} />
+            <Map
+              mapImage={state.mapImageURL}
+              data={state.regionsGeoJSON}
+              setActiveData={setActiveData}
+              activeData={activeData}
+            />
+            <StackedBarChart
+              data={state.regions.data}
+              setActiveData={setActiveData}
+              activeData={activeData}
+            />
+          </div>
+          <div style={{ display: 'flex' }}>
             <TreeMap
               writtenContents={state.writtenContents}
               poeticForms={state.poeticForms}
@@ -32,7 +47,7 @@ function App() {
             ></TreeMap>
           </div>
           <div>
-            <CivPopulation entityPopulation={state.entityPop} width={450} height={250}/>
+            <CivPopulation entityPopulation={state.entityPop} width={450} height={250} />
           </div>
           <div style={{ display: 'flex' }}>
             <StackedBarChart data={state.regions.data} />
