@@ -59,6 +59,7 @@ const Map = ({ mapImage, mapSize, data, regions }) => {
         );
         thisLayer.on({
           mouseover: (e) => {
+            geoJSONRef.current.resetStyle();
             geoJSONRef.current.eachLayer((layer) => {
               if (layer.feature.properties.regionId === feature.properties.regionId) {
                 layer.setStyle(hoverRegionStyle);
@@ -68,7 +69,7 @@ const Map = ({ mapImage, mapSize, data, regions }) => {
             });
             e.target.setStyle(hoverStyle);
           },
-          mouseout: (e) => geoJSONRef.current.resetStyle(),
+          // mouseout: (e) => geoJSONRef.current.resetStyle(),
         });
       },
     }).addTo(mapRef.current);

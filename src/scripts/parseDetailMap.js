@@ -221,7 +221,6 @@ const detailMapToGeoJSON = async (directoryPath) => {
 
   for (let f of features) {
     f.geometry.coordinates = removeRedudantCoordsFromPolygon(f.geometry.coordinates);
-    console.log(f.properties.biomeInfo, f.properties.area, f.properties.regionId);
   }
   return {
     type: 'FeatureCollection',

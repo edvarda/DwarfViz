@@ -1,24 +1,16 @@
-import logo from './data/logo.png';
-import React, { useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import Map from './Map.js';
-import { useWorldData } from './WorldData';
-import { StackedBarChart } from './StackedBarChart';
-import { TreeMap } from './TreeMap';
-import { CivPopulation } from './CivPopulation/CivPopulation.js';
+import { Row, Col, Container } from 'react-bootstrap';
+import React, { useState } from 'react';
+
+import logo from './data/logo.png';
+
+import { Places, People, Plot } from './components';
+import { useWorldData } from './hooks/useWorldData';
 
 function App() {
   const { state, isLoading, isError } = useWorldData();
   const { activeData, setActiveData } = useState({});
-
-  const mapSize = {
-    width: 528,
-    height: 528,
-    bounds: [
-      [0, 0],
-      [527, 527],
-    ],
-  };
 
   return (
     <div className='App'>
@@ -30,34 +22,25 @@ function App() {
       {isLoading ? (
         <div>Loading...</div>
       ) : (
-        <div>
-          <div style={{ display: 'flex' }}>
-            <Map
-              mapImage={state.mapImageURL}
-              mapSize={mapSize}
-              data={state.regionsGeoJSON}
-              regions={state.regions.data}
-              setActiveData={setActiveData}
-              activeData={activeData}
-            />
-            <CivPopulation entityPopulation={state.entityPop} width={450} height={250} />
-          </div>
-          <div style={{ display: 'flex' }}>
-            <TreeMap
-              writtenContents={state.writtenContents}
-              poeticForms={state.poeticForms}
-              musicalForms={state.musicalForms}
-              danceForms={state.danceForms}
-              width={900}
-              height={600}
-            ></TreeMap>
-          </div>
-          <StackedBarChart
-            data={state.regions.data}
-            setActiveData={setActiveData}
-            activeData={activeData}
-          />
-        </div>
+        <Container fluid>
+          <Row>
+            <Col>
+              <Places
+                mapImage={state.mapImageURL}
+                data={state}
+                regions={state.regions.data}
+                setActiveData={setActiveData}
+                activeData={activeData}
+              />
+            </Col>
+            <Col>
+              <People entityPopulation={state.entityPop} />
+            </Col>
+            <Col>
+              <Plot data={state} />
+            </Col>
+          </Row>
+        </Container>
       )}
     </div>
   );

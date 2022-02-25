@@ -15,7 +15,7 @@ const colors = [
   '#d43d51',
 ];
 
-const width = 800;
+const width = 500;
 const height = 500;
 const margin = { top: 20, right: 20, bottom: 20, left: 100 };
 
