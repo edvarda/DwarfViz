@@ -10,7 +10,7 @@ const getImageArray = async (imageFilePath) => {
   return pixelsArray.step(1, -1); // Flip array up/down to correspond to leaflet coordinate ordering.
 };
 
-const getJSON = (filePath) => {
+const getFileContents = (filePath) => {
   try {
     const data = fs.readFileSync(filePath, 'utf8');
     return data;
@@ -19,10 +19,26 @@ const getJSON = (filePath) => {
   }
 };
 
+const getRegionTileCoordToIdMap = (regionsFilePath, mapSize) => {
+  const coordToIdMap = {};
+  const maxCoordId = mapSize.height * mapSize.width;
+  const regions = JSON.parse(getFileContents(regionsFilePath));
+  for (const region of regions.data) {
+    for (const coord of region.coords) {
+      if (coord.id < maxCoordId) {
+        // BUG: theres a bug in the data, but only for coords with ids larger than should be possible
+        coordToIdMap[`${coord.x},${coord.y}`] = region.id;
+      }
+    }
+  }
+  return coordToIdMap;
+};
+
 const getColorToBiomeInfo = (biomeColorKeyFilePath) => {
   const parseBiomeString = (biomeString) => {
     const [biomeType, ...additionalProps] = biomeString.split(' ').reverse();
     const biomeInfo = {
+      biomeString,
       biomeType,
       // regionType: biomeTypeToRegion[biomeType]
     };
@@ -81,7 +97,8 @@ const getColorToBiomeInfo = (biomeColorKeyFilePath) => {
     }
     return biomeInfo;
   };
-  const biomeTypesAndColors = getJSON(biomeColorKeyFilePath)
+
+  const biomeTypesAndColors = getFileContents(biomeColorKeyFilePath)
     .split('\n')
     .filter((line) => !!line)
     .map(_.trim)
@@ -104,7 +121,16 @@ const getColor = (x, y, imageArray) => {
 const detailMapToGeoJSON = async (directoryPath) => {
   const imageArray = await getImageArray(`${directoryPath}/image.png`);
   const colorToBiomeInfo = getColorToBiomeInfo(`${directoryPath}/biome_color_key.txt`);
+  const mapSize = {
+    height: Math.trunc(imageArray.shape[1] / 16),
+    width: Math.trunc(imageArray.shape[0] / 16),
+  };
+  const regionTileCoordToId = getRegionTileCoordToIdMap(`${directoryPath}/regions.json`, mapSize);
 
+  const localToRegion = (x, y) => ({
+    x: Math.trunc(x / 16),
+    y: mapSize.height - 1 - Math.trunc(y / 16),
+  });
   const features = [];
   const visited = ndarray(new Uint8Array(imageArray.shape[0] * imageArray.shape[1]), [
     imageArray.shape[0],
@@ -119,6 +145,7 @@ const detailMapToGeoJSON = async (directoryPath) => {
     for (let j = 0; j < visited.shape[1]; ++j) {
       if (!visited.get(i, j)) {
         const biomeColor = getColor(i, j, imageArray);
+        const biomeRegionWeights = {};
         const neighbourColors = new Set();
         const coordinatesInBiome = [];
         const queue = [];
@@ -142,10 +169,15 @@ const detailMapToGeoJSON = async (directoryPath) => {
             }
           }
           coordinatesInBiome.push(p);
+          const regionCoord = localToRegion(p.x, p.y);
+          const regionId = regionTileCoordToId[`${regionCoord.x},${regionCoord.y}`];
+          biomeRegionWeights[regionId] = (biomeRegionWeights[regionId] ?? 0) + 1;
         }
+
         const outline = getOutlineOfArea(_.first(coordinatesInBiome), imageArray);
         const pointToCoord = (p) => [p.x, p.y];
         const biomeInfo = colorToBiomeInfo[biomeColor];
+        const regionId = _.maxBy(_.toPairs(biomeRegionWeights), (x) => x[1])[0];
         const feature = {
           type: 'Feature',
           allPoints: coordinatesInBiome,
@@ -156,6 +188,7 @@ const detailMapToGeoJSON = async (directoryPath) => {
           properties: {
             biomeInfo,
             area: coordinatesInBiome.length,
+            regionId: regionId,
             isContained: neighbourColors.size === 1,
           },
         };
@@ -163,23 +196,6 @@ const detailMapToGeoJSON = async (directoryPath) => {
       }
     }
   }
-
-  //TODO check orientation of region coords
-  features.push({
-    type: 'Feature',
-    geometry: {
-      type: 'Polygon',
-      coordinates: [
-        [
-          [10, 10],
-          [10, 11],
-          [11, 11],
-          [11, 10],
-        ],
-      ],
-    },
-    properties: {},
-  });
 
   for (let feature of features.filter((f) => f.properties.isContained === true)) {
     let startPos;
@@ -205,7 +221,7 @@ const detailMapToGeoJSON = async (directoryPath) => {
 
   for (let f of features) {
     f.geometry.coordinates = removeRedudantCoordsFromPolygon(f.geometry.coordinates);
-    console.log(f.properties.biomeInfo, f.properties.area);
+    console.log(f.properties.biomeInfo, f.properties.area, f.properties.regionId);
   }
   return {
     type: 'FeatureCollection',
@@ -292,4 +308,9 @@ const removeRedudantCoordsFromPolygon = (polygon) => {
   return polygon;
 };
 
-module.exports = { getOutlineOfArea, turnLeft, turnRight, detailMapToGeoJSON };
+module.exports = {
+  getOutlineOfArea,
+  turnLeft,
+  turnRight,
+  detailMapToGeoJSON,
+};
