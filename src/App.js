@@ -10,11 +10,21 @@ import { CivPopulation } from './CivPopulation/CivPopulation.js';
 function App() {
   const { state, isLoading, isError } = useWorldData();
   const { activeData, setActiveData } = useState({});
+
+  const mapSize = {
+    width: 528,
+    height: 528,
+    bounds: [
+      [0, 0],
+      [527, 527],
+    ],
+  };
+
   return (
     <div className='App'>
       <header className='App-header'>
         <img src={logo} className='App-logo' alt='logo' />
-        <p>Wololo</p>
+        <p>DwarfViz</p>
       </header>
       {isError && <div>Error fetching data</div>}
       {isLoading ? (
@@ -24,15 +34,13 @@ function App() {
           <div style={{ display: 'flex' }}>
             <Map
               mapImage={state.mapImageURL}
+              mapSize={mapSize}
               data={state.regionsGeoJSON}
+              regions={state.regions.data}
               setActiveData={setActiveData}
               activeData={activeData}
             />
-            <StackedBarChart
-              data={state.regions.data}
-              setActiveData={setActiveData}
-              activeData={activeData}
-            />
+            <CivPopulation entityPopulation={state.entityPop} width={450} height={250} />
           </div>
           <div style={{ display: 'flex' }}>
             <TreeMap
@@ -40,13 +48,15 @@ function App() {
               poeticForms={state.poeticForms}
               musicalForms={state.musicalForms}
               danceForms={state.danceForms}
-              width={400}
+              width={900}
               height={600}
             ></TreeMap>
           </div>
-          <div>
-            <CivPopulation entityPopulation={state.entityPop} width={450} height={250} />
-          </div>
+          <StackedBarChart
+            data={state.regions.data}
+            setActiveData={setActiveData}
+            activeData={activeData}
+          />
         </div>
       )}
     </div>

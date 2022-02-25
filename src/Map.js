@@ -1,71 +1,80 @@
-import { MapContainer, ImageOverlay, GeoJSON } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
+import _ from 'lodash';
 
-const Map = ({ mapImage, data }) => {
-  const [mapSize, setMapSize] = useState(null);
+const style = {
+  stroke: true,
+  color: 'black',
+  weight: 1,
+  opacity: 1,
+};
+const hoverStyle = {
+  stroke: true,
+  color: 'black',
+  weight: 3,
+  opacity: 1,
+};
+const hoverRegionStyle = {
+  stroke: true,
+  color: 'black',
+  weight: 1,
+  opacity: 1,
+};
+const fade = {
+  stroke: true,
+  color: 'gray',
+  fillColor: 'gray',
+  fillOpacity: 0.7,
+  weight: 1,
+  opacity: 1,
+};
+
+const Map = ({ mapImage, mapSize, data, regions }) => {
+  const mapRef = useRef(null);
   useEffect(() => {
-    const img = new Image();
-    img.src = mapImage;
-    img.onload = function () {
-      setMapSize({
-        width: this.width,
-        height: this.height,
-        bounds: [
-          [0, 0],
-          [this.width, this.height],
-        ],
-      });
-    };
-  }, [mapImage]);
+    // create map
+    mapRef.current = L.map('map', {
+      center: [mapSize.width / 2, mapSize.height / 2],
+      zoom: 0,
+      attributionControl: false,
+      zoomControl: true,
+      crs: L.CRS.Simple,
+      maxBounds: mapSize.bounds,
+      layers: [L.imageOverlay(mapImage, mapSize.bounds)],
+    });
+  }, [mapImage, mapSize]);
 
-  const lineStyle = {
-    color: 'black',
-    weight: 1,
-    fillColor: 'transparent',
-    opacity: 1,
-  };
-  const hoverStyle = {
-    color: 'black',
-    fillColor: '#ff7800',
-    weight: 3,
-    opacity: 1,
-    fillOpacity: 0.5,
-  };
-  return (
-    <>
-      {mapSize && (
-        <MapContainer
-          style={{ width: mapSize.width, height: mapSize.width }}
-          center={[mapSize.width / 2, mapSize.height / 2]}
-          zoom={0}
-          attributionControl={false}
-          zoomControl={false}
-          crs={L.CRS.Simple}
-          maxBounds={mapSize.bounds}
-        >
-          <GeoJSON
-            data={data}
-            style={(f) => {
-              return lineStyle;
-            }}
-            onEachFeature={(feature, layer) => {
-              layer.on({
-                mouseover: (e) => {
-                  layer.setStyle(hoverStyle);
-                },
-                mouseout: (e) => {
-                  layer.setStyle(lineStyle);
-                },
-              });
-            }}
-          />
-          <ImageOverlay bounds={mapSize.bounds} url={mapImage} />
-        </MapContainer>
-      )}
-    </>
-  );
+  console.log(regions);
+
+  const geoJSONRef = useRef(null);
+  useEffect(() => {
+    geoJSONRef.current = L.geoJSON(data, {
+      style: style,
+      onEachFeature: (feature, thisLayer) => {
+        const region = regions.find((x) => x.id === +feature.properties.regionId);
+        thisLayer.bindTooltip(
+          `<div>Biome: ${feature.properties.biomeInfo.biomeString}<br />Region: ${region.name}</div>`,
+          { interactive: true },
+        );
+        thisLayer.on({
+          mouseover: (e) => {
+            geoJSONRef.current.eachLayer((layer) => {
+              if (layer.feature.properties.regionId === feature.properties.regionId) {
+                layer.setStyle(hoverRegionStyle);
+              } else {
+                layer.setStyle(fade);
+              }
+            });
+            e.target.setStyle(hoverStyle);
+          },
+          mouseout: (e) => geoJSONRef.current.resetStyle(),
+        });
+      },
+    }).addTo(mapRef.current);
+  }, [data]);
+
+  return <div id='map' style={{ height: mapSize.height, width: mapSize.width }} />;
 };
 
 export default Map;
