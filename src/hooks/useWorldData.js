@@ -19,6 +19,8 @@ export const useWorldData = () => {
         poeticForms: await (await import('../data/poetic_forms.json')).data,
         musicalForms: await (await import('../data/musical_forms.json')).data,
         entityPop: await (await import('../data/entity_populations.json')).data,
+        historicalEvents: await (await import('../data/historical_events.json')).data,
+        worldsInfo: await (await import('../data/worlds_info.json')).data,
       };
     };
     const fetchRemoteData = async () => {
