@@ -1,9 +1,7 @@
-import { CivPopulation } from './CivPopulation/CivPopulation.js';
 import Sunburst from './Sunburst.js';
-const People = ({ entityPopulation }) => {
+const People = ({ data }) => {
   return (
     <>
-      <CivPopulation entityPopulation={entityPopulation} width={450} height={250} />
       <Sunburst />
     </>
   );

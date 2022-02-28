@@ -43,6 +43,9 @@ const Map = ({ mapImage, mapSize, data, regions }) => {
       maxBounds: mapSize.bounds,
       layers: [L.imageOverlay(mapImage, mapSize.bounds)],
     });
+    return () => {
+      mapRef.current.remove();
+    };
   }, [mapImage, mapSize]);
 
   console.log(regions);

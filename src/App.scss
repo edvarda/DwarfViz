@@ -1,0 +1,41 @@
+$placesColor: rgb(113, 93, 190);
+$societyColor: rgb(193, 73, 71);
+$peopleColor: rgb(90, 151, 70);
+$eventsColor: rgb(179, 128, 50);
+
+body {
+  font-family: 'Lato';
+  -webkit-font-smoothing: antialiased;
+  -moz-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizelegibility;
+}
+
+.App {
+  text-align: center;
+}
+
+#People {
+  border-color: $peopleColor;
+}
+
+#Society {
+  border-color: $societyColor;
+}
+#Places {
+  border-color: $placesColor;
+}
+#Events {
+  border-color: $eventsColor;
+  min-height: 20vh;
+}
+
+.view {
+  border: 1em solid;
+  transition: all 0.5s ease;
+  flex-grow: 1;
+}
+
+.expanded {
+  flex-grow: 10;
+}

@@ -54,5 +54,5 @@ export const useWorldData = () => {
     };
     loadData();
   }, []);
-  return { state, isLoading, isError };
+  return [state, isLoading, isError];
 };
