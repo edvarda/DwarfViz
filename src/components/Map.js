@@ -32,6 +32,7 @@ const fade = {
 
 const Map = ({ mapImage, mapSize, data, regions }) => {
   const mapRef = useRef(null);
+  const geoJSONRef = useRef(null);
   useEffect(() => {
     // create map
     mapRef.current = L.map('map', {
@@ -43,15 +44,7 @@ const Map = ({ mapImage, mapSize, data, regions }) => {
       maxBounds: mapSize.bounds,
       layers: [L.imageOverlay(mapImage, mapSize.bounds)],
     });
-    return () => {
-      mapRef.current.remove();
-    };
-  }, [mapImage, mapSize]);
 
-  console.log(regions);
-
-  const geoJSONRef = useRef(null);
-  useEffect(() => {
     geoJSONRef.current = L.geoJSON(data, {
       style: style,
       onEachFeature: (feature, thisLayer) => {
@@ -76,7 +69,12 @@ const Map = ({ mapImage, mapSize, data, regions }) => {
         });
       },
     }).addTo(mapRef.current);
-  }, [data]);
+    return () => {
+      mapRef.current.remove();
+    };
+  }, [mapImage, mapSize, data, regions]);
+
+  useEffect(() => {}, []);
 
   return <div id='map' style={{ height: mapSize.height, width: mapSize.width }} />;
 };

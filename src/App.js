@@ -8,7 +8,7 @@ import { useWorldData } from './hooks/useWorldData';
 
 function App() {
   const [state, isLoading, isError] = useWorldData();
-  const [activeView, setActiveView] = useState(null);
+  const [activeView, setActiveView] = useState('Places');
 
   return (
     <div className='App'>
@@ -18,18 +18,35 @@ function App() {
       ) : (
         <Container fluid>
           <Row>
-            <Col id='Places' className={`view ${activeView === 'Places' ? 'expanded' : ''}`}>
-              <h2 onClick={() => setActiveView('Places')}>Places</h2>
-
-              <Places mapImage={state.mapImageURL} data={state} regions={state.regions.data} />
+            <Col
+              id='Places'
+              className={`view ${activeView === 'Places' ? 'expanded' : ''}`}
+              onClick={() => activeView !== 'Places' && setActiveView('Places')}
+            >
+              <h2>Places</h2>
+              <div>
+                <Places mapImage={state.mapImageURL} data={state} regions={state.regions.data} />
+              </div>
             </Col>
-            <Col id='Society' className={`view ${activeView === 'Society' ? 'expanded' : ''}`}>
-              <h2 onClick={() => setActiveView('Society')}>Society</h2>
-              <Society entityPopulation={state.entityPop} />
+            <Col
+              id='Society'
+              className={`view ${activeView === 'Society' ? 'expanded' : ''}`}
+              onClick={() => activeView !== 'Society' && setActiveView('Society')}
+            >
+              <h2>Society</h2>
+              <div>
+                <Society entityPopulation={state.entityPop} />
+              </div>
             </Col>
-            <Col id='People' className={`view ${activeView === 'People' ? 'expanded' : ''}`}>
-              <h2 onClick={() => setActiveView('People')}>People</h2>
-              <People data={state} />
+            <Col
+              id='People'
+              className={`view ${activeView === 'People' ? 'expanded' : ''}`}
+              onClick={() => activeView !== 'People' && setActiveView('People')}
+            >
+              <h2>People</h2>
+              <div>
+                <People data={state} />
+              </div>
             </Col>
           </Row>
 

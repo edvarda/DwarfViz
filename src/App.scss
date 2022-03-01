@@ -31,11 +31,18 @@ body {
 }
 
 .view {
-  border: 1em solid;
-  transition: all 0.5s ease;
+  border: 1.5em solid;
+  transition: all 0.8s ease;
   flex-grow: 1;
+  overflow: hidden;
+  div {
+    opacity: 0;
+  }
 }
 
 .expanded {
   flex-grow: 10;
+  div {
+    opacity: 1;
+  }
 }
