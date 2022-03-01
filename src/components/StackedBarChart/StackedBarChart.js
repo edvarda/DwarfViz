@@ -37,9 +37,9 @@ export const StackedBarChart = ({ data }) => {
     .domain(processedData.map((d) => d.type))
     .range([0, innerWidth]);
 
-  console.log(processedData);
-  console.log(yScale.ticks());
-  console.log(xScale.domain());
+  // console.log(processedData);
+  // console.log(yScale.ticks());
+  // console.log(xScale.domain());
   return (
     <svg width={width} height={height} style={{ border: `3px solid ${colors[0]}` }}>
       <g transform={`translate(${margin.left},${margin.top})`}>

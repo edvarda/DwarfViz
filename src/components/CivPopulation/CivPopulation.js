@@ -2,22 +2,21 @@ import './stylesCiv.css';
 import { scaleBand, scaleLinear, max, format, axisBottom, axisLeft, select } from 'd3';
 import React, { useEffect, useRef } from 'react';
 
-export const CivPopulation = ({ entityPopulation, width, height }) => {
+export const CivPopulation = ({ entityPopulations, width, height }) => {
   const svgRef = useRef(null);
 
   //prepare our data
-  console.log(entityPopulation);
-  const aggregateObject = entityPopulation.reduce((aggregateObject, nextValue) => {
+  const aggregateObject = entityPopulations.reduce((aggregateObject, nextValue) => {
     aggregateObject[nextValue.races[0].split(':')[0]] =
       (aggregateObject[nextValue.races[0].split(':')[0]] || 0) + +nextValue.races[0].split(':')[1];
     return aggregateObject;
   }, {});
-  console.log(aggregateObject);
+  // console.log(aggregateObject);
   const processedData = Object.entries(aggregateObject).map(([race, population]) => ({
     race,
     population,
   }));
-  console.log(processedData);
+  // console.log(processedData);
 
   function renderGraph() {
     const svg = select(svgRef.current);
@@ -36,7 +35,7 @@ export const CivPopulation = ({ entityPopulation, width, height }) => {
       .domain([0, max(processedData.map(xValue))])
       .range([0, innerWidth]);
 
-    console.log(processedData.map(yValue));
+    // console.log(processedData.map(yValue));
     const yScale = scaleBand()
       .domain(processedData.map(yValue))
       .range([0, innerHeight])
@@ -76,7 +75,7 @@ export const CivPopulation = ({ entityPopulation, width, height }) => {
 
   useEffect(() => {
     renderGraph();
-  }, [entityPopulation]);
+  }, [entityPopulations]);
 
   return (
     <div>

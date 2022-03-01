@@ -21,7 +21,7 @@ const TreeMap = ({ writtenContents, poeticForms, musicalForms, danceForms, width
     var artworks = [];
     var musicDict = new Object();
     var danceDict = new Object();
-    console.log(writtenContents);
+    // console.log(writtenContents);
     for (let i = 0; i < writtenContents.length; i++) {
       let formId = writtenContents[i].form_id;
       let formType = writtenContents[i].form;
@@ -89,7 +89,7 @@ const TreeMap = ({ writtenContents, poeticForms, musicalForms, danceForms, width
     createTreeMap(hierarchy);
 
     let artworkTiles = hierarchy.leaves();
-    console.log(artworkTiles);
+    // console.log(artworkTiles);
     let block = svg
       .selectAll('g')
       .data(artworkTiles)

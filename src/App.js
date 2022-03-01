@@ -1,17 +1,28 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.scss';
 import { Row, Col, Container } from 'react-bootstrap';
-import React, { useState } from 'react';
+import React from 'react';
 
 import { Places, People, Society, Events } from './components';
-import { useWorldData } from './hooks/useWorldData';
+import { useWorldData, WorldDataProvider } from './hooks/useWorldData';
+import useViewSelect from './hooks/useViewSelect.js';
 
 function App() {
-  const [state, isLoading, isError] = useWorldData();
-  const [activeView, setActiveView] = useState('Places');
-
   return (
     <div className='App'>
+      <WorldDataProvider>
+        <Viz />
+      </WorldDataProvider>
+    </div>
+  );
+}
+
+const Viz = () => {
+  const { isLoading, isError, selectedItems } = useWorldData();
+  const [activeView, setActiveView] = useViewSelect(selectedItems);
+
+  return (
+    <>
       {isError && <div>Error fetching data</div>}
       {isLoading ? (
         <div>Loading...</div>
@@ -24,8 +35,8 @@ function App() {
               onClick={() => activeView !== 'Places' && setActiveView('Places')}
             >
               <h2>Places</h2>
-              <div>
-                <Places mapImage={state.mapImageURL} data={state} regions={state.regions.data} />
+              <div className={'view-content'}>
+                <Places />
               </div>
             </Col>
             <Col
@@ -34,8 +45,8 @@ function App() {
               onClick={() => activeView !== 'Society' && setActiveView('Society')}
             >
               <h2>Society</h2>
-              <div>
-                <Society entityPopulation={state.entityPop} />
+              <div className={'view-content'}>
+                <Society />
               </div>
             </Col>
             <Col
@@ -44,19 +55,19 @@ function App() {
               onClick={() => activeView !== 'People' && setActiveView('People')}
             >
               <h2>People</h2>
-              <div>
-                <People data={state} />
+              <div className={'view-content'}>
+                <People />
               </div>
             </Col>
           </Row>
 
           <Row id='Events' className={'view'}>
-            <Events data={state} />
+            {/* <Events data={state} /> */}
           </Row>
         </Container>
       )}
-    </div>
+    </>
   );
-}
+};
 
 export default App;

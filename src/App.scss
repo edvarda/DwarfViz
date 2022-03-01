@@ -35,6 +35,13 @@ body {
   transition: all 0.8s ease;
   flex-grow: 1;
   overflow: hidden;
+  height: 100vh;
+  overflow-y: scroll;
+
+  .view-content > * {
+    display: none;
+  }
+
   div {
     opacity: 0;
   }
@@ -42,7 +49,29 @@ body {
 
 .expanded {
   flex-grow: 10;
+  .view-content > * {
+    display: inherit;
+  }
+
   div {
     opacity: 1;
   }
+}
+
+.itemLink {
+  cursor: pointer;
+  text-decoration: underline;
+  font-weight: 800;
+}
+
+.placesLink {
+  color: $placesColor;
+}
+
+.peopleLink {
+  color: $peopleColor;
+}
+
+.societyLink {
+  color: $societyColor;
 }
