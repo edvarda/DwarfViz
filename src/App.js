@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.scss';
 import { Row, Col, Container } from 'react-bootstrap';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { Places, People, Society, Events } from './components';
 import { useWorldData, WorldDataProvider } from './hooks/useWorldData';
@@ -18,7 +18,7 @@ function App() {
 }
 
 const Viz = () => {
-  const { isLoading, isError, selectedItems } = useWorldData();
+  const { isLoading, isError, selectedItems, selectItem } = useWorldData();
   const [activeView, setActiveView] = useViewSelect(selectedItems);
 
   return (
@@ -44,7 +44,13 @@ const Viz = () => {
               className={`view ${activeView === 'Society' ? 'expanded' : ''}`}
               onClick={() => activeView !== 'Society' && setActiveView('Society')}
             >
-              <h2>Society</h2>
+              <h2
+                onClick={() => {
+                  selectItem.entity(23);
+                }}
+              >
+                Society
+              </h2>
               <div className={'view-content'}>
                 <Society />
               </div>
@@ -62,7 +68,7 @@ const Viz = () => {
           </Row>
 
           <Row id='Events' className={'view'}>
-            {/* <Events data={state} /> */}
+            <Events />
           </Row>
         </Container>
       )}

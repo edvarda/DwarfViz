@@ -4,6 +4,7 @@ import { useState, useRef, useMemo, useEffect } from 'react';
 import { AxisBottom } from './AxisBottom';
 import { AxisLeft } from './AxisLeft';
 import { Marks } from './Marks';
+import { useWorldData } from '../../hooks/useWorldData';
 
 const d3 = { max };
 
@@ -23,15 +24,16 @@ const yValue = (d) => 1; // +1 per event
 const xValue = (d) => d['year'];
 
 const BrushableTimeline = ({ data, width, height }) => {
+  const {
+    state: { worldsInfo, historicalEvents },
+  } = useWorldData();
   const [brushExtent, setBrushExtent] = useState();
   const brushRef = useRef();
 
-  console.log(data.worldsInfo);
-  console.log(data.historicalEvents);
-  const maxYears = data.worldsInfo[0].year;
+  const maxYears = worldsInfo[0].year;
   const xValueExtent = [-1, ...Array(maxYears).keys()]; // -1, 0, 1, 2, 3,... up to maxYears (e.g. 125)
 
-  const eventData = data.historicalEvents;
+  const eventData = historicalEvents;
   const filteredData = brushExtent
     ? eventData.filter((d) => {
         const date = xValue(d);
