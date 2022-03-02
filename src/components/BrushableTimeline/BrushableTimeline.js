@@ -1,4 +1,4 @@
-import { brushX, select, scaleLinear, max, sum, timeFormat, extent, bin, interpolateRgb } from 'd3';
+import { brushX, select, scaleLinear, max, sum, timeFormat, extent, bin, interpolateRgb, nice } from 'd3';
 
 import { useState, useRef, useMemo, useEffect } from 'react';
 import { AxisBottom } from './AxisBottom';
@@ -9,48 +9,39 @@ import { useWorldData } from '../../hooks/useWorldData';
 const d3 = { max };
 
 const margin = {
-  top: 20,
-  right: 30,
-  bottom: 20,
-  left: 50,
+  top: 10,
+  right: 0,
+  bottom: 0,
+  left: 65,
 };
 
 const xAxisLabelOffset = 40;
-const yAxisLabelOffset = 40;
+const yAxisLabelOffset = 50;
 const xAxisLabel = 'Year';
 const yAxisLabel = 'Events';
 
 const yValue = (d) => 1; // +1 per event
 const xValue = (d) => d['year'];
 
-const BrushableTimeline = ({ data, width, height }) => {
+const BrushableTimeline = ({ width, height, yearRange, setYearRange }) => {
   const {
     state: { worldsInfo, historicalEvents },
   } = useWorldData();
-  const [brushExtent, setBrushExtent] = useState();
+  //const [brushExtent, setYearRange] = useState();
   const brushRef = useRef();
 
   const maxYears = worldsInfo[0].year;
-  const xValueExtent = [-1, ...Array(maxYears).keys()]; // -1, 0, 1, 2, 3,... up to maxYears (e.g. 125)
-
-  const eventData = historicalEvents;
-  const filteredData = brushExtent
-    ? eventData.filter((d) => {
-        const date = xValue(d);
-        return date > brushExtent[0] && date < brushExtent[1];
-      })
-    : eventData;
-
+  const xValueExtent = [-1, ...[...Array(maxYears+1).keys()].slice(1)]; // -1, 0, 1, 2, 3,... up to maxYears (e.g. 125)
+ 
   const innerHeight = height - margin.top - margin.bottom;
   const innerWidth = width - margin.left - margin.right;
 
   const xScale = useMemo(
     () =>
       scaleLinear()
-        //.domain(extent(filteredData, xValue))
         .domain(extent(xValueExtent))
         .range([0, innerWidth]),
-    [filteredData, xValueExtent, innerWidth],
+    [xValueExtent, innerWidth],
   );
 
   const binnedData = useMemo(() => {
@@ -58,14 +49,14 @@ const BrushableTimeline = ({ data, width, height }) => {
     return bin()
       .value(xValue)
       .domain(xScale.domain())
-      .thresholds(50)(eventData) // 50 -> Makes ~50 "bins" -> actual number depends on input size, we always get evenly spaced result
+      .thresholds(stop)(historicalEvents) // 50 -> Makes ~50 "bins" -> actual number depends on input size, we always get evenly spaced result
       .map((array) => ({
-        y: sum(array, yValue),
+        y: array.length,
         x0: array.x0,
         x1: array.x1,
       }));
-  }, [xValue, xScale, eventData, yValue]);
-
+  }, [xValue, xScale, historicalEvents, yValue]);
+  
   // Colorscale is used to interpolate color histogram bar rects depending on how many events occured
   const colorScale = (d) =>
     scaleLinear()
@@ -94,7 +85,7 @@ const BrushableTimeline = ({ data, width, height }) => {
     ]);
     brush(select(brushRef.current));
     brush.on('brush end', (event) => {
-      setBrushExtent(event.selection && event.selection.map(xScale.invert));
+      setYearRange(event.selection && event.selection.map(xScale.invert));
     });
   }, [innerWidth, innerHeight]);
 
@@ -109,6 +100,7 @@ const BrushableTimeline = ({ data, width, height }) => {
           x={innerWidth / 2}
           y={innerHeight + xAxisLabelOffset}
           textAnchor='middle'
+          style={{ fontWeight: 'bold' }}
         >
           {xAxisLabel}
         </text>
@@ -116,6 +108,7 @@ const BrushableTimeline = ({ data, width, height }) => {
           className='axis-label'
           textAnchor='middle'
           transform={`translate(${-yAxisLabelOffset},${innerHeight / 2}) rotate(-90)`}
+          style={{ fontWeight: 'bold' }}
         >
           {yAxisLabel}
         </text>

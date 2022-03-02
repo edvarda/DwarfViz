@@ -1,16 +1,33 @@
 import BrushableTimeline from './BrushableTimeline/BrushableTimeline.js';
+import EventsList from './EventsList/EventsList.js'
+import { useState } from 'react'
 const Events = () => {
+  const [yearRange, setYearRange] = useState()
+  
   return (
-    <svg width='412' height='412'>
-      <g>
-        <BrushableTimeline
-          width={412}
-          height={360}
-          //setBrushExtent={setBrushExtent}
-          //xValue={xValue}
-        />
-      </g>
-    </svg>
+          <>
+    <svg  width="100%" height="100%">
+        <g>
+          <BrushableTimeline
+            width={1400}
+            height={250}
+            yearRange={yearRange}
+            setYearRange={setYearRange}
+
+            //setBrushExtent={setBrushExtent}
+            //xValue={xValue}
+            />
+          </g>
+        </svg>
+      
+
+        <EventsList
+          width={1400}
+          height={150}
+          yearRange={yearRange}>
+        </EventsList>
+ 
+    </>
   );
 };
 
