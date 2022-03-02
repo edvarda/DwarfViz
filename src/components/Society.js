@@ -2,6 +2,7 @@ import { Card, Row, Col } from 'react-bootstrap';
 import ItemLink from './ItemLink';
 import { useWorldData } from '../hooks/useWorldData';
 import { CivPopulation } from './CivPopulation/CivPopulation.js';
+import CirclePacking from './CirclePacking';
 
 const Society = () => {
   const {
@@ -11,7 +12,7 @@ const Society = () => {
   } = useWorldData();
   return (
     <>
-      <Row>
+      <Row className={'d-flex flex-row'}>
         <Col className={'d-flex flex-wrap'}>
           {selectedEntity && (
             <Card style={{ width: '18rem' }} className={'m-1'}>
@@ -60,6 +61,9 @@ const Society = () => {
               </Card.Body>
             </Card>
           )}
+        </Col>
+        <Col>
+          <CirclePacking width={500} height={500} />
         </Col>
       </Row>
 
