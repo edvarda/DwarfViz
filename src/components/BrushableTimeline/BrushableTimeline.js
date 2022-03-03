@@ -1,6 +1,6 @@
-import { brushX, select, scaleLinear, max, sum, timeFormat, extent, bin, interpolateRgb, nice } from 'd3';
+import { brushX, select, scaleLinear, max, extent, bin, interpolateRgb } from 'd3';
 
-import { useState, useRef, useMemo, useEffect } from 'react';
+import { useRef, useMemo, useEffect, useState } from 'react';
 import { AxisBottom } from './AxisBottom';
 import { AxisLeft } from './AxisLeft';
 import { Marks } from './Marks';
@@ -23,7 +23,7 @@ const yAxisLabel = 'Events';
 const yValue = (d) => 1; // +1 per event
 const xValue = (d) => d['year'];
 
-const BrushableTimeline = ({ width, height, yearRange, setYearRange }) => {
+const BrushableTimeline = ({ width, height, setYearRange }) => {
   const {
     state: { worldsInfo, historicalEvents },
   } = useWorldData();
@@ -31,16 +31,16 @@ const BrushableTimeline = ({ width, height, yearRange, setYearRange }) => {
   const brushRef = useRef();
 
   const maxYears = worldsInfo[0].year;
-  const xValueExtent = [-1, ...[...Array(maxYears+1).keys()].slice(1)]; // -1, 0, 1, 2, 3,... up to maxYears (e.g. 125)
- 
+  const xValueExtent = useMemo(() => {
+    console.log('asdasd');
+    return [-1, ...[...Array(maxYears + 1).keys()].slice(1)];
+  }, [maxYears]); // -1, 0, 1, 2, 3,... up to maxYears (e.g. 125)
+
   const innerHeight = height - margin.top - margin.bottom;
   const innerWidth = width - margin.left - margin.right;
 
   const xScale = useMemo(
-    () =>
-      scaleLinear()
-        .domain(extent(xValueExtent))
-        .range([0, innerWidth]),
+    () => scaleLinear().domain(extent(xValueExtent)).range([0, innerWidth]),
     [xValueExtent, innerWidth],
   );
 
@@ -55,8 +55,8 @@ const BrushableTimeline = ({ width, height, yearRange, setYearRange }) => {
         x0: array.x0,
         x1: array.x1,
       }));
-  }, [xValue, xScale, historicalEvents, yValue]);
-  
+  }, [xScale, historicalEvents]);
+
   // Colorscale is used to interpolate color histogram bar rects depending on how many events occured
   const colorScale = (d) =>
     scaleLinear()
@@ -79,12 +79,13 @@ const BrushableTimeline = ({ width, height, yearRange, setYearRange }) => {
   );
 
   useEffect(() => {
+    console.log('creating brush');
     const brush = brushX().extent([
       [0, 0],
       [innerWidth, innerHeight],
     ]);
     brush(select(brushRef.current));
-    brush.on('brush end', (event) => {
+    brush.on('end', (event) => {
       setYearRange(event.selection && event.selection.map(xScale.invert));
     });
   }, [innerWidth, innerHeight]);
