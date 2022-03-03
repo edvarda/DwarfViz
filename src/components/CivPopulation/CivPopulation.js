@@ -1,76 +1,104 @@
 import './stylesCiv.css';
-import { scaleBand, scaleLinear, max, format, axisBottom, axisLeft, select } from 'd3';
+import { scaleBand, scaleLinear, scaleOrdinal, max, format, axisBottom, axisLeft, select, stack, schemeSet2} from 'd3';
 import React, { useEffect, useRef } from 'react';
 
 export const CivPopulation = ({ entityPopulations, width, height }) => {
   const svgRef = useRef(null);
 
   //prepare our data
-  const aggregateObject = entityPopulations.reduce((aggregateObject, nextValue) => {
-    aggregateObject[nextValue.races[0].split(':')[0]] =
-      (aggregateObject[nextValue.races[0].split(':')[0]] || 0) + +nextValue.races[0].split(':')[1];
-    return aggregateObject;
-  }, {});
-  // console.log(aggregateObject);
-  const processedData = Object.entries(aggregateObject).map(([race, population]) => ({
-    race,
-    population,
-  }));
-  // console.log(processedData);
+  console.log(entityPopulations);
+  let population = {};
+  let civilizations = [];
+  let races = [];
+  entityPopulations.forEach(civ => {
+    civilizations.push(civ.civ_id); 
+    civ.races.forEach(race => {
+      const race_name = race.split(':')[0];
+      const pop = race.split(':')[1];
+      if(population[race_name] == undefined) {
+        population[race_name] = {};
+        races.push(race_name);
+      }
+      population[race_name][civ.civ_id] = pop;
+    });
+  });
+
+  let data = [];
+  for (const [race, civ_pops] of Object.entries(population)) {
+    data.push(Object.assign({}, {'race':race}, civ_pops));
+  }
+  console.log(data);
+
+  let raceCivPop = function(race, civ_id) {
+    if(population[race][civ_id] == undefined) return 0;
+    else return population[race][civ_id];
+  };
+  console.log(civilizations);
+  console.log(races);
+  console.log(population);
 
   function renderGraph() {
     const svg = select(svgRef.current);
     svg.selectAll('g').remove(); // remove 'g' elements from each svg to ensure that if we pass another data set, text and legends are removed from the previously rendered SVG to avoid left behind elements
-    svg.attr('width', width).attr('height', height);
+    //svg.attr('width', width).attr('height', height);
 
-    const xValue = (d) => d.population;
-    const yValue = (d) => d.race.replace(/_/g, ' ');
-
-    const margin = { top: 35, right: 20, bottom: 20, left: 100 };
+    const margin = { top: 35, right: 10, bottom: 20, left: 50 };
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
     const chartTitle = 'Entity race population';
 
-    const xScale = scaleLinear()
-      .domain([0, max(processedData.map(xValue))])
-      .range([0, innerWidth]);
+    svg.attr("width", width)
+      .attr("height", height)
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    // console.log(processedData.map(yValue));
-    const yScale = scaleBand()
-      .domain(processedData.map(yValue))
-      .range([0, innerHeight])
-      .padding(0.1);
+    let subgroups = civilizations;
+    let groups = races;
 
-    const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+    const xScale = scaleBand()
+      .domain(groups)
+      .range([0, innerWidth])
+      .padding([0.2])
+    svg.append("g")
+      .attr("transform", "translate(0," + innerHeight + ")")
+      .call(axisBottom(xScale).tickSizeOuter(0));
 
-    const xAxisTickFormat = (number) => format('.2s')(number).replace('G', 'B');
+    //console.log(processedData.map(yValue));
+    const yScale = scaleLinear()
+      .domain([0, 7000])
+      .range([ innerHeight, 0 ]);
+    svg.append("g")
+      .attr("transform", "translate(" + margin.left + ",0)")
+      .call(axisLeft(yScale));
 
-    const xAxis = axisBottom(xScale).tickFormat(xAxisTickFormat).tickSize(-innerHeight);
+    // color palette = one color per subgroup
+    var color = scaleOrdinal()
+      .domain(groups)
+      .range(schemeSet2);
 
-    g.append('g').call(axisLeft(yScale)).selectAll('.domain, .tick line').remove();
+    //stack the data? --> stack per subgroup
+    var stackedData = stack()
+      .keys(subgroups)
+      (data)
 
-    const xAxisG = g.append('g').call(xAxis).attr('transform', `translate(0,${innerHeight})`);
+    console.log(stackedData);
+      // Show the bars
+    svg.append("g")
+      .selectAll("g")
+      // Enter in the stack data = loop key per key = group per group
+      .data(stackedData)
+      .enter().append("g")
+        .attr("fill", function(d) { return color(d.race); }) //this isnt working, would want a color per race bar
+        .selectAll("rect")
+        // enter a second time = loop subgroup per subgroup to add all rectangles
+        .data(function(d) { return d; })
+        .enter().append("rect")
+          .attr("x", function(d) { return xScale(d.data.race); })
+          .attr("y", function(d) { return yScale(d[1]); })
+          .attr("height", function(d) { return yScale(d[0]) - yScale(d[1]); })
+          .attr("width",xScale.bandwidth())
+          .attr("stroke", "grey")
 
-    xAxisG.select('.domain').remove();
-
-    xAxisG
-      .append('text')
-      .attr('class', 'axis-label')
-      .attr('y', 65)
-      .attr('x', innerWidth / 2)
-      .attr('fill', 'black')
-      .text('Population');
-
-    g.selectAll('rect')
-      .data(processedData)
-      .enter()
-      .append('rect')
-      .attr('class', 'popBar')
-      .attr('y', (d) => yScale(yValue(d)))
-      .attr('width', (d) => xScale(xValue(d)))
-      .attr('height', yScale.bandwidth());
-
-    g.append('text').attr('class', 'title').attr('y', -10).text(chartTitle);
   }
 
   useEffect(() => {
@@ -78,8 +106,8 @@ export const CivPopulation = ({ entityPopulations, width, height }) => {
   }, [entityPopulations]);
 
   return (
-    <div>
-      <svg ref={svgRef} style={{ border: '3px solid blue' }} />;
-    </div>
+    <>
+      <svg ref={svgRef} style={{ border: '3px solid blue' }} />
+    </>
   );
 };
