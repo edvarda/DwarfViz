@@ -1,12 +1,19 @@
+.barchart {
+  border: 2px solid black;
+}
+.bar {
+  fill: rgb(0, 0, 255);
+}
+
 .title {
-    font-size: 2em;
-    fill: gray; 
+  font-size: 2em;
+  fill: gray;
 }
 
 .tick line {
-    stroke: #C0C0BB;
+  stroke: #c0c0bb;
 }
 
 .popBar {
-    fill: steelblue;
+  fill: steelblue;
 }

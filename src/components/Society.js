@@ -1,12 +1,12 @@
 import { Card, Row, Col } from 'react-bootstrap';
 import ItemLink from './ItemLink';
 import { useWorldData } from '../hooks/useWorldData';
-import { CivPopulation } from './CivPopulation/CivPopulation.js';
+import { CivPopulation, CivPopulationReact } from './CivPopulation/CivPopulation.js';
 import CirclePacking from './CirclePacking';
 
 const Society = () => {
   const {
-    state: { entityPopulations, entities, historicalFigures },
+    state: { entities, historicalFigures },
     selectedItems: { entity: selectedEntity },
     selectItem,
   } = useWorldData();
@@ -63,11 +63,11 @@ const Society = () => {
           )}
         </Col>
         <Col>
+          <CivPopulation width={450} height={250} className={'barchart'} />
+          <CivPopulationReact width={450} height={250} className={'barchart'} />
           <CirclePacking width={500} height={500} />
         </Col>
       </Row>
-
-      <CivPopulation entityPopulations={entityPopulations} width={450} height={250} />
     </>
   );
 };
