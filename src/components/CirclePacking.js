@@ -417,7 +417,7 @@ const CirclePacking = ({ width, height }) => {
         ],
       }),
     );
-    console.log('subtree', subtree);
+    // console.log('subtree', subtree);
     return subtree;
   };
 
