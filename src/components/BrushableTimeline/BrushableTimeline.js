@@ -32,7 +32,6 @@ const BrushableTimeline = ({ width, height, setYearRange }) => {
 
   const maxYears = worldsInfo[0].year;
   const xValueExtent = useMemo(() => {
-    console.log('asdasd');
     return [-1, ...Array(maxYears + 1).keys()];
   }, [maxYears]); // -1, 0, 1, 2, 3,... up to maxYears (e.g. 125)
 
@@ -45,7 +44,6 @@ const BrushableTimeline = ({ width, height, setYearRange }) => {
   );
   const [start_, xStop] = xScale.domain();
   const binnedData = useMemo(() => {
-    
     return bin()
       .value(xValue)
       .domain(xScale.domain())
@@ -80,7 +78,6 @@ const BrushableTimeline = ({ width, height, setYearRange }) => {
 
   const brushRef = useRef();
   useEffect(() => {
-    console.log('creating brush');
     const brush = brushX().extent([
       [0, 0],
       [innerWidth, innerHeight],
