@@ -28,12 +28,12 @@ const BrushableTimeline = ({ width, height, setYearRange }) => {
     state: { worldsInfo, historicalEvents },
   } = useWorldData();
   //const [brushExtent, setYearRange] = useState();
-  const brushRef = useRef();
+  
 
   const maxYears = worldsInfo[0].year;
   const xValueExtent = useMemo(() => {
     console.log('asdasd');
-    return [-1, ...[...Array(maxYears + 1).keys()].slice(1)];
+    return [-1, ...Array(maxYears + 1).keys()];
   }, [maxYears]); // -1, 0, 1, 2, 3,... up to maxYears (e.g. 125)
 
   const innerHeight = height - margin.top - margin.bottom;
@@ -43,19 +43,19 @@ const BrushableTimeline = ({ width, height, setYearRange }) => {
     () => scaleLinear().domain(extent(xValueExtent)).range([0, innerWidth]),
     [xValueExtent, innerWidth],
   );
-
+  const [start_, xStop] = xScale.domain();
   const binnedData = useMemo(() => {
-    const [start, stop] = xScale.domain();
+    
     return bin()
       .value(xValue)
       .domain(xScale.domain())
-      .thresholds(stop)(historicalEvents) // 50 -> Makes ~50 "bins" -> actual number depends on input size, we always get evenly spaced result
+      .thresholds(xStop)(historicalEvents) // 50 -> Makes ~50 "bins" -> actual number depends on input size, we always get evenly spaced result
       .map((array) => ({
         y: array.length,
         x0: array.x0,
         x1: array.x1,
       }));
-  }, [xScale, historicalEvents]);
+  }, [xScale, historicalEvents, xStop]);
 
   // Colorscale is used to interpolate color histogram bar rects depending on how many events occured
   const colorScale = (d) =>
@@ -78,6 +78,7 @@ const BrushableTimeline = ({ width, height, setYearRange }) => {
     [binnedData, innerHeight],
   );
 
+  const brushRef = useRef();
   useEffect(() => {
     console.log('creating brush');
     const brush = brushX().extent([
@@ -86,7 +87,11 @@ const BrushableTimeline = ({ width, height, setYearRange }) => {
     ]);
     brush(select(brushRef.current));
     brush.on('end', (event) => {
-      setYearRange(event.selection && event.selection.map(xScale.invert));
+      if (event.selection && event.sourceEvent) {
+        const yearSelection = event.selection.map(xScale.invert);
+        setYearRange(yearSelection);
+      }
+      
     });
   }, [innerWidth, innerHeight]);
 

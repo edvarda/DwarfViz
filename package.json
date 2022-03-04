@@ -12,10 +12,11 @@
     "d3": "^7.3.0",
     "leaflet": "^1.7.1",
     "react": "^17.0.2",
-    "react-bootstrap": "^2.1.2",
+    "react-bootstrap": "^2.2.0",
     "react-dom": "^17.0.2",
     "react-leaflet": "^3.2.5",
     "react-scripts": "5.0.0",
+    "react-table": "^7.7.0",
     "sass": "^1.49.9",
     "web-vitals": "^2.1.4"
   },

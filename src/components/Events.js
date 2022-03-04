@@ -7,10 +7,10 @@ const Events = () => {
   return (
     <>
       <svg width='100%' height='100%'>
-        <g>{/* <BrushableTimeline width={1400} height={250} setYearRange={setYearRange} /> */}</g>
+        <g>{ <BrushableTimeline width={1400} height={250} setYearRange={setYearRange} /> }</g>
       </svg>
 
-      {/* <EventsList width={1400} height={150} yearRange={yearRange}></EventsList> */}
+      { <EventsList width={1400} height={150} yearRange={yearRange}></EventsList> }
     </>
   );
 };
