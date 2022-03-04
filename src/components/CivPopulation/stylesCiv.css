@@ -1,9 +1,6 @@
 .barchart {
   border: 2px solid black;
 }
-.bar {
-  fill: rgb(0, 0, 255);
-}
 
 .title {
   font-size: 2em;

@@ -1,7 +1,7 @@
 import { Card, Row, Col } from 'react-bootstrap';
 import ItemLink from './ItemLink';
 import { useWorldData } from '../hooks/useWorldData';
-import { CivPopulation, CivPopulationReact } from './CivPopulation/CivPopulation.js';
+import { CivPopulation } from './CivPopulation/CivPopulation.js';
 import CirclePacking from './CirclePacking';
 
 const Society = () => {
@@ -63,8 +63,7 @@ const Society = () => {
           )}
         </Col>
         <Col>
-          <CivPopulation width={450} height={250} className={'barchart'} />
-          <CivPopulationReact width={450} height={250} className={'barchart'} />
+          <CivPopulation width={550} height={250} className={'barchart'} />
           <CirclePacking width={500} height={500} />
         </Col>
       </Row>
