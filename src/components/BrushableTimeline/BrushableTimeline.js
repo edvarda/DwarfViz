@@ -47,7 +47,7 @@ const BrushableTimeline = ({ width, height, setYearRange }) => {
     return bin()
       .value(xValue)
       .domain(xScale.domain())
-      .thresholds(xStop)(historicalEvents) // 50 -> Makes ~50 "bins" -> actual number depends on input size, we always get evenly spaced result
+      .thresholds(xStop)(historicalEvents) // 50 instead of xStop -> Makes ~50 "bins" -> actual number depends on input size, we always get evenly spaced result
       .map((array) => ({
         y: array.length,
         x0: array.x0,
@@ -88,7 +88,9 @@ const BrushableTimeline = ({ width, height, setYearRange }) => {
         const yearSelection = event.selection.map(xScale.invert);
         setYearRange(yearSelection);
       }
-      
+      else {  // This makes it so that upon deselecting the timeline, every year is shown again
+        setYearRange();
+      }
     });
   }, [innerWidth, innerHeight]);
 
