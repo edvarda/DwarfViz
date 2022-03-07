@@ -18,6 +18,7 @@ const Table = ({ data, rowsPerPage }) => {
             <th className={styles.tableHeader}>ID</th>
             <th className={styles.tableHeader}>Year</th>
             <th className={styles.tableHeader}>Type</th>
+            <th className={styles.tableHeader}>What happened?</th>
           </tr>
         </thead>
         <tbody>

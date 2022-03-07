@@ -65,7 +65,7 @@ const Viz = () => {
             </Col>
           </Row>
 
-          <Row id='Events' className={'view'}>
+          <Row id='Events' className={'view expanded'} >
             <Events />
           </Row>
         </Container>

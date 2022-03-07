@@ -14,7 +14,7 @@
     background-color: #f1f1f1;
     padding: 12px;
     font-weight: 500;
-    text-align: left;
+    text-align: center;
     font-size: 14px;
     color: #2c3e50;
   }
@@ -42,7 +42,13 @@
   }
 
   .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
   }
   
   .wrapper {
+    width: 1200px;
   }
