@@ -3,46 +3,61 @@ import {
   scaleBand,
   scaleLinear,
   scaleOrdinal,
+  scaleSequential,
   axisBottom,
   axisLeft,
   select,
   stack,
   schemeSet2,
+  color,
+  interpolateViridis,
 } from 'd3';
 import React, { useEffect, useRef } from 'react';
 import { useDwarfViz } from '../../hooks/useDwarfViz';
 import _ from 'lodash';
 
-export const Marks = ({ data, xScale, yScale, xValue, yValue, innerHeight }) => {
-  const barHeight = (popObject) => _.sum(Object.values(popObject).map((x) => +x));
+export const Marks = ({ data, xScale, yScale, xValue, yValue, innerHeight, color }) => {
+  const totalPop = (popObject) => _.sum(Object.values(popObject));
+  const rectPileArray = (raceName) => {
+    const civPops = data[raceName];
+    let rectArray = [];
+    let previousHeight = 0;
+    //console.log('race: ', raceName, color(raceName))
+    for (const [id, civ_pop] of Object.entries(civPops)) {
+      //console.log('val', civ_pop, yScale(civ_pop))
+      rectArray.push(
+        <rect
+          key={id}
+          x={xScale(raceName)}
+          y={yScale(civ_pop) - previousHeight}
+          width={xScale.bandwidth()}
+          height={innerHeight - yScale(civ_pop)}
+          stroke={'grey'}
+          className={'bar'}
+          fill={color(raceName)}
+        />,
+      );
+      previousHeight += innerHeight - yScale(civ_pop);
+    }
+    return rectArray;
+  };
   return (
     <g>
       {Object.keys(data).map((raceName) => {
-        console.log('rectmap', data[raceName]);
-        console.log('val', barHeight(data[raceName]), yScale(barHeight(data[raceName])));
-        return (
-          <rect
-            key={raceName}
-            x={xScale(raceName)}
-            y={innerHeight - yScale(barHeight(data[raceName]))}
-            width={xScale.bandwidth()}
-            height={yScale(barHeight(data[raceName]))}
-            className={'bar'}
-          />
-        );
+        return <g>{rectPileArray(raceName)}</g>;
       })}
     </g>
   );
 };
 
-const CivPopulationReact = ({ width, height }) => {
+const CivPopulation = ({ width, height }) => {
   const {
     state: { entityPopulations },
   } = useDwarfViz();
   const xAxisRef = useRef(null);
   const yAxisRef = useRef(null);
 
-  const margin = { top: 35, right: 10, bottom: 20, left: 50 };
+  const margin = { top: 35, right: 10, bottom: 40, left: 50 };
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
 
@@ -54,7 +69,7 @@ const CivPopulationReact = ({ width, height }) => {
     civilizations.push(civ.civ_id);
     civ.races.forEach((race) => {
       const race_name = race.split(':')[0];
-      const pop = race.split(':')[1];
+      const pop = +race.split(':')[1];
       if (population[race_name] === undefined) {
         population[race_name] = {};
         races.push(race_name);
@@ -62,14 +77,22 @@ const CivPopulationReact = ({ width, height }) => {
       population[race_name][civ.civ_id] = pop;
     });
   });
-  let data = [];
-  for (const [race, civ_pops] of Object.entries(population)) {
-    data.push(Object.assign({}, { race: race }, civ_pops));
+  console.log(races);
+  console.log(population);
+
+  let maxRacePop = 0;
+  for (const race_pops of Object.values(population)) {
+    let totalPop = 0;
+    for (const civ_pop of Object.values(race_pops)) {
+      totalPop += civ_pop;
+    }
+    if (totalPop > maxRacePop) maxRacePop = totalPop;
   }
 
   const xScale = scaleBand().domain(races).range([0, innerWidth]).padding([0.2]);
-  const yScale = scaleLinear().domain([0, 7000]).range([innerHeight, 0]);
-  const color = scaleOrdinal().domain(races).range(schemeSet2);
+  const yScale = scaleLinear().domain([0, maxRacePop]).range([innerHeight, 0]).nice();
+  const color = scaleLinear().domain(races).range(schemeSet2);
+  const colorScale = scaleSequential().domain(races).interpolator(interpolateViridis);
 
   useEffect(() => {
     const xAxisG = select(xAxisRef.current);
@@ -87,7 +110,7 @@ const CivPopulationReact = ({ width, height }) => {
   return (
     <svg style={{ border: '3px solid red' }} width={width} height={height}>
       <g transform={`translate(${margin.left},${margin.top})`}>
-        <g ref={xAxisRef} transform={`translate(0,${innerHeight})`} />
+        <g ref={xAxisRef} transform={`translate(0,${innerHeight})`}></g>
         <g ref={yAxisRef} />
         <Marks
           data={population}
@@ -96,130 +119,11 @@ const CivPopulationReact = ({ width, height }) => {
           xValue={xValue}
           yValue={yValue}
           innerHeight={innerHeight}
+          color={colorScale}
         />
       </g>
     </svg>
   );
 };
 
-const CivPopulation = ({ width, height }) => {
-  const svgRef = useRef(null);
-  const {
-    state: { entityPopulations },
-  } = useDwarfViz();
-
-  //prepare our data
-  console.log('entityPop', entityPopulations);
-  let population = {};
-  let civilizations = [];
-  let races = [];
-  entityPopulations.forEach((civ) => {
-    civilizations.push(civ.civ_id);
-    civ.races.forEach((race) => {
-      const race_name = race.split(':')[0];
-      const pop = race.split(':')[1];
-      if (population[race_name] === undefined) {
-        population[race_name] = {};
-        races.push(race_name);
-      }
-      population[race_name][civ.civ_id] = pop;
-    });
-  });
-
-  let data = [];
-  for (const [race, civ_pops] of Object.entries(population)) {
-    data.push(Object.assign({}, { race: race }, civ_pops));
-  }
-  console.log('data', data);
-
-  // let raceCivPop = function (race, civ_id) {
-  //   if (population[race][civ_id] === undefined) return 0;
-  //   else return population[race][civ_id];
-  // };
-
-  console.log('civilizations', civilizations);
-  console.log('races', races);
-  console.log('population', population);
-
-  function renderGraph() {
-    const svg = select(svgRef.current);
-    svg.selectAll('g').remove(); // remove 'g' elements from each svg to ensure that if we pass another data set, text and legends are removed from the previously rendered SVG to avoid left behind elements
-    //svg.attr('width', width).attr('height', height);
-
-    const margin = { top: 35, right: 10, bottom: 20, left: 50 };
-    const innerWidth = width - margin.left - margin.right;
-    const innerHeight = height - margin.top - margin.bottom;
-    const chartTitle = 'Entity race population';
-
-    svg
-      .attr('width', width)
-      .attr('height', height)
-      .append('g')
-      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
-    let subgroups = civilizations;
-    let groups = races;
-
-    const xScale = scaleBand().domain(groups).range([0, innerWidth]).padding([0.2]);
-    const yScale = scaleLinear().domain([0, 7000]).range([innerHeight, 0]);
-    svg
-      .append('g')
-      .attr('transform', 'translate(0,' + innerHeight + ')')
-      .call(axisBottom(xScale).tickSizeOuter(0));
-
-    svg
-      .append('g')
-      .attr('transform', 'translate(' + margin.left + ',0)')
-      .call(axisLeft(yScale));
-
-    // color palette = one color per subgroup
-    var color = scaleOrdinal().domain(groups).range(schemeSet2);
-
-    //stack the data? --> stack per subgroup
-    var stackedData = stack().keys(subgroups)(data);
-
-    console.log('stackedData', stackedData);
-    // Show the bars
-    svg
-      .append('g')
-      // selected a new, empty  g element
-      .selectAll('g') // empty selection inside a new g element
-      // Enter in the stack data = loop key per key = group per group
-      .data(stackedData)
-      .enter() // if the data has 14 entries, we have like 14 ghost elements.
-      .append('g') // this is where we create 14 new g elements
-      .attr('fill', function (d) {
-        return color(d.race);
-      }) //this isnt working, would want a color per race bar
-      .selectAll('rect')
-      // enter a second time = loop subgroup per subgroup to add all rectangles
-      .data(function (d) {
-        return d;
-      })
-      .enter()
-      .append('rect')
-      .attr('x', function (d) {
-        return xScale(d.data.race);
-      })
-      .attr('y', function (d) {
-        return yScale(d[1]);
-      })
-      .attr('height', function (d) {
-        return yScale(d[0]) - yScale(d[1]);
-      })
-      .attr('width', xScale.bandwidth())
-      .attr('stroke', 'grey');
-  }
-
-  useEffect(() => {
-    renderGraph();
-  }, [entityPopulations]);
-
-  return (
-    <>
-      <svg ref={svgRef} style={{ border: '3px solid blue' }} />
-    </>
-  );
-};
-
-export { CivPopulationReact, CivPopulation };
+export { CivPopulation };

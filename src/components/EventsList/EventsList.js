@@ -13,7 +13,9 @@ import {
 
 import { useState, useRef, useMemo, useEffect } from 'react';
 import { useDwarfViz } from '../../hooks/useDwarfViz';
-//import { useTable } from 'react-table'
+
+import Table from './Table.js';
+import styles from './Table.module.css';
 
 const d3 = { max };
 
@@ -24,31 +26,26 @@ const margin = {
   left: 65,
 };
 
-const EventsList = ({ data, width, height, yearRange }) => {
+const EventsList = ({ width, height, yearRange }) => {
   const {
     state: { worldsInfo, historicalEvents },
   } = useDwarfViz();
 
-  const filteredData = yearRange
+  const filteredEvents = yearRange
     ? historicalEvents
         .filter((d) => {
           const date = d['year'];
           return date > yearRange[0] && date < yearRange[1];
         })
         .slice(0, 100)
-    : historicalEvents;
+    : historicalEvents.slice(0, 100);
 
-  console.log('im filtering now');
   return (
-    <>
-      <ul>
-        {filteredData.map((d) => (
-          <li key={d.id}>
-            {d.type} {d.year}
-          </li>
-        ))}
-      </ul>
-    </>
+    // <div className={styles.container}>
+    //   <div className={styles.wrapper}>
+    <Table data={filteredEvents} rowsPerPage={12} />
+    //   </div>
+    // </div>
   );
 };
 
