@@ -12,7 +12,7 @@ import {
 } from 'd3';
 
 import { useState, useRef, useMemo, useEffect } from 'react';
-import { useWorldData } from '../../hooks/useWorldData';
+import { useDwarfViz } from '../../hooks/useDwarfViz';
 //import { useTable } from 'react-table'
 
 const d3 = { max };
@@ -27,7 +27,7 @@ const margin = {
 const EventsList = ({ data, width, height, yearRange }) => {
   const {
     state: { worldsInfo, historicalEvents },
-  } = useWorldData();
+  } = useDwarfViz();
 
   const filteredData = yearRange
     ? historicalEvents

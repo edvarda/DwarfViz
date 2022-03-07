@@ -1,6 +1,6 @@
 import { Card, Row, Col } from 'react-bootstrap';
 import ItemLink from './ItemLink';
-import { useWorldData } from '../hooks/useWorldData';
+import { useDwarfViz } from '../hooks/useDwarfViz';
 import { CivPopulation, CivPopulationReact } from './CivPopulation/CivPopulation.js';
 import CirclePacking from './CirclePacking';
 
@@ -9,7 +9,7 @@ const Society = () => {
     state: { entities, historicalFigures },
     selectedItems: { entity: selectedEntity },
     selectItem,
-  } = useWorldData();
+  } = useDwarfViz();
   return (
     <>
       <Row className={'d-flex flex-row'}>
@@ -22,23 +22,6 @@ const Society = () => {
                   Type: {selectedEntity.type}{' '}
                 </Card.Subtitle>
                 <Card.Text>Race: {selectedEntity.race}</Card.Text>
-                <div>
-                  <h2>Child entities</h2>
-                  <ul>
-                    {selectedEntity.entity_link.map((entityLink) => (
-                      <li key={entityLink.target}>
-                        Linked to {entityLink.type}:{' '}
-                        <ItemLink
-                          handleClick={selectItem.entity}
-                          type={'societyLink'}
-                          id={entityLink.target}
-                        >
-                          {entities.find((x) => x.id === entityLink.target).name}
-                        </ItemLink>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
                 <div>
                   <h2>Associated Historical Figures</h2>
                   <ul>
@@ -63,8 +46,8 @@ const Society = () => {
           )}
         </Col>
         <Col>
-          <CivPopulation width={450} height={250} className={'barchart'} />
-          <CivPopulationReact width={450} height={250} className={'barchart'} />
+          {/* <CivPopulation width={450} height={250} className={'barchart'} />
+          <CivPopulationReact width={450} height={250} className={'barchart'} /> */}
           <CirclePacking width={500} height={500} />
         </Col>
       </Row>

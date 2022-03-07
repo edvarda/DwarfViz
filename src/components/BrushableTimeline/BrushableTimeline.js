@@ -4,7 +4,7 @@ import { useRef, useMemo, useEffect, useState } from 'react';
 import { AxisBottom } from './AxisBottom';
 import { AxisLeft } from './AxisLeft';
 import { Marks } from './Marks';
-import { useWorldData } from '../../hooks/useWorldData';
+import { useDwarfViz } from '../../hooks/useDwarfViz';
 
 const d3 = { max };
 
@@ -26,7 +26,7 @@ const xValue = (d) => d['year'];
 const BrushableTimeline = ({ width, height, setYearRange }) => {
   const {
     state: { worldsInfo, historicalEvents },
-  } = useWorldData();
+  } = useDwarfViz();
   //const [brushExtent, setYearRange] = useState();
   const brushRef = useRef();
 

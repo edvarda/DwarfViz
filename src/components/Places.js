@@ -1,14 +1,16 @@
 import { Card, Row, Col } from 'react-bootstrap';
 import Map from './Map';
 import ItemLink from './ItemLink';
-import { useWorldData } from '../hooks/useWorldData';
+import { useDwarfViz } from '../hooks/useDwarfViz';
 
 const Places = () => {
   const {
     state: { mapImageURL, entities, regions, regionsGeoJSON },
     selectItem,
     selectedItems: { site: selectedSite },
-  } = useWorldData();
+  } = useDwarfViz();
+
+  const owningEntity = (selectedSite) => entities.find((x) => x.id === selectedSite.civ_id);
   return (
     <>
       <Row>
@@ -19,35 +21,38 @@ const Places = () => {
                 <Card.Title>{selectedSite.name}</Card.Title>
                 <Card.Subtitle className='mb-2 text-muted'>Type: {selectedSite.type}</Card.Subtitle>
                 <Card.Text>Number of structures: {selectedSite.structures.length} </Card.Text>
-                <div>
-                  Belongs to civilization:{' '}
-                  <ItemLink
-                    handleClick={selectItem.entity}
-                    type={'societyLink'}
-                    id={selectedSite.civ_id}
-                  >
-                    {entities.find((x) => x.id === selectedSite.civ_id).name}
-                  </ItemLink>
-                </div>
+                {owningEntity(selectedSite) && (
+                  <div>
+                    Belongs to {owningEntity(selectedSite).type}:{' '}
+                    <ItemLink
+                      handleClick={selectItem.entity}
+                      type={'societyLink'}
+                      id={selectedSite.civ_id}
+                    >
+                      {owningEntity(selectedSite).name}
+                    </ItemLink>
+                  </div>
+                )}
               </Card.Body>
             </Card>
           )}
         </Col>
+        <Col>
+          <Map
+            mapImage={mapImageURL}
+            mapSize={{
+              width: 528,
+              height: 528,
+              bounds: [
+                [0, 0],
+                [527, 527],
+              ],
+            }}
+            data={regionsGeoJSON}
+            regions={regions}
+          />
+        </Col>
       </Row>
-
-      <Map
-        mapImage={mapImageURL}
-        mapSize={{
-          width: 528,
-          height: 528,
-          bounds: [
-            [0, 0],
-            [527, 527],
-          ],
-        }}
-        data={regionsGeoJSON}
-        regions={regions}
-      />
     </>
   );
 };

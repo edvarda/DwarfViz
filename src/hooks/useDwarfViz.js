@@ -1,4 +1,4 @@
-import { useState, useReducer, useEffect, useContext, createContext } from 'react';
+import { useState, useEffect, useContext, useReducer, createContext } from 'react';
 import config from '../dwarfviz.config';
 import axios from 'axios';
 const { useStaticData, storytellerURL } = config;
@@ -19,9 +19,10 @@ const fetchFromStoryteller = async (endpoint) => {
 const WorldDataContext = createContext(null);
 
 const WorldDataProvider = ({ children }) => {
+  const [state, setState] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
-  const [state, setState] = useState({});
+  const [activeView, setActiveView] = useState('Places');
 
   useEffect(() => {
     const getStaticData = async () => {
@@ -67,6 +68,7 @@ const WorldDataProvider = ({ children }) => {
     loadData();
   }, []);
 
+  // Add history in here
   const selectionReducer = (selectState, action) => {
     switch (action.type) {
       case 'SELECT_SITE':
@@ -90,21 +92,33 @@ const WorldDataProvider = ({ children }) => {
   });
 
   const selectItem = {
-    site: (siteId) => dispatch({ type: 'SELECT_SITE', payload: siteId }),
-    entity: (entityId) => dispatch({ type: 'SELECT_ENTITY', payload: entityId }),
-    historicalFigure: (hfId) => dispatch({ type: 'SELECT_HISTORICAL_FIGURE', payload: hfId }),
+    site: (siteId) => {
+      dispatch({ type: 'SELECT_SITE', payload: siteId });
+      setActiveView('Places');
+    },
+    entity: (entityId) => {
+      dispatch({ type: 'SELECT_ENTITY', payload: entityId });
+      setActiveView('Society');
+    },
+    historicalFigure: (hfId) => {
+      dispatch({ type: 'SELECT_HISTORICAL_FIGURE', payload: hfId });
+      setActiveView('People');
+    },
   };
 
   return (
-    <WorldDataContext.Provider value={[state, isLoading, isError, selectedItems, selectItem]}>
+    <WorldDataContext.Provider
+      value={[state, isLoading, isError, activeView, setActiveView, selectedItems, selectItem]}
+    >
       {children}
     </WorldDataContext.Provider>
   );
 };
 
-const useWorldData = () => {
-  const [state, isLoading, isError, selectedItems, selectItem] = useContext(WorldDataContext);
-  return { state, isLoading, isError, selectedItems, selectItem };
+const useDwarfViz = () => {
+  const [state, isLoading, isError, activeView, setActiveView, selectedItems, selectItem] =
+    useContext(WorldDataContext);
+  return { state, isLoading, isError, activeView, setActiveView, selectedItems, selectItem };
 };
 
-export { WorldDataProvider, useWorldData };
+export { WorldDataProvider, useDwarfViz };

@@ -2,10 +2,25 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import React, { useEffect, useRef } from 'react';
 import _ from 'lodash';
+import { useDwarfViz } from '../hooks/useDwarfViz';
+
+const point = {
+  color: 'red',
+  fillColor: '#f03',
+  fillOpacity: 0.5,
+  radius: 3,
+};
+
+const pointHover = {
+  color: 'black',
+  fillColor: '#f03',
+  fillOpacity: 1,
+  radius: 5,
+};
 
 const style = {
   stroke: true,
-  color: 'black',
+  fill: 'black',
   weight: 1,
   opacity: 1,
 };
@@ -31,8 +46,34 @@ const fade = {
 };
 
 const Map = ({ mapImage, mapSize, data, regions }) => {
+  const sitesAsGeoJSONFeatures = (sites) => {
+    const getCenterpointOfRect = ({ x1, x2, y1, y2 }) => [
+      (x1 + x2) / 2,
+      mapSize.height - (y1 + y2) / 2,
+    ];
+    const features = sites
+      .filter((x) => !!x.rectangle)
+      .map((site) => ({
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: getCenterpointOfRect(site.rectangle),
+        },
+        properties: {
+          name: site.name,
+          id: site.id,
+        },
+      }));
+    return features;
+  };
+
+  const {
+    state: { sites },
+    selectItem,
+  } = useDwarfViz();
   const mapRef = useRef(null);
   const geoJSONRef = useRef(null);
+  const geoJSONSitesRef = useRef(null);
   useEffect(() => {
     // create map
     mapRef.current = L.map('map', {
@@ -65,7 +106,23 @@ const Map = ({ mapImage, mapSize, data, regions }) => {
             });
             e.target.setStyle(hoverStyle);
           },
-          // mouseout: (e) => geoJSONRef.current.resetStyle(),
+        });
+      },
+    }).addTo(mapRef.current);
+
+    geoJSONSitesRef.current = L.geoJSON(sitesAsGeoJSONFeatures(sites), {
+      pointToLayer: (feature, latlng) => L.circleMarker(latlng, point),
+      onEachFeature: (feature, thisLayer) => {
+        thisLayer.bindTooltip(`<div>Site: ${feature.properties.name}</div>`, { interactive: true });
+        thisLayer.on({
+          mouseover: (e) => {
+            e.target.setStyle(pointHover);
+          },
+          mouseout: (e) => e.target.setStyle(point),
+          click: (e) => {
+            console.log('select');
+            selectItem.site(e.target.feature.properties.id);
+          },
         });
       },
     }).addTo(mapRef.current);

@@ -1,16 +1,21 @@
 import { Card, Row, Col } from 'react-bootstrap';
+
 import ItemLink from './ItemLink.js';
-import { useWorldData } from '../hooks/useWorldData';
+import { useDwarfViz } from '../hooks/useDwarfViz';
+import FamilyTree from './FamilyTree.js';
+import RelationshipGraph from './RelationshipGraph.js';
+import RelatedEntities from './RelatedEntities.js';
 
 const People = () => {
   const {
     state: { historicalFigures, entities, sites },
     selectItem,
     selectedItems: { historicalFigure: selectedFigure },
-  } = useWorldData();
+  } = useDwarfViz();
+
   return (
     <>
-      <Row>
+      <Row className={'d-flex flex-row'}>
         <Col className={'d-flex flex-wrap'}>
           {selectedFigure && (
             <Card style={{ width: '18rem' }} className={'m-1'}>
@@ -20,12 +25,13 @@ const People = () => {
                   Race: {selectedFigure.race}
                 </Card.Subtitle>
                 <Card.Text>Caste: {selectedFigure.caste} </Card.Text>
+                <Card.Text>Id: {selectedFigure.id} </Card.Text>
                 <Card.Text>Birth year: {selectedFigure.birth_year}</Card.Text>
                 <div>
                   <h2>Linked entities</h2>
                   <ul>
                     {selectedFigure.entity_link.map((entityLink) => (
-                      <li key={entityLink.entity_id}>
+                      <li key={entityLink.entity_id + 'entity'}>
                         {`Linked as ${entityLink.link_type} to: `}
                         <ItemLink
                           handleClick={selectItem.entity}
@@ -61,7 +67,7 @@ const People = () => {
                     {selectedFigure.links.map((link) => {
                       const hf = historicalFigures.find((x) => x.id === link.hf_id_other);
                       return (
-                        <li key={link.hf_id_other}>
+                        <li key={link.hf_id_other + 'other'}>
                           {`${link.link_type}: `}
                           <ItemLink
                             handleClick={selectItem.historicalFigure}
@@ -78,6 +84,11 @@ const People = () => {
               </Card.Body>
             </Card>
           )}
+        </Col>
+        <Col className={''}>
+          {selectedFigure && <FamilyTree width={400} height={300} />}
+          {selectedFigure && <RelationshipGraph width={400} height={400} />}
+          {selectedFigure && <RelatedEntities width={400} height={400} />}
         </Col>
       </Row>
     </>

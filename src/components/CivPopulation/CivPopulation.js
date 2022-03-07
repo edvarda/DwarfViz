@@ -10,7 +10,7 @@ import {
   schemeSet2,
 } from 'd3';
 import React, { useEffect, useRef } from 'react';
-import { useWorldData } from '../../hooks/useWorldData';
+import { useDwarfViz } from '../../hooks/useDwarfViz';
 import _ from 'lodash';
 
 export const Marks = ({ data, xScale, yScale, xValue, yValue, innerHeight }) => {
@@ -38,7 +38,7 @@ export const Marks = ({ data, xScale, yScale, xValue, yValue, innerHeight }) => 
 const CivPopulationReact = ({ width, height }) => {
   const {
     state: { entityPopulations },
-  } = useWorldData();
+  } = useDwarfViz();
   const xAxisRef = useRef(null);
   const yAxisRef = useRef(null);
 
@@ -106,7 +106,7 @@ const CivPopulation = ({ width, height }) => {
   const svgRef = useRef(null);
   const {
     state: { entityPopulations },
-  } = useWorldData();
+  } = useDwarfViz();
 
   //prepare our data
   console.log('entityPop', entityPopulations);

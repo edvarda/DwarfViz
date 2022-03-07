@@ -1,11 +1,10 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.scss';
 import { Row, Col, Container } from 'react-bootstrap';
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import { Places, People, Society, Events } from './components';
-import { useWorldData, WorldDataProvider } from './hooks/useWorldData';
-import useViewSelect from './hooks/useViewSelect.js';
+import { useDwarfViz, WorldDataProvider } from './hooks/useDwarfViz';
 
 function App() {
   return (
@@ -18,8 +17,7 @@ function App() {
 }
 
 const Viz = () => {
-  const { isLoading, isError, selectedItems, selectItem } = useWorldData();
-  const [activeView, setActiveView] = useViewSelect(selectedItems);
+  const { isLoading, isError, activeView, setActiveView, selectItem } = useDwarfViz();
 
   return (
     <>

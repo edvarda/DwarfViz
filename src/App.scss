@@ -1,6 +1,6 @@
 $placesColor: rgb(113, 93, 190);
-$societyColor: rgb(193, 73, 71);
 $peopleColor: rgb(90, 151, 70);
+$societyColor: rgb(193, 73, 71);
 $eventsColor: rgb(179, 128, 50);
 
 body {
@@ -74,4 +74,11 @@ body {
 
 .societyLink {
   color: $societyColor;
+}
+
+:export {
+  peopleColor: $peopleColor;
+  placesColor: $placesColor;
+  societyColor: $societyColor;
+  eventsColor: $eventsColor;
 }
