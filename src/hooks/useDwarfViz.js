@@ -118,7 +118,15 @@ const WorldDataProvider = ({ children }) => {
 const useDwarfViz = () => {
   const [state, isLoading, isError, activeView, setActiveView, selectedItems, selectItem] =
     useContext(WorldDataContext);
-  return { state, isLoading, isError, activeView, setActiveView, selectedItems, selectItem };
+
+  const find = {
+    hf: (id) => state.historicalFigures.find((x) => x.id === id),
+    entity: (id) => state.entities.find((x) => x.id === id),
+    site: (id) => state.sites.find((x) => x.id === id),
+    region: (id) => state.regions.find((x) => x.id === id),
+  };
+
+  return { state, isLoading, isError, activeView, setActiveView, selectedItems, selectItem, find };
 };
 
 export { WorldDataProvider, useDwarfViz };
