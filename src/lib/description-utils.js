@@ -404,6 +404,7 @@ function getEntityName(entity, type) {
   //---------------------------
   //type = "nameRace": The Scorching of Thieves, a serpent man guild
   var race = getRace(entity.race);
+  
   if (type === 'nameRace') {
     if (entity.name !== null && entity.race !== null && entity.type_ !== null) {
       nameRace = `${name}, ${a_an(race)} ${orgName}`;
@@ -469,6 +470,9 @@ function getRace(race) {
       break;
     case 'kobold':
       return 'kobold';
+      break;
+    case null:  // Dirty fix, some races can apparently be null (e.g. year 91 has one), causes crash otherwise
+      return 'unknown race';
       break;
     default:
       if (race !== undefined) {
