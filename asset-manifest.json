@@ -1,24 +1,22 @@
 {
   "files": {
-    "main.css": "/pages/edvarda/DwarfViz/static/css/main.1ea24dac.css",
-    "main.js": "/pages/edvarda/DwarfViz/static/js/main.3698a722.js",
+    "main.css": "/pages/edvarda/DwarfViz/static/css/main.c831621d.css",
+    "main.js": "/pages/edvarda/DwarfViz/static/js/main.ea95fef0.js",
     "static/js/660.9bc655bd.chunk.js": "/pages/edvarda/DwarfViz/static/js/660.9bc655bd.chunk.js",
     "static/js/921.30292fdd.chunk.js": "/pages/edvarda/DwarfViz/static/js/921.30292fdd.chunk.js",
     "static/js/582.bd30c307.chunk.js": "/pages/edvarda/DwarfViz/static/js/582.bd30c307.chunk.js",
-    "static/js/769.52b844c4.chunk.js": "/pages/edvarda/DwarfViz/static/js/769.52b844c4.chunk.js",
-    "static/js/262.e9979b2f.chunk.js": "/pages/edvarda/DwarfViz/static/js/262.e9979b2f.chunk.js",
-    "static/js/103.07ed5165.chunk.js": "/pages/edvarda/DwarfViz/static/js/103.07ed5165.chunk.js",
-    "static/js/473.d6019540.chunk.js": "/pages/edvarda/DwarfViz/static/js/473.d6019540.chunk.js",
     "static/js/30.d5ae29cb.chunk.js": "/pages/edvarda/DwarfViz/static/js/30.d5ae29cb.chunk.js",
+    "static/js/163.b12770bc.chunk.js": "/pages/edvarda/DwarfViz/static/js/163.b12770bc.chunk.js",
+    "static/js/394.b3109e09.chunk.js": "/pages/edvarda/DwarfViz/static/js/394.b3109e09.chunk.js",
     "static/js/787.66ebd713.chunk.js": "/pages/edvarda/DwarfViz/static/js/787.66ebd713.chunk.js",
     "static/media/image.png": "/pages/edvarda/DwarfViz/static/media/image.ffc9a9d246064d983fae.png",
     "index.html": "/pages/edvarda/DwarfViz/index.html",
-    "main.1ea24dac.css.map": "/pages/edvarda/DwarfViz/static/css/main.1ea24dac.css.map",
-    "main.3698a722.js.map": "/pages/edvarda/DwarfViz/static/js/main.3698a722.js.map",
+    "main.c831621d.css.map": "/pages/edvarda/DwarfViz/static/css/main.c831621d.css.map",
+    "main.ea95fef0.js.map": "/pages/edvarda/DwarfViz/static/js/main.ea95fef0.js.map",
     "787.66ebd713.chunk.js.map": "/pages/edvarda/DwarfViz/static/js/787.66ebd713.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.1ea24dac.css",
-    "static/js/main.3698a722.js"
+    "static/css/main.c831621d.css",
+    "static/js/main.ea95fef0.js"
   ]
 }
