@@ -2,8 +2,6 @@ import { Card, Row, Col } from 'react-bootstrap';
 import ItemLink from './ItemLink';
 import { useDwarfViz } from '../hooks/useDwarfViz';
 import { CivPopulation, CivPopulationReact } from './CivPopulation/CivPopulation.js';
-import { useWorldData } from '../hooks/useWorldData';
-import { CivPopulation } from './CivPopulation/CivPopulation.js';
 import CirclePacking from './CirclePacking';
 
 const Society = () => {
