@@ -20,7 +20,7 @@ import styles from './Table.module.css';
 const EventsList = ({ width, height, yearRange, historicalEvents }) => {
   const maxSlice = 144;
   const {
-    state: { worldsInfo },
+    data: { worldsInfo },
   } = useDwarfViz();
 
   const filteredEvents = yearRange

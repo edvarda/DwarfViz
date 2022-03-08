@@ -56,8 +56,8 @@ const data = {
 
 const RelationshipGraph = ({ width, height }) => {
   const {
-    state: { historicalFigures },
-    selectedItems: { historicalFigure: selectedFigure },
+    data: { historicalFigures },
+    peopleView: { selectedItem: selectedFigure },
     selectHF,
   } = useDwarfViz();
 

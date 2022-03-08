@@ -17,20 +17,29 @@ function App() {
 }
 
 const Viz = () => {
-  const { isLoading, isError, activeView, setActiveView, selectEntity } = useDwarfViz();
+  const {
+    isLoading,
+    isError,
+    isDataLoaded,
+    placesView,
+    peopleView,
+    societyView,
+    selectEntity,
+    setActiveView,
+  } = useDwarfViz();
 
   return (
     <>
       {isError && <div>Error fetching data</div>}
-      {isLoading ? (
-        <div>Loading...</div>
+      {!isDataLoaded ? (
+        <div>Loading data...</div>
       ) : (
         <Container fluid>
           <Row>
             <Col
               id='Places'
-              className={`view ${activeView === 'Places' ? 'expanded' : ''}`}
-              onClick={() => activeView !== 'Places' && setActiveView('Places')}
+              className={`view ${placesView.isActive && `expanded`}`}
+              onClick={() => setActiveView('placesView')}
             >
               <h2>Places</h2>
               <div className={'view-content'}>
@@ -39,8 +48,8 @@ const Viz = () => {
             </Col>
             <Col
               id='Society'
-              className={`view ${activeView === 'Society' ? 'expanded' : ''}`}
-              onClick={() => activeView !== 'Society' && setActiveView('Society')}
+              className={`view ${societyView.isActive && `expanded`}`}
+              onClick={() => setActiveView('societyView')}
             >
               <h2
                 onClick={() => {
@@ -55,8 +64,8 @@ const Viz = () => {
             </Col>
             <Col
               id='People'
-              className={`view ${activeView === 'People' ? 'expanded' : ''}`}
-              onClick={() => activeView !== 'People' && setActiveView('People')}
+              className={`view ${peopleView.isActive && `expanded`}`}
+              onClick={() => setActiveView('peopleView')}
             >
               <h2>People</h2>
               <div className={'view-content'}>
@@ -66,7 +75,7 @@ const Viz = () => {
           </Row>
 
           <Row id='Events' className={'view expanded'}>
-            <Events />
+            {!isLoading && <Events />}
           </Row>
         </Container>
       )}

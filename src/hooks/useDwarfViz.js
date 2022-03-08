@@ -1,210 +1,264 @@
-import { useState, useEffect, useContext, useReducer, createContext } from 'react';
-import config from '../dwarfviz.config';
 import axios from 'axios';
+import { createContext, useContext, useEffect, useReducer } from 'react';
+import config from '../dwarfviz.config';
 const { useStaticData, storytellerURL } = config;
+const Actions = {
+  START_FETCH: 'START_FETCH',
+  FETCH_SUCCESS: 'FETCH_SUCCESS',
+  FETCH_ERROR: 'FETCH_ERROR',
+  SET_DATA: 'SET_DATA',
+  SELECT_SITE: 'SELECT_SITE',
+  SELECT_ENTITY: 'SELECT_ENTITY',
+  SELECT_HISTORICAL_FIGURE: 'SELECT_HISTORICAL_FIGURE',
+  SET_ACTIVE_VIEW: 'SET_ACTIVE_VIEW',
+};
+
+const Views = {
+  PEOPLE: {
+    itemType: 'historicalFigure',
+    eventEndpoint: 'link_he_hf',
+    name: 'peopleView',
+    actionType: Actions.SELECT_HISTORICAL_FIGURE,
+  },
+  SOCIETY: {
+    itemType: 'entity',
+    eventEndpoint: 'link_he_entity',
+    name: 'societyView',
+    actionType: Actions.SELECT_ENTITY,
+  },
+  PLACES: {
+    itemType: 'site',
+    eventEndpoint: 'link_he_site',
+    name: 'placesView',
+    actionType: Actions.SELECT_SITE,
+  },
+};
 
 const fetchFromStoryteller = async (endpoint, resourceId = null) => {
   const items = [];
   let response;
   let nextPage = 0;
-  do {
-    let url = resourceId
-      ? `${storytellerURL}/${endpoint}/${resourceId}?per_page=500&page=${nextPage}`
-      : `${storytellerURL}/${endpoint}?per_page=500&page=${nextPage}`;
-    response = (await axios.get(url)).data;
-    items.push(...response.data);
-    nextPage = 1 + response.page_nr;
-  } while (response.links.next !== null);
+  try {
+    do {
+      let url = resourceId
+        ? `${storytellerURL}/${endpoint}/${resourceId}?per_page=500&page=${nextPage}`
+        : `${storytellerURL}/${endpoint}?per_page=500&page=${nextPage}`;
+      response = (await axios.get(url)).data;
+      items.push(...response.data);
+      nextPage = 1 + response.page_nr;
+    } while (response.links.next !== null);
+  } catch (error) {
+    throw error;
+  }
   return items;
 };
 
 const WorldDataContext = createContext(null);
 
 const WorldDataProvider = ({ children }) => {
-  const [state, setState] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState(false);
-  const [activeView, setActiveView] = useState('Places');
-  const [newSelectionAction, setNewSelectionAction] = useState(null);
-
   useEffect(() => {
-    const getStaticData = async () => {
-      return {
-        regionsGeoJSON: await import('../data/regions.geo.json'),
-        regions: await import('../data/regions.json'),
-        mapImageURL: await (await import('../data/image.png')).default,
-        entityPop: await (await import('../data/entity_populations.json')).data,
-        historicalEvents: await (await import('../data/historical_events.json')).data,
-        worldsInfo: await (await import('../data/worlds_info.json')).data,
-      };
-    };
-    const fetchRemoteData = async () => {
-      try {
-        return {
-          regionsGeoJSON: await import('../data/regions.geo.json'),
-          regions: await fetchFromStoryteller('regions'),
-          historicalFigures: await fetchFromStoryteller('historical_figures'),
-          sites: await fetchFromStoryteller('sites'),
-          entities: await fetchFromStoryteller('entities'),
-          entityPopulations: await fetchFromStoryteller('entity_populations'),
-          worldsInfo: await fetchFromStoryteller('worlds_info'),
-          historicalEvents: await fetchFromStoryteller('historical_events'),
-          mapImageURL: `${storytellerURL}/map_images/2/image.png`,
-        };
-      } catch (error) {
-        setIsError(true);
-        console.log(error);
-        return getStaticData();
-      }
-    };
+    const fetchStaticData = async () => ({
+      regionsGeoJSON: await import('../data/regions.geo.json'),
+      regions: await import('../data/regions.json'),
+      mapImageURL: await (await import('../data/image.png')).default,
+      entityPop: await (await import('../data/entity_populations.json')).data,
+      historicalEvents: await (await import('../data/historical_events.json')).data,
+      worldsInfo: await (await import('../data/worlds_info.json')).data,
+    });
+    const fetchRemoteData = async () => ({
+      regionsGeoJSON: await import('../data/regions.geo.json'),
+      regions: await fetchFromStoryteller('regions'),
+      historicalFigures: await fetchFromStoryteller('historical_figures'),
+      sites: await fetchFromStoryteller('sites'),
+      entities: await fetchFromStoryteller('entities'),
+      entityPopulations: await fetchFromStoryteller('entity_populations'),
+      worldsInfo: await fetchFromStoryteller('worlds_info'),
+      historicalEvents: await fetchFromStoryteller('historical_events'),
+      mapImageURL: `${storytellerURL}/map_images/2/image.png`,
+    });
     const loadData = async () => {
-      setIsLoading(true);
-      if (useStaticData) {
-        const initialData = await getStaticData();
-        setState(initialData);
-      } else {
-        const initialData = await fetchRemoteData();
-        setState(initialData);
+      dispatch({ type: Actions.START_FETCH });
+      try {
+        const data = useStaticData ? await fetchStaticData() : await fetchRemoteData();
+        dispatch({ type: Actions.FETCH_SUCCESS });
+        dispatch({ type: Actions.SET_DATA, payload: data });
+      } catch (error) {
+        console.log(error);
+        dispatch({ type: Actions.FETCH_ERROR });
+        return;
       }
-      setIsLoading(false);
     };
     loadData();
   }, []);
 
-  // Add history in here
-  const selectionReducer = (selectState, action) => {
+  const stateReducer = (state, action) => {
+    console.log('ACTION:', action);
+    console.log('State', state);
     switch (action.type) {
-      case 'SELECT_SITE':
+      case Actions.START_FETCH:
+        return { ...state, isLoading: true };
+      case Actions.FETCH_SUCCESS:
         return {
-          ...selectState,
-          site: {
-            ...state.sites.find((x) => x.id === action.payload.id),
-            relatedEvents: action.payload.events,
-          },
+          ...state,
+          isLoading: false,
         };
-      case 'SELECT_ENTITY':
+      case Actions.FETCH_ERROR:
+        return { ...state, isError: true, isLoading: false };
+      case Actions.SET_DATA:
+        return { ...state, data: action.payload, isDataLoaded: true };
+      case Actions.SELECT_SITE:
+        if (
+          state.placesView.selectedItem &&
+          state.placesView.selectedItem.id === action.payload.id
+        ) {
+          return state;
+        }
         return {
-          ...selectState,
-          entity: {
-            ...state.entities.find((x) => x.id === action.payload.id),
-            relatedEvents: action.payload.events,
+          ...state,
+          placesView: {
+            ...state.placesView,
+            isActive: true,
+            selectedItem: {
+              ...state.data.sites.find((x) => x.id === action.payload.id),
+              relatedEvents: action.payload.relatedEvents,
+            },
           },
+          societyView: { ...state.societyView, isActive: false },
+          peopleView: { ...state.peopleView, isActive: false },
         };
-      case 'SELECT_HISTORICAL_FIGURE':
+      case Actions.SELECT_ENTITY:
+        if (
+          state.societyView.selectedItem &&
+          state.societyView.selectedItem.id === action.payload.id
+        ) {
+          return state;
+        }
         return {
-          ...selectState,
-          historicalFigure: {
-            ...state.historicalFigures.find((x) => x.id === action.payload.id),
-            relatedEvents: action.payload.events,
+          ...state,
+          societyView: {
+            ...state.societyView,
+            isActive: true,
+            selectedItem: {
+              ...state.data.entities.find((x) => x.id === action.payload.id),
+              relatedEvents: action.payload.relatedEvents,
+            },
           },
+          peopleView: { ...state.peopleView, isActive: false },
+          placesView: { ...state.placesView, isActive: false },
+        };
+      case Actions.SELECT_HISTORICAL_FIGURE:
+        if (
+          state.peopleView.selectedItem &&
+          state.peopleView.selectedItem.id === action.payload.id
+        ) {
+          return state;
+        }
+        return {
+          ...state,
+          peopleView: {
+            ...state.peopleView,
+            isActive: true,
+            selectedItem: {
+              ...state.data.historicalFigures.find((x) => x.id === action.payload.id),
+              relatedEvents: action.payload.relatedEvents,
+            },
+          },
+          societyView: { ...state.societyView, isActive: false },
+          placesView: { ...state.placesView, isActive: false },
+        };
+      case Actions.SET_ACTIVE_VIEW:
+        if (state[action.payload].isActive) return state; // View already active, don't mutate state
+        return {
+          ...state,
+          placesView: { ...state.placesView, isActive: action.payload === 'placesView' },
+          peopleView: { ...state.peopleView, isActive: action.payload === 'peopleView' },
+          societyView: { ...state.societyView, isActive: action.payload === 'societyView' },
         };
       default:
         return state;
     }
   };
 
-  const [selectedItems, dispatch] = useReducer(selectionReducer, {
-    site: null,
-    entity: null,
-    historicalFigure: null,
-  });
-
-  const selectSite = (siteId) => {
-    console.log('selectedItemsin select', selectedItems);
-    if (!selectedItems.site || siteId !== selectedItems.site.id)
-      setNewSelectionAction({ type: 'SELECT_SITE', payload: siteId });
-    setActiveView('Places');
+  const initialState = {
+    data: null,
+    isLoading: false,
+    isError: false,
+    isDataLoaded: false,
+    placesView: { selectedItem: null, history: [], isActive: true },
+    societyView: { selectedItem: null, history: [], isActive: false },
+    peopleView: { selectedItem: null, history: [], isActive: false },
   };
 
-  const selectEntity = (entityId) => {
-    console.log('selectedItemsin select', selectedItems);
-    if (!selectedItems.entity || entityId !== selectedItems.entity.id)
-      setNewSelectionAction({ type: 'SELECT_ENTITY', payload: entityId });
-    setActiveView('Society');
-  };
+  const [state, dispatch] = useReducer(stateReducer, initialState);
 
-  const selectHF = (hfId) => {
-    console.log('selectedItemsin select', selectedItems);
-    if (!selectedItems.historicalFigure || hfId !== selectedItems.historicalFigure.id)
-      setNewSelectionAction({ type: 'SELECT_HISTORICAL_FIGURE', payload: hfId });
-    setActiveView('People');
-  };
-
-  useEffect(() => {
-    const handleNewSelectionAction = async (endpoint, action) => {
-      const events = await fetchFromStoryteller(endpoint, action.payload);
-      dispatch({ ...action, payload: { id: action.payload, events } });
-      setNewSelectionAction(null);
-    };
-
-    if (newSelectionAction === null) return;
-    let endpoint;
-    switch (newSelectionAction.type) {
-      case 'SELECT_SITE':
-        endpoint = 'link_he_site';
-        break;
-      case 'SELECT_ENTITY':
-        endpoint = 'link_he_entity';
-        break;
-      case 'SELECT_HISTORICAL_FIGURE':
-        endpoint = 'link_he_hf';
-        break;
-      default:
-        break;
-    }
-    handleNewSelectionAction(endpoint, newSelectionAction);
-  }, [newSelectionAction]);
+  useEffect(() => {}, [state.placesView, state.societyView, state.peopleView]);
 
   return (
-    <WorldDataContext.Provider
-      value={[
-        state,
-        isLoading,
-        isError,
-        activeView,
-        selectedItems,
-        setActiveView,
-        selectSite,
-        selectEntity,
-        selectHF,
-      ]}
-    >
-      {children}
-    </WorldDataContext.Provider>
+    <WorldDataContext.Provider value={[state, dispatch]}>{children}</WorldDataContext.Provider>
   );
 };
 
 const useDwarfViz = () => {
-  const [
-    state,
-    isLoading,
-    isError,
-    activeView,
-    selectedItems,
-    setActiveView,
-    selectSite,
-    selectEntity,
-    selectHF,
-  ] = useContext(WorldDataContext);
+  const [state, dispatch] = useContext(WorldDataContext);
 
-  const find = {
-    hf: (id) => state.historicalFigures.find((x) => x.id === id),
-    entity: (id) => state.entities.find((x) => x.id === id),
-    site: (id) => state.sites.find((x) => x.id === id),
-    region: (id) => state.regions.find((x) => x.id === id),
+  const selectSite = (siteId) => {
+    console.log('select site', siteId);
+    selectItem(Views.PLACES, siteId);
   };
 
+  const selectEntity = (entityId) => {
+    console.log('select entity', entityId);
+    selectItem(Views.SOCIETY, entityId);
+  };
+
+  const selectHF = (hfId) => {
+    console.log('select hf', hfId);
+    selectItem(Views.PEOPLE, hfId);
+  };
+
+  const selectItem = async (View, id) => {
+    console.log('in selectItem', View, state[View.name], state);
+    if (id !== null) {
+      dispatch({ type: Actions.START_FETCH });
+      try {
+        const relatedEvents = await fetchFromStoryteller(View.eventEndpoint, id);
+        dispatch({ type: Actions.FETCH_SUCCESS });
+        dispatch({ type: View.actionType, payload: { id, relatedEvents: relatedEvents } });
+      } catch (error) {
+        console.log(error);
+        dispatch({ type: Actions.FETCH_ERROR });
+        return;
+      }
+    }
+  };
+
+  const find = {
+    hf: (id) => data.historicalFigures.find((x) => x.id === id),
+    entity: (id) => data.entities.find((x) => x.id === id),
+    site: (id) => data.sites.find((x) => x.id === id),
+    region: (id) => data.regions.find((x) => x.id === id),
+  };
+
+  const setActiveView = (viewName) => {
+    dispatch({ type: Actions.SET_ACTIVE_VIEW, payload: viewName });
+  };
+  const getActiveView = () => [placesView, societyView, peopleView].find((view) => view.isActive);
+
+  const { data, isLoading, isDataLoaded, isError, placesView, societyView, peopleView } = state;
   return {
-    state,
+    data,
     isLoading,
+    isDataLoaded,
     isError,
-    activeView,
+    placesView,
+    societyView,
+    peopleView,
+    find,
+    getActiveView,
     setActiveView,
-    selectedItems,
     selectSite,
     selectEntity,
     selectHF,
-    find,
   };
 };
 

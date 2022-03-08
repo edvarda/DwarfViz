@@ -5,25 +5,13 @@ import { useDwarfViz } from '../hooks/useDwarfViz.js';
 const Events = () => {
   const [yearRange, setYearRange] = useState();
   const {
-    state: { historicalEvents },
-    selectedItems,
-    activeView,
+    data: { historicalEvents },
+    getActiveView,
   } = useDwarfViz();
-  let events = historicalEvents;
-  switch (activeView) {
-    case 'Places':
-      if (selectedItems.site) events = selectedItems.site.relatedEvents;
-      break;
-    case 'Society':
-      if (selectedItems.entity) events = selectedItems.entity.relatedEvents;
-      break;
-    case 'People':
-      if (selectedItems.historicalFigure) events = selectedItems.historicalFigure.relatedEvents;
-      break;
-    default:
-      break;
-  }
-  console.log('events:', events);
+
+  const events = getActiveView().selectedItem
+    ? getActiveView().selectedItem.relatedEvents
+    : historicalEvents;
 
   return (
     <>

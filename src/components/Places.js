@@ -5,9 +5,9 @@ import { useDwarfViz } from '../hooks/useDwarfViz';
 
 const Places = () => {
   const {
-    state: { mapImageURL, entities, regions, regionsGeoJSON },
+    data: { mapImageURL, entities, regions, regionsGeoJSON },
     selectEntity,
-    selectedItems: { site: selectedSite },
+    placesView: { selectedItem: selectedSite },
   } = useDwarfViz();
 
   const owningEntity = (selectedSite) => entities.find((x) => x.id === selectedSite.civ_id);

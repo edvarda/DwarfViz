@@ -68,7 +68,7 @@ const Map = ({ mapImage, mapSize, data, regions }) => {
   };
 
   const {
-    state: { sites },
+    data: { sites },
     selectSite,
   } = useDwarfViz();
   const mapRef = useRef(null);

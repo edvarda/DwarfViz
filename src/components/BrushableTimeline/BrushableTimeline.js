@@ -25,7 +25,7 @@ const xValue = (d) => d['year'];
 
 const BrushableTimeline = ({ width, height, setYearRange, historicalEvents }) => {
   const {
-    state: { worldsInfo },
+    data: { worldsInfo },
   } = useDwarfViz();
   //const [brushExtent, setYearRange] = useState();
 

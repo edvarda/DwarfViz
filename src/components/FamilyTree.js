@@ -93,8 +93,8 @@ const Levels = ({ width, height }) => {
 
 const FamilyTree = ({ width, height }) => {
   const {
-    state: { historicalFigures },
-    selectedItems: { historicalFigure: selectedFigure },
+    data: { historicalFigures },
+    peopleView: { selectedItem: selectedFigure },
   } = useDwarfViz();
 
   const getOtherFigureFromLink = (link) => ({

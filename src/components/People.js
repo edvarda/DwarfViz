@@ -8,11 +8,11 @@ import RelatedEntities from './RelatedEntities.js';
 
 const People = () => {
   const {
-    state: { historicalFigures, entities, sites },
+    data: { historicalFigures, entities, sites },
     selectEntity,
     selectSite,
     selectHF,
-    selectedItems: { historicalFigure: selectedFigure },
+    peopleView: { selectedItem: selectedFigure },
   } = useDwarfViz();
 
   return (

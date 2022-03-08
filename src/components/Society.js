@@ -1,14 +1,14 @@
 import { Card, Row, Col } from 'react-bootstrap';
 import ItemLink from './ItemLink';
 import { useDwarfViz } from '../hooks/useDwarfViz';
-import { CivPopulation, CivPopulationReact } from './CivPopulation/CivPopulation.js';
+import CivPopulation from './CivPopulation/CivPopulation.js';
 import CirclePacking from './CirclePacking';
-import { EntityDetails } from './EntityDetails/EntityDetails.js'
+import EntityDetails from './EntityDetails/EntityDetails.js';
 
 const Society = () => {
   const {
-    state: { entities, historicalFigures },
-    selectedItems: { entity: selectedEntity },
+    data: { historicalFigures },
+    societyView: { selectedItem: selectedEntity },
     selectHF,
   } = useDwarfViz();
 
@@ -19,7 +19,7 @@ const Society = () => {
           {selectedEntity && (
             <Card style={{ width: '18rem' }} className={'m-1'}>
               <Card.Body>
-                <EntityDetails/>
+                <EntityDetails />
                 <div>
                   <h2>Associated Historical Figures</h2>
                   <ul>

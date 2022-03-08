@@ -18,16 +18,12 @@ import ItemLink from '../ItemLink.js';
 import { useDwarfViz } from '../../hooks/useDwarfViz';
 import _ from 'lodash';
 
-export const Marks = ({ data, xScale, yScale, xValue, yValue, innerHeight, hue, maxCivPop }) => {
-  const {
-    state: { entities },
-    selectEntity,
-  } = useDwarfViz();
+const Marks = ({ data, xScale, yScale, xValue, yValue, innerHeight, hue, maxCivPop, entities }) => {
   const totalPop = (popObject) => _.sum(Object.values(popObject));
   const civName = (civ_id) => {
     const nameTag = entities.find((ent) => ent.id == civ_id).name;
-    return (nameTag != null ? nameTag : 'Unnamed');
-  }
+    return nameTag != null ? nameTag : 'Unnamed';
+  };
   const rectPileArray = (raceName) => {
     const civPops = data[raceName];
     let rectArray = [];
@@ -49,7 +45,9 @@ export const Marks = ({ data, xScale, yScale, xValue, yValue, innerHeight, hue, 
               75 - (civ_pop / maxCivPop) * 10
             }%)`}
           >
-            <title>Civilization name: {civName(id)}, Population: {civ_pop}</title>
+            <title>
+              Civilization name: {civName(id)}, Population: {civ_pop}
+            </title>
           </rect>
         </>,
       );
@@ -68,9 +66,10 @@ export const Marks = ({ data, xScale, yScale, xValue, yValue, innerHeight, hue, 
 
 const CivPopulation = ({ width, height }) => {
   const {
-    state: { entityPopulations, entities},
+    data: { entityPopulations, entities },
     selectEntity,
   } = useDwarfViz();
+
   const xAxisRef = useRef(null);
   const yAxisRef = useRef(null);
 
@@ -178,10 +177,11 @@ const CivPopulation = ({ width, height }) => {
           innerHeight={innerHeight}
           hue={colorScale}
           maxCivPop={maxCivPopulation}
+          entities={entities}
         />
       </g>
     </svg>
   );
 };
 
-export { CivPopulation };
+export default CivPopulation;

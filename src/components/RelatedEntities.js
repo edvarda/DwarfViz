@@ -3,8 +3,8 @@ import { useDwarfViz } from '../hooks/useDwarfViz.js';
 
 const RelatedEntities = ({ width, height }) => {
   const {
-    state: { entities },
-    selectedItems: { historicalFigure: selectedFigure },
+    data: { entities },
+    peopleView: { selectedItem: selectedFigure },
     selectEntity,
   } = useDwarfViz();
 

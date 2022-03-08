@@ -6,8 +6,8 @@ import _ from 'lodash';
 
 const CirclePacking = ({ width, height }) => {
   const {
-    state: { entities, historicalFigures },
-    selectedItems: { entity: selectedEntity },
+    data: { entities, historicalFigures },
+    societyView: { selectedItem: selectedEntity },
     selectHF,
     selectEntity,
   } = useDwarfViz();
@@ -154,9 +154,6 @@ const CirclePacking = ({ width, height }) => {
     // Can sent
     function zoom(d) {
       // const focus0 = focus;
-      // if (((d.data.isEntity ?? false) && !selectedEntity) || selectedEntity.id !== d.data.id) {
-      //   selectEntity(d.data.id);
-      // }
 
       focus = d;
 
@@ -166,6 +163,12 @@ const CirclePacking = ({ width, height }) => {
         .tween('zoom', (d) => {
           const i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2]);
           return (t) => zoomTo(i(t));
+        })
+        .end()
+        .then(() => {
+          if (d.data.isEntity ?? false) {
+            selectEntity(d.data.id);
+          }
         });
 
       label
@@ -191,7 +194,6 @@ const CirclePacking = ({ width, height }) => {
   }, []);
 
   useEffect(() => {
-    console.log('selected new entity');
     if (selectedEntity) zoomFunctionRef.current(selectedEntity.id);
   }, [selectedEntity]);
 
