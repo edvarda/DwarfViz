@@ -3,6 +3,7 @@ import ItemLink from './ItemLink';
 import { useDwarfViz } from '../hooks/useDwarfViz';
 import { CivPopulation, CivPopulationReact } from './CivPopulation/CivPopulation.js';
 import CirclePacking from './CirclePacking';
+import { EntityDetails } from './EntityDetails/EntityDetails.js'
 
 const Society = () => {
   const {
@@ -10,6 +11,7 @@ const Society = () => {
     selectedItems: { entity: selectedEntity },
     selectHF,
   } = useDwarfViz();
+
   return (
     <>
       <Row className={'d-flex flex-row'}>
@@ -17,11 +19,7 @@ const Society = () => {
           {selectedEntity && (
             <Card style={{ width: '18rem' }} className={'m-1'}>
               <Card.Body>
-                <Card.Title>{selectedEntity.name}</Card.Title>
-                <Card.Subtitle className='mb-2 text-muted'>
-                  Type: {selectedEntity.type}{' '}
-                </Card.Subtitle>
-                <Card.Text>Race: {selectedEntity.race}</Card.Text>
+                <EntityDetails/>
                 <div>
                   <h2>Associated Historical Figures</h2>
                   <ul>
