@@ -113,16 +113,51 @@ const CivPopulation = ({ width, height }) => {
   const yScale = scaleLinear().domain([0, maxRacePop]).range([innerHeight, 0]).nice();
   const color = scaleLinear().domain(races).range(['#63a6d6', '#124488']);
   const colorScale = scaleBand().domain(races).range([0, 360]);
-
+  
   useEffect(() => {
     const xAxisG = select(xAxisRef.current);
     const xAxis = axisBottom(xScale).tickSizeOuter(0);
     xAxisG.call(xAxis);
+    xAxisG.selectAll(".tick text")
+      .call(wrap, xScale.bandwidth());
 
     const yAxisG = select(yAxisRef.current);
     const yAxis = axisLeft(yScale);
     yAxisG.call(yAxis);
   });
+
+  function wrap(text, width) {
+    text.each(function () {
+        var text = select(this),
+            words = text.text().split(/\s+|_/).reverse(),
+            word,
+            line = [],
+            lineNumber = 0,
+            lineHeight = 0.8, // ems
+            x = 1,
+            y = text.attr("y"),
+            dy = 0, //parseFloat(text.attr("dy")),
+            tspan = text.text(null)
+                        .append("tspan")
+                        .attr("x", x)
+                        .attr("y", y)
+                        .attr("dy", dy + "em");
+        while (word = words.pop()) {
+            line.push(word);
+            tspan.text(line.join(""));
+            if (tspan.node().getComputedTextLength() > width) {
+                line.pop();
+                tspan.text(line.join(""));
+                line = [word];
+                tspan = text.append("tspan")
+                            .attr("x", x)
+                            .attr("y", y)
+                            .attr("dy", ++lineNumber * lineHeight + dy + "em")
+                            .text(word);
+            }
+        }
+    });
+  }
 
   const xValue = (d) => d;
   const yValue = (d) => d;
