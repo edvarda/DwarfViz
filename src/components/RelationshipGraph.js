@@ -58,7 +58,7 @@ const RelationshipGraph = ({ width, height }) => {
   const {
     state: { historicalFigures },
     selectedItems: { historicalFigure: selectedFigure },
-    selectItem: { historicalFigure: selectFigure },
+    selectHF,
   } = useDwarfViz();
 
   const getRelationships = (hf) => {
@@ -131,7 +131,7 @@ const RelationshipGraph = ({ width, height }) => {
         {root.descendants().map((d) => (
           <g
             transform={`rotate(${d.x - 90})translate(${d.y})`}
-            onClick={() => selectFigure(d.data.other.id)}
+            onClick={() => selectHF(d.data.other.id)}
           >
             <circle r={7} fill={'red'} stroke={'black'} strokeWidth={2}></circle>
             <text transform={`rotate(${-(d.x - 90)})`} textAnchor={'middle'} x={0} y={20}>

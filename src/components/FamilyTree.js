@@ -4,9 +4,7 @@ import './FamilyTree.scss';
 import LinkTypes from './LinkTypes.js';
 
 const Marks = ({ width, height, familyTree }) => {
-  const {
-    selectItem: { historicalFigure: selectFigure },
-  } = useDwarfViz();
+  const { selectHF } = useDwarfViz();
   console.log(familyTree);
   const parentScale = d3
     .scaleBand()
@@ -37,7 +35,7 @@ const Marks = ({ width, height, familyTree }) => {
             key={'familyTree' + person.id}
             cx={parentScale(person.id) + parentScale.bandwidth() / 2}
             r={getRadius(parentScale.bandwidth())}
-            onClick={() => selectFigure(person.id)}
+            onClick={() => selectHF(person.id)}
             cy={height / 6}
           />
           <text
@@ -53,7 +51,7 @@ const Marks = ({ width, height, familyTree }) => {
             key={'familyTree' + person.id}
             cx={rootScale(person.id) + rootScale.bandwidth() / 2}
             r={getRadius(rootScale.bandwidth())}
-            onClick={() => selectFigure(person.id)}
+            onClick={() => selectHF(person.id)}
             cy={height / 2}
           />
           <text
@@ -69,7 +67,7 @@ const Marks = ({ width, height, familyTree }) => {
             key={'familyTree' + person.id}
             cx={childrenScale(person.id) + childrenScale.bandwidth() / 2}
             r={getRadius(childrenScale.bandwidth())}
-            onClick={() => selectFigure(person.id)}
+            onClick={() => selectHF(person.id)}
             cy={(height / 6) * 5}
           />
           <text

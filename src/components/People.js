@@ -9,7 +9,9 @@ import RelatedEntities from './RelatedEntities.js';
 const People = () => {
   const {
     state: { historicalFigures, entities, sites },
-    selectItem,
+    selectEntity,
+    selectSite,
+    selectHF,
     selectedItems: { historicalFigure: selectedFigure },
   } = useDwarfViz();
 
@@ -34,7 +36,7 @@ const People = () => {
                       <li key={entityLink.entity_id + 'entity'}>
                         {`Linked as ${entityLink.link_type} to: `}
                         <ItemLink
-                          handleClick={selectItem.entity}
+                          handleClick={selectEntity}
                           type={'societyLink'}
                           id={entityLink.entity_id}
                         >
@@ -51,7 +53,7 @@ const People = () => {
                       <li key={siteLink.site_id}>
                         {`Linked as ${siteLink.link_type} to: `}
                         <ItemLink
-                          handleClick={selectItem.site}
+                          handleClick={selectSite}
                           type={'societyLink'}
                           id={siteLink.site_id}
                         >
@@ -69,11 +71,7 @@ const People = () => {
                       return (
                         <li key={link.hf_id_other + 'other'}>
                           {`${link.link_type}: `}
-                          <ItemLink
-                            handleClick={selectItem.historicalFigure}
-                            type={'peopleLink'}
-                            id={hf.id}
-                          >
+                          <ItemLink handleClick={selectHF} type={'peopleLink'} id={hf.id}>
                             {hf.name}
                           </ItemLink>
                         </li>

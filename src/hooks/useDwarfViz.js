@@ -91,24 +91,34 @@ const WorldDataProvider = ({ children }) => {
     historicalFigure: null,
   });
 
-  const selectItem = {
-    site: (siteId) => {
-      dispatch({ type: 'SELECT_SITE', payload: siteId });
-      setActiveView('Places');
-    },
-    entity: (entityId) => {
-      dispatch({ type: 'SELECT_ENTITY', payload: entityId });
-      setActiveView('Society');
-    },
-    historicalFigure: (hfId) => {
-      dispatch({ type: 'SELECT_HISTORICAL_FIGURE', payload: hfId });
-      setActiveView('People');
-    },
+  const selectSite = (siteId) => {
+    dispatch({ type: 'SELECT_SITE', payload: siteId });
+    setActiveView('Places');
+  };
+
+  const selectEntity = (entityId) => {
+    dispatch({ type: 'SELECT_ENTITY', payload: entityId });
+    setActiveView('Society');
+  };
+
+  const selectHF = (hfId) => {
+    dispatch({ type: 'SELECT_HISTORICAL_FIGURE', payload: hfId });
+    setActiveView('People');
   };
 
   return (
     <WorldDataContext.Provider
-      value={[state, isLoading, isError, activeView, setActiveView, selectedItems, selectItem]}
+      value={[
+        state,
+        isLoading,
+        isError,
+        activeView,
+        selectedItems,
+        setActiveView,
+        selectSite,
+        selectEntity,
+        selectHF,
+      ]}
     >
       {children}
     </WorldDataContext.Provider>
@@ -116,8 +126,17 @@ const WorldDataProvider = ({ children }) => {
 };
 
 const useDwarfViz = () => {
-  const [state, isLoading, isError, activeView, setActiveView, selectedItems, selectItem] =
-    useContext(WorldDataContext);
+  const [
+    state,
+    isLoading,
+    isError,
+    activeView,
+    selectedItems,
+    setActiveView,
+    selectSite,
+    selectEntity,
+    selectHF,
+  ] = useContext(WorldDataContext);
 
   const find = {
     hf: (id) => state.historicalFigures.find((x) => x.id === id),
@@ -126,7 +145,18 @@ const useDwarfViz = () => {
     region: (id) => state.regions.find((x) => x.id === id),
   };
 
-  return { state, isLoading, isError, activeView, setActiveView, selectedItems, selectItem, find };
+  return {
+    state,
+    isLoading,
+    isError,
+    activeView,
+    setActiveView,
+    selectedItems,
+    selectSite,
+    selectEntity,
+    selectHF,
+    find,
+  };
 };
 
 export { WorldDataProvider, useDwarfViz };

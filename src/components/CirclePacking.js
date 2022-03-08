@@ -8,7 +8,8 @@ const CirclePacking = ({ width, height }) => {
   const {
     state: { entities, historicalFigures },
     selectedItems: { entity: selectedEntity },
-    selectItem,
+    selectHF,
+    selectEntity,
   } = useDwarfViz();
   const svgRef = useRef(null);
 
@@ -118,7 +119,7 @@ const CirclePacking = ({ width, height }) => {
       })
       .on('click', (event, d) => {
         if (!d.children && d.data.assignment) {
-          selectItem.historicalFigure(d.data.assignment.hf_id);
+          selectHF(d.data.assignment.hf_id);
         } else if (focus !== d) {
           zoom(d);
         }
@@ -154,7 +155,7 @@ const CirclePacking = ({ width, height }) => {
     function zoom(d) {
       // const focus0 = focus;
       if (((d.data.isEntity ?? false) && !selectedEntity) || selectedEntity.id !== d.data.id) {
-        selectItem.entity(d.data.id);
+        selectEntity(d.data.id);
       }
 
       focus = d;

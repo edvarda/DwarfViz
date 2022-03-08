@@ -17,7 +17,7 @@ function App() {
 }
 
 const Viz = () => {
-  const { isLoading, isError, activeView, setActiveView, selectItem } = useDwarfViz();
+  const { isLoading, isError, activeView, setActiveView, selectEntity } = useDwarfViz();
 
   return (
     <>
@@ -44,7 +44,7 @@ const Viz = () => {
             >
               <h2
                 onClick={() => {
-                  selectItem.entity(23);
+                  selectEntity(23);
                 }}
               >
                 Society
@@ -65,7 +65,7 @@ const Viz = () => {
             </Col>
           </Row>
 
-          <Row id='Events' className={'view expanded'} >
+          <Row id='Events' className={'view expanded'}>
             <Events />
           </Row>
         </Container>

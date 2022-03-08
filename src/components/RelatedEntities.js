@@ -5,7 +5,7 @@ const RelatedEntities = ({ width, height }) => {
   const {
     state: { entities },
     selectedItems: { historicalFigure: selectedFigure },
-    selectItem: { historicalFigure: selectEntity },
+    selectEntity,
   } = useDwarfViz();
 
   const getRelatedEntities = (hf) => {

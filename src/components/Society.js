@@ -8,7 +8,7 @@ const Society = () => {
   const {
     state: { entities, historicalFigures },
     selectedItems: { entity: selectedEntity },
-    selectItem,
+    selectHF,
   } = useDwarfViz();
   return (
     <>
@@ -29,11 +29,7 @@ const Society = () => {
                       const hf = historicalFigures.find((x) => x.id === hf_id);
                       return (
                         <li key={hf_id}>
-                          <ItemLink
-                            handleClick={selectItem.historicalFigure}
-                            type={'peopleLink'}
-                            id={hf.id}
-                          >
+                          <ItemLink handleClick={selectHF} type={'peopleLink'} id={hf.id}>
                             {hf.name}
                           </ItemLink>
                         </li>

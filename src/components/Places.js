@@ -6,7 +6,7 @@ import { useDwarfViz } from '../hooks/useDwarfViz';
 const Places = () => {
   const {
     state: { mapImageURL, entities, regions, regionsGeoJSON },
-    selectItem,
+    selectEntity,
     selectedItems: { site: selectedSite },
   } = useDwarfViz();
 
@@ -25,7 +25,7 @@ const Places = () => {
                   <div>
                     Belongs to {owningEntity(selectedSite).type}:{' '}
                     <ItemLink
-                      handleClick={selectItem.entity}
+                      handleClick={selectEntity}
                       type={'societyLink'}
                       id={selectedSite.civ_id}
                     >

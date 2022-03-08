@@ -69,7 +69,7 @@ const Map = ({ mapImage, mapSize, data, regions }) => {
 
   const {
     state: { sites },
-    selectItem,
+    selectSite,
   } = useDwarfViz();
   const mapRef = useRef(null);
   const geoJSONRef = useRef(null);
@@ -121,7 +121,7 @@ const Map = ({ mapImage, mapSize, data, regions }) => {
           mouseout: (e) => e.target.setStyle(point),
           click: (e) => {
             console.log('select');
-            selectItem.site(e.target.feature.properties.id);
+            selectSite(e.target.feature.properties.id);
           },
         });
       },
