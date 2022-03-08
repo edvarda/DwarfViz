@@ -153,7 +153,7 @@ const CirclePacking = ({ width, height }) => {
     // Can sent
     function zoom(d) {
       // const focus0 = focus;
-      if ((d.data.isEntity ?? false) && selectedEntity && selectedEntity.id !== d.data.id) {
+      if (((d.data.isEntity ?? false) && !selectedEntity) || selectedEntity.id !== d.data.id) {
         selectItem.entity(d.data.id);
       }
 
