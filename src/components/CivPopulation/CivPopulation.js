@@ -11,7 +11,7 @@ import {
   schemeSet2,
   color,
   interpolateViridis,
-  schemePaired
+  schemePaired,
 } from 'd3';
 import React, { useEffect, useRef } from 'react';
 import { useDwarfViz } from '../../hooks/useDwarfViz';
@@ -31,15 +31,17 @@ export const Marks = ({ data, xScale, yScale, xValue, yValue, innerHeight, hue, 
           <rect
             key={id}
             x={xScale(raceName)}
-            y={yScale(civ_pop)-previousHeight}
+            y={yScale(civ_pop) - previousHeight}
             width={xScale.bandwidth()}
-            height={innerHeight-yScale(civ_pop)}
+            height={innerHeight - yScale(civ_pop)}
             stroke={'grey'}
             className={'bar'}
-            fill={`hsl(${hue(raceName)},${25+(civ_pop/maxCivPop)*75}%,${75-(civ_pop/maxCivPop)*10}%)`}
+            fill={`hsl(${hue(raceName)},${25 + (civ_pop / maxCivPop) * 75}%,${
+              75 - (civ_pop / maxCivPop) * 10
+            }%)`}
           />
           {/*<text fill={'red'} x={xScale(raceName)} y={yScale(civ_pop)-previousHeight-10}>Population: {civ_pop}</text>*/}
-        </>
+        </>,
       );
       previousHeight += innerHeight - yScale(civ_pop);
     }
@@ -81,8 +83,8 @@ const CivPopulation = ({ width, height }) => {
       population[race_name][civ.civ_id] = pop;
     });
   });
-  console.log(races);
-  console.log(population);
+  // console.log(races);
+  // console.log(population);
 
   let maxRacePop = 0;
   let maxCivPopulation = 0;
@@ -94,12 +96,12 @@ const CivPopulation = ({ width, height }) => {
     }
     if (totalPop > maxRacePop) maxRacePop = totalPop;
   }
-  console.log(maxCivPopulation)
+  // console.log(maxCivPopulation)
 
   const xScale = scaleBand().domain(races).range([0, innerWidth]).padding([0.2]);
   const yScale = scaleLinear().domain([0, maxRacePop]).range([innerHeight, 0]).nice();
-  const color = scaleLinear().domain(races).range(['#63a6d6','#124488']);
-  const colorScale = scaleBand().domain(races).range([0,360]);
+  const color = scaleLinear().domain(races).range(['#63a6d6', '#124488']);
+  const colorScale = scaleBand().domain(races).range([0, 360]);
 
   useEffect(() => {
     const xAxisG = select(xAxisRef.current);
@@ -114,27 +116,25 @@ const CivPopulation = ({ width, height }) => {
   const xValue = (d) => d;
   const yValue = (d) => d;
 
-  const TootlipFactory = ({text}) => (
-    <div>{text}</div>
-  );
+  const TootlipFactory = ({ text }) => <div>{text}</div>;
 
   return (
-      <svg style={{ border: '3px solid red' }} width={width} height={height}>
-        <g transform={`translate(${margin.left},${margin.top})`}>
-          <g ref={xAxisRef} transform={`translate(0,${innerHeight})`}></g>
-          <g ref={yAxisRef} />
-          <Marks
-            data={population}
-            xScale={xScale}
-            yScale={yScale}
-            xValue={xValue}
-            yValue={yValue}
-            innerHeight={innerHeight}
-            hue={colorScale}
-            maxCivPop={maxCivPopulation}
-          />
-        </g>
-      </svg>
+    <svg style={{ border: '3px solid red' }} width={width} height={height}>
+      <g transform={`translate(${margin.left},${margin.top})`}>
+        <g ref={xAxisRef} transform={`translate(0,${innerHeight})`}></g>
+        <g ref={yAxisRef} />
+        <Marks
+          data={population}
+          xScale={xScale}
+          yScale={yScale}
+          xValue={xValue}
+          yValue={yValue}
+          innerHeight={innerHeight}
+          hue={colorScale}
+          maxCivPop={maxCivPopulation}
+        />
+      </g>
+    </svg>
   );
 };
 

@@ -3,13 +3,15 @@ import config from '../dwarfviz.config';
 import axios from 'axios';
 const { useStaticData, storytellerURL } = config;
 
-const fetchFromStoryteller = async (endpoint) => {
+const fetchFromStoryteller = async (endpoint, resourceId = null) => {
   const items = [];
   let response;
   let nextPage = 0;
   do {
-    response = (await axios.get(`${storytellerURL}/${endpoint}?per_page=500&page=${nextPage}`))
-      .data;
+    let url = resourceId
+      ? `${storytellerURL}/${endpoint}/${resourceId}?per_page=500&page=${nextPage}`
+      : `${storytellerURL}/${endpoint}?per_page=500&page=${nextPage}`;
+    response = (await axios.get(url)).data;
     items.push(...response.data);
     nextPage = 1 + response.page_nr;
   } while (response.links.next !== null);
@@ -23,6 +25,7 @@ const WorldDataProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [activeView, setActiveView] = useState('Places');
+  const [newSelectionAction, setNewSelectionAction] = useState(null);
 
   useEffect(() => {
     const getStaticData = async () => {
@@ -72,13 +75,28 @@ const WorldDataProvider = ({ children }) => {
   const selectionReducer = (selectState, action) => {
     switch (action.type) {
       case 'SELECT_SITE':
-        return { ...selectState, site: state.sites.find((x) => x.id === action.payload) };
+        return {
+          ...selectState,
+          site: {
+            ...state.sites.find((x) => x.id === action.payload.id),
+            relatedEvents: action.payload.events,
+          },
+        };
       case 'SELECT_ENTITY':
-        return { ...selectState, entity: state.entities.find((x) => x.id === action.payload) };
+        return {
+          ...selectState,
+          entity: {
+            ...state.entities.find((x) => x.id === action.payload.id),
+            relatedEvents: action.payload.events,
+          },
+        };
       case 'SELECT_HISTORICAL_FIGURE':
         return {
           ...selectState,
-          historicalFigure: state.historicalFigures.find((x) => x.id === action.payload),
+          historicalFigure: {
+            ...state.historicalFigures.find((x) => x.id === action.payload.id),
+            relatedEvents: action.payload.events,
+          },
         };
       default:
         return state;
@@ -92,19 +110,50 @@ const WorldDataProvider = ({ children }) => {
   });
 
   const selectSite = (siteId) => {
-    dispatch({ type: 'SELECT_SITE', payload: siteId });
+    console.log('selectedItemsin select', selectedItems);
+    if (!selectedItems.site || siteId !== selectedItems.site.id)
+      setNewSelectionAction({ type: 'SELECT_SITE', payload: siteId });
     setActiveView('Places');
   };
 
   const selectEntity = (entityId) => {
-    dispatch({ type: 'SELECT_ENTITY', payload: entityId });
+    console.log('selectedItemsin select', selectedItems);
+    if (!selectedItems.entity || entityId !== selectedItems.entity.id)
+      setNewSelectionAction({ type: 'SELECT_ENTITY', payload: entityId });
     setActiveView('Society');
   };
 
   const selectHF = (hfId) => {
-    dispatch({ type: 'SELECT_HISTORICAL_FIGURE', payload: hfId });
+    console.log('selectedItemsin select', selectedItems);
+    if (!selectedItems.historicalFigure || hfId !== selectedItems.historicalFigure.id)
+      setNewSelectionAction({ type: 'SELECT_HISTORICAL_FIGURE', payload: hfId });
     setActiveView('People');
   };
+
+  useEffect(() => {
+    const handleNewSelectionAction = async (endpoint, action) => {
+      const events = await fetchFromStoryteller(endpoint, action.payload);
+      dispatch({ ...action, payload: { id: action.payload, events } });
+      setNewSelectionAction(null);
+    };
+
+    if (newSelectionAction === null) return;
+    let endpoint;
+    switch (newSelectionAction.type) {
+      case 'SELECT_SITE':
+        endpoint = 'link_he_site';
+        break;
+      case 'SELECT_ENTITY':
+        endpoint = 'link_he_entity';
+        break;
+      case 'SELECT_HISTORICAL_FIGURE':
+        endpoint = 'link_he_hf';
+        break;
+      default:
+        break;
+    }
+    handleNewSelectionAction(endpoint, newSelectionAction);
+  }, [newSelectionAction]);
 
   return (
     <WorldDataContext.Provider

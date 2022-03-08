@@ -17,11 +17,10 @@ import { useDwarfViz } from '../../hooks/useDwarfViz';
 import Table from './Table.js';
 import styles from './Table.module.css';
 
-
-const EventsList = ({ width, height, yearRange }) => {
+const EventsList = ({ width, height, yearRange, historicalEvents }) => {
   const maxSlice = 144;
   const {
-    state: { worldsInfo, historicalEvents },
+    state: { worldsInfo },
   } = useDwarfViz();
 
   const filteredEvents = yearRange
@@ -34,11 +33,11 @@ const EventsList = ({ width, height, yearRange }) => {
     : historicalEvents.slice(0, maxSlice);
 
   return (
-     <div className={styles.container}>
-       <div className={styles.wrapper}>
-    <Table data={filteredEvents} rowsPerPage={12} />
-       </div>
-     </div>
+    <div className={styles.container}>
+      <div className={styles.wrapper}>
+        <Table data={filteredEvents} rowsPerPage={12} />
+      </div>
+    </div>
   );
 };
 

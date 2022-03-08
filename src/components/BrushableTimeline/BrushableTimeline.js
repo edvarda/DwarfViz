@@ -23,12 +23,11 @@ const yAxisLabel = 'Events';
 const yValue = (d) => 1; // +1 per event
 const xValue = (d) => d['year'];
 
-const BrushableTimeline = ({ width, height, setYearRange }) => {
+const BrushableTimeline = ({ width, height, setYearRange, historicalEvents }) => {
   const {
-    state: { worldsInfo, historicalEvents },
+    state: { worldsInfo },
   } = useDwarfViz();
   //const [brushExtent, setYearRange] = useState();
-  
 
   const maxYears = worldsInfo[0].year;
   const xValueExtent = useMemo(() => {
@@ -87,8 +86,8 @@ const BrushableTimeline = ({ width, height, setYearRange }) => {
       if (event.selection && event.sourceEvent) {
         const yearSelection = event.selection.map(xScale.invert);
         setYearRange(yearSelection);
-      }
-      else {  // This makes it so that upon deselecting the timeline, every year is shown again
+      } else {
+        // This makes it so that upon deselecting the timeline, every year is shown again
         setYearRange();
       }
     });
