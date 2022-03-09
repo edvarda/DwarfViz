@@ -30,7 +30,7 @@ const Places = () => {
                 {owningEntity(selectedSite) && (
                   <div>
                     Belongs to {owningEntity(selectedSite).type}:{' '}
-                    <ItemLink view={VIEWS.PLACES} id={selectedSite.civ_id}>
+                    <ItemLink view={VIEWS.SOCIETY} id={selectedSite.civ_id}>
                       {owningEntity(selectedSite).name}
                     </ItemLink>
                   </div>
