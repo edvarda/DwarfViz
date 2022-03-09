@@ -4,6 +4,7 @@ import { useDwarfViz } from '../hooks/useDwarfViz';
 import CivPopulation from './CivPopulation/CivPopulation.js';
 import CirclePacking from './CirclePacking';
 import EntityDetails from './EntityDetails/EntityDetails.js';
+import HistoryControls from './HistoryControls.js';
 
 const Society = () => {
   const {
@@ -15,6 +16,11 @@ const Society = () => {
   return (
     <>
       <Row className={'d-flex flex-row'}>
+        <Row>
+          <Col>
+            <HistoryControls viewName={'societyView'} />
+          </Col>
+        </Row>
         <Col className={'d-flex flex-wrap'}>
           {selectedEntity && (
             <Card style={{ width: '18rem' }} className={'m-1'}>

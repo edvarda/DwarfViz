@@ -5,6 +5,7 @@ import { useDwarfViz } from '../hooks/useDwarfViz';
 import FamilyTree from './FamilyTree.js';
 import RelationshipGraph from './RelationshipGraph.js';
 import RelatedEntities from './RelatedEntities.js';
+import HistoryControls from './HistoryControls.js';
 
 const People = () => {
   const {
@@ -15,9 +16,15 @@ const People = () => {
     peopleView: { selectedItem: selectedFigure },
   } = useDwarfViz();
 
+  console.log('People selected', selectedFigure);
   return (
     <>
       <Row className={'d-flex flex-row'}>
+        <Row>
+          <Col>
+            <HistoryControls viewName={'peopleView'} />
+          </Col>
+        </Row>
         <Col className={'d-flex flex-wrap'}>
           {selectedFigure && (
             <Card style={{ width: '18rem' }} className={'m-1'}>

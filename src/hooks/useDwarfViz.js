@@ -15,19 +15,19 @@ const Actions = {
 
 const Views = {
   PEOPLE: {
-    itemType: 'historicalFigure',
+    itemType: 'historicalFigures',
     eventEndpoint: 'link_he_hf',
     name: 'peopleView',
     actionType: Actions.SELECT_HISTORICAL_FIGURE,
   },
   SOCIETY: {
-    itemType: 'entity',
+    itemType: 'entities',
     eventEndpoint: 'link_he_entity',
     name: 'societyView',
     actionType: Actions.SELECT_ENTITY,
   },
   PLACES: {
-    itemType: 'site',
+    itemType: 'sites',
     eventEndpoint: 'link_he_site',
     name: 'placesView',
     actionType: Actions.SELECT_SITE,
@@ -92,8 +92,31 @@ const WorldDataProvider = ({ children }) => {
   }, []);
 
   const stateReducer = (state, action) => {
-    console.log('ACTION:', action);
-    console.log('State', state);
+    const isSelected = (viewName, itemId) =>
+      state[viewName].selectedItem && state[viewName].selectedItem.id === itemId;
+
+    const getSelectedItem = (View) => ({
+      ...state.data[View.itemType].find((x) => x.id === action.payload.id),
+      relatedEvents: action.payload.relatedEvents,
+    });
+
+    const getNewHistory = (View) => {
+      let history = state[View.name].history;
+      let historyPager = state[View.name].historyPager;
+      // Append to history
+      if (action.payload.id && !action.payload.isHistoryAction) {
+        history = history.slice(0, historyPager + 1); // Drop everything in front of pager if pager is not at end before appending.
+        history.push({
+          ...action,
+          payload: { ...action.payload, isHistoryAction: true },
+        });
+        historyPager = history.length - 1;
+      } else if (action.payload.isHistoryAction) {
+        historyPager += action.payload.movePager;
+      }
+      return { history, historyPager };
+    };
+
     switch (action.type) {
       case Actions.START_FETCH:
         return { ...state, isLoading: true };
@@ -107,10 +130,7 @@ const WorldDataProvider = ({ children }) => {
       case Actions.SET_DATA:
         return { ...state, data: action.payload, isDataLoaded: true };
       case Actions.SELECT_SITE:
-        if (
-          state.placesView.selectedItem &&
-          state.placesView.selectedItem.id === action.payload.id
-        ) {
+        if (isSelected(Views.PLACES.name, action.payload.id)) {
           return state;
         }
         return {
@@ -118,19 +138,14 @@ const WorldDataProvider = ({ children }) => {
           placesView: {
             ...state.placesView,
             isActive: true,
-            selectedItem: {
-              ...state.data.sites.find((x) => x.id === action.payload.id),
-              relatedEvents: action.payload.relatedEvents,
-            },
+            ...getNewHistory(Views.PLACES),
+            selectedItem: getSelectedItem(Views.PLACES),
           },
           societyView: { ...state.societyView, isActive: false },
           peopleView: { ...state.peopleView, isActive: false },
         };
       case Actions.SELECT_ENTITY:
-        if (
-          state.societyView.selectedItem &&
-          state.societyView.selectedItem.id === action.payload.id
-        ) {
+        if (isSelected(Views.SOCIETY.name, action.payload.id)) {
           return state;
         }
         return {
@@ -138,19 +153,14 @@ const WorldDataProvider = ({ children }) => {
           societyView: {
             ...state.societyView,
             isActive: true,
-            selectedItem: {
-              ...state.data.entities.find((x) => x.id === action.payload.id),
-              relatedEvents: action.payload.relatedEvents,
-            },
+            ...getNewHistory(Views.SOCIETY),
+            selectedItem: getSelectedItem(Views.SOCIETY),
           },
           peopleView: { ...state.peopleView, isActive: false },
           placesView: { ...state.placesView, isActive: false },
         };
       case Actions.SELECT_HISTORICAL_FIGURE:
-        if (
-          state.peopleView.selectedItem &&
-          state.peopleView.selectedItem.id === action.payload.id
-        ) {
+        if (isSelected(Views.PEOPLE.name, action.payload.id)) {
           return state;
         }
         return {
@@ -158,10 +168,8 @@ const WorldDataProvider = ({ children }) => {
           peopleView: {
             ...state.peopleView,
             isActive: true,
-            selectedItem: {
-              ...state.data.historicalFigures.find((x) => x.id === action.payload.id),
-              relatedEvents: action.payload.relatedEvents,
-            },
+            ...getNewHistory(Views.PEOPLE),
+            selectedItem: getSelectedItem(Views.PEOPLE),
           },
           societyView: { ...state.societyView, isActive: false },
           placesView: { ...state.placesView, isActive: false },
@@ -184,9 +192,9 @@ const WorldDataProvider = ({ children }) => {
     isLoading: false,
     isError: false,
     isDataLoaded: false,
-    placesView: { selectedItem: null, history: [], isActive: true },
-    societyView: { selectedItem: null, history: [], isActive: false },
-    peopleView: { selectedItem: null, history: [], isActive: false },
+    placesView: { selectedItem: null, history: [], historyPager: -1, isActive: true },
+    societyView: { selectedItem: null, history: [], historyPager: -1, isActive: false },
+    peopleView: { selectedItem: null, history: [], historyPager: -1, isActive: false },
   };
 
   const [state, dispatch] = useReducer(stateReducer, initialState);
@@ -217,7 +225,6 @@ const useDwarfViz = () => {
   };
 
   const selectItem = async (View, id) => {
-    console.log('in selectItem', View, state[View.name], state);
     if (id !== null) {
       dispatch({ type: Actions.START_FETCH });
       try {
@@ -262,4 +269,29 @@ const useDwarfViz = () => {
   };
 };
 
-export { WorldDataProvider, useDwarfViz };
+const useHistory = (viewName) => {
+  const [state, dispatch] = useContext(WorldDataContext);
+
+  const { history, historyPager } = state[viewName];
+
+  const hasBack = !!history[historyPager - 1];
+  const hasForward = !!history[historyPager + 1];
+
+  const goBack = () => {
+    if (hasBack) {
+      const historyAction = history[historyPager - 1];
+      dispatch({ ...historyAction, payload: { ...historyAction.payload, movePager: -1 } });
+    }
+  };
+  const goForward = () => {
+    console.log('Forward:', hasForward, historyPager, history);
+    if (hasForward) {
+      const historyAction = history[historyPager + 1];
+      dispatch({ ...historyAction, payload: { ...historyAction.payload, movePager: 1 } });
+    }
+  };
+
+  return { goBack, goForward, hasBack, hasForward };
+};
+
+export { WorldDataProvider, useDwarfViz, useHistory };
