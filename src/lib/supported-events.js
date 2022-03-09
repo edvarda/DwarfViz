@@ -346,16 +346,13 @@ function hf_died_desc(he, dwarfViz) {
 function creature_devoured_desc(he, dwarfViz) {
   var victim = dwarfViz.find.hf(he.victim); //load historical figure data
   var eater = dwarfViz.find.hf(he.eater_hf_id); //load historical figure data
-  if (he.victim === -1) {
-    victim = { name: 'A creature' };
-  }
 
   var eventDesc = '';
   if (victim === undefined){
-    victim = {name: "Unknown"}
+    victim = {name: "A creature"}
   }
   if (eater === undefined){
-    eater = {name: "Unknown"}
+    eater = {name: "a creature"}
   }
 
   eventDesc += `${victim.name} was devoured by ${eater.name}.`;
