@@ -18,7 +18,7 @@ import ItemLink from '../ItemLink.js';
 import { useDwarfViz } from '../../hooks/useDwarfViz';
 import _ from 'lodash';
 
-const Marks = ({ data, xScale, yScale, xValue, yValue, innerHeight, hue, maxCivPop, entities }) => {
+const Marks = ({ data, xScale, yScale, xValue, yValue, innerHeight, hue, maxCivPop, entities, selectEntity }) => {
   const totalPop = (popObject) => _.sum(Object.values(popObject));
   const civName = (civ_id) => {
     const nameTag = entities.find((ent) => ent.id == civ_id).name;
@@ -26,10 +26,13 @@ const Marks = ({ data, xScale, yScale, xValue, yValue, innerHeight, hue, maxCivP
   };
   const rectPileArray = (raceName) => {
     const civPops = data[raceName];
+    const sortedKeys = Object.keys(civPops).sort((el1, el2) => civPops[el2] - civPops[el1])
     let rectArray = [];
     let previousHeight = 0;
     //console.log('race: ', raceName, color(raceName))
-    for (const [id, civ_pop] of Object.entries(civPops)) {
+    //for (const [id, civ_pop] of Object.entries(civPops)) {
+    for (const id of sortedKeys) {
+      const civ_pop = civPops[id]
       //console.log('val', civ_pop, yScale(civ_pop))
       rectArray.push(
         <rect
@@ -43,6 +46,7 @@ const Marks = ({ data, xScale, yScale, xValue, yValue, innerHeight, hue, maxCivP
           fill={`hsl(${hue(raceName)},${25 + (civ_pop / maxCivPop) * 75}%,${
             75 - (civ_pop / maxCivPop) * 10
           }%)`}
+          //onClick={() => selectEntity(id)}
         >
           <title>
             Civilization name: {civName(id)}, Population: {civ_pop}
@@ -177,6 +181,7 @@ const CivPopulation = ({ width, height }) => {
           hue={colorScale}
           maxCivPop={maxCivPopulation}
           entities={entities}
+          selectEntity={selectEntity}
         />
       </g>
     </svg>
