@@ -39,11 +39,14 @@ const WorldDataProvider = ({ children }) => {
   useEffect(() => {
     const fetchStaticData = async () => ({
       regionsGeoJSON: await import('../data/regions.geo.json'),
-      regions: await import('../data/regions.json'),
       mapImageURL: await (await import('../data/image.png')).default,
-      entityPop: await (await import('../data/entity_populations.json')).data,
-      historicalEvents: await (await import('../data/historical_events.json')).data,
-      worldsInfo: await (await import('../data/worlds_info.json')).data,
+      regions: (await import('../data/regions.json')).data,
+      historicalFigures: (await import('../data/historicalFigures.json')).data,
+      sites: (await import('../data/sites.json')).data,
+      entities: (await import('../data/entities.json')).data,
+      entityPopulations: (await import('../data/entityPopulations.json')).data,
+      worldsInfo: (await import('../data/worldsInfo.json')).data,
+      historicalEvents: (await import('../data/historicalEvents.json')).data,
     });
     const fetchRemoteData = async () => ({
       regionsGeoJSON: await import('../data/regions.geo.json'),

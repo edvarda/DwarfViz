@@ -27,7 +27,8 @@
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "process-maps": "node ./src/scripts/processDetailMaps.js ./src/data"
+    "process-maps": "node ./src/scripts/processDetailMaps.js ./src/data",
+    "update-static-data": "node ./src/scripts/updateStaticDataFiles.js"
   },
   "eslintConfig": {
     "extends": [
