@@ -313,7 +313,7 @@ const useHistory = (view) => {
   };
 
   const clearSelection = () => {
-    selectItem(view, null);
+    view.selectItem(null);
   };
 
   return { goBack, goForward, clearSelection, hasBack, hasForward, hasSelection };
