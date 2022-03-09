@@ -2,6 +2,7 @@ import axios from 'axios';
 import { createContext, useContext, useEffect, useReducer } from 'react';
 import config from '../dwarfviz.config';
 const { useStaticData, storytellerURL } = config;
+
 const ACTIONS = {
   START_FETCH: 'START_FETCH',
   FETCH_SUCCESS: 'FETCH_SUCCESS',
@@ -11,27 +12,6 @@ const ACTIONS = {
   SELECT_ENTITY: 'SELECT_ENTITY',
   SELECT_HISTORICAL_FIGURE: 'SELECT_HISTORICAL_FIGURE',
   SET_ACTIVE_VIEW: 'SET_ACTIVE_VIEW',
-};
-
-const VIEWS = {
-  PEOPLE: {
-    itemType: 'historicalFigures',
-    eventEndpoint: 'link_he_hf',
-    name: 'peopleView',
-    actionType: ACTIONS.SELECT_HISTORICAL_FIGURE,
-  },
-  SOCIETY: {
-    itemType: 'entities',
-    eventEndpoint: 'link_he_entity',
-    name: 'societyView',
-    actionType: ACTIONS.SELECT_ENTITY,
-  },
-  PLACES: {
-    itemType: 'sites',
-    eventEndpoint: 'link_he_site',
-    name: 'placesView',
-    actionType: ACTIONS.SELECT_SITE,
-  },
 };
 
 const fetchFromStoryteller = async (endpoint, resourceId = null) => {
@@ -219,20 +199,6 @@ const WorldDataProvider = ({ children }) => {
     }
   };
 
-  const [state, dispatch] = useReducer(stateReducer, initialState);
-
-  useEffect(() => {}, [state.placesView, state.societyView, state.peopleView]);
-
-  return (
-    <WorldDataContext.Provider value={[state, dispatch, selectItem]}>
-      {children}
-    </WorldDataContext.Provider>
-  );
-};
-
-const useDwarfViz = () => {
-  const [state, dispatch, selectItem] = useContext(WorldDataContext);
-
   const selectSite = (siteId) => {
     console.log('select site', siteId);
     selectItem(VIEWS.PLACES, siteId);
@@ -247,6 +213,47 @@ const useDwarfViz = () => {
     console.log('select hf', hfId);
     selectItem(VIEWS.PEOPLE, hfId);
   };
+
+  const VIEWS = {
+    PEOPLE: {
+      itemType: 'historicalFigures',
+      eventEndpoint: 'link_he_hf',
+      name: 'peopleView',
+      actionType: ACTIONS.SELECT_HISTORICAL_FIGURE,
+      selectItem: selectHF,
+    },
+    SOCIETY: {
+      itemType: 'entities',
+      eventEndpoint: 'link_he_entity',
+      name: 'societyView',
+      actionType: ACTIONS.SELECT_ENTITY,
+      selectItem: selectEntity,
+    },
+    PLACES: {
+      itemType: 'sites',
+      eventEndpoint: 'link_he_site',
+      name: 'placesView',
+      actionType: ACTIONS.SELECT_SITE,
+      selectItem: selectSite,
+    },
+  };
+
+  const [state, dispatch] = useReducer(stateReducer, initialState);
+
+  useEffect(() => {}, [state.placesView, state.societyView, state.peopleView]);
+
+  return (
+    <WorldDataContext.Provider
+      value={{ VIEWS, state, dispatch, selectSite, selectEntity, selectHF }}
+    >
+      {children}
+    </WorldDataContext.Provider>
+  );
+};
+
+const useDwarfViz = () => {
+  const { VIEWS, state, dispatch, selectSite, selectEntity, selectHF } =
+    useContext(WorldDataContext);
 
   const find = {
     hf: (id) => data.historicalFigures.find((x) => x.id === id),
@@ -275,13 +282,14 @@ const useDwarfViz = () => {
     selectSite,
     selectEntity,
     selectHF,
+    VIEWS,
   };
 };
 
-const useHistory = (VIEW) => {
-  const [state, dispatch, selectItem] = useContext(WorldDataContext);
+const useHistory = (view) => {
+  const { state, dispatch, selectItem } = useContext(WorldDataContext);
 
-  const { history, historyPager, selectedItem } = state[VIEW.name];
+  const { history, historyPager, selectedItem } = state[view.name];
 
   const hasBack = !!history[historyPager - 1];
   const hasForward = !!history[historyPager + 1];
@@ -302,10 +310,10 @@ const useHistory = (VIEW) => {
   };
 
   const clearSelection = () => {
-    selectItem(VIEW, null);
+    selectItem(view, null);
   };
 
   return { goBack, goForward, clearSelection, hasBack, hasForward, hasSelection };
 };
 
-export { WorldDataProvider, useDwarfViz, useHistory, VIEWS };
+export { WorldDataProvider, useDwarfViz, useHistory };

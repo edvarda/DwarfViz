@@ -1,6 +1,6 @@
 import { Card, Row, Col } from 'react-bootstrap';
 import ItemLink from './ItemLink';
-import { useDwarfViz, VIEWS } from '../hooks/useDwarfViz';
+import { useDwarfViz } from '../hooks/useDwarfViz';
 import CivPopulation from './CivPopulation/CivPopulation.js';
 import CirclePacking from './CirclePacking';
 import EntityDetails from './EntityDetails/EntityDetails.js';
@@ -10,7 +10,7 @@ const Society = () => {
   const {
     data: { historicalFigures },
     societyView: { selectedItem: selectedEntity },
-    selectHF,
+    VIEWS,
   } = useDwarfViz();
 
   return (
@@ -33,7 +33,7 @@ const Society = () => {
                       const hf = historicalFigures.find((x) => x.id === hf_id);
                       return (
                         <li key={hf_id}>
-                          <ItemLink handleClick={selectHF} type={'peopleLink'} id={hf.id}>
+                          <ItemLink view={VIEWS.PEOPLE} id={hf.id}>
                             {hf.name}
                           </ItemLink>
                         </li>

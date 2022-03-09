@@ -1,14 +1,14 @@
 import { Card, Row, Col } from 'react-bootstrap';
 import Map from './Map';
 import ItemLink from './ItemLink';
-import { useDwarfViz, VIEWS } from '../hooks/useDwarfViz';
+import { useDwarfViz } from '../hooks/useDwarfViz';
 import HistoryControls from './HistoryControls.js';
 
 const Places = () => {
   const {
     data: { mapImageURL, entities, regions, regionsGeoJSON },
-    selectEntity,
     placesView: { selectedItem: selectedSite },
+    VIEWS,
   } = useDwarfViz();
 
   const owningEntity = (selectedSite) => entities.find((x) => x.id === selectedSite.civ_id);
@@ -30,11 +30,7 @@ const Places = () => {
                 {owningEntity(selectedSite) && (
                   <div>
                     Belongs to {owningEntity(selectedSite).type}:{' '}
-                    <ItemLink
-                      handleClick={selectEntity}
-                      type={'societyLink'}
-                      id={selectedSite.civ_id}
-                    >
+                    <ItemLink view={VIEWS.PLACES} id={selectedSite.civ_id}>
                       {owningEntity(selectedSite).name}
                     </ItemLink>
                   </div>

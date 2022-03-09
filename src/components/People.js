@@ -1,7 +1,7 @@
 import { Card, Row, Col } from 'react-bootstrap';
 
 import ItemLink from './ItemLink.js';
-import { useDwarfViz, VIEWS } from '../hooks/useDwarfViz';
+import { useDwarfViz } from '../hooks/useDwarfViz';
 import FamilyTree from './FamilyTree.js';
 import RelationshipGraph from './RelationshipGraph.js';
 import RelatedEntities from './RelatedEntities.js';
@@ -10,10 +10,8 @@ import HistoryControls from './HistoryControls.js';
 const People = () => {
   const {
     data: { historicalFigures, entities, sites },
-    selectEntity,
-    selectSite,
-    selectHF,
     peopleView: { selectedItem: selectedFigure },
+    VIEWS,
   } = useDwarfViz();
 
   console.log('People selected', selectedFigure);
@@ -42,11 +40,7 @@ const People = () => {
                     {selectedFigure.entity_link.map((entityLink) => (
                       <li key={entityLink.entity_id + 'entity'}>
                         {`Linked as ${entityLink.link_type} to: `}
-                        <ItemLink
-                          handleClick={selectEntity}
-                          type={'societyLink'}
-                          id={entityLink.entity_id}
-                        >
+                        <ItemLink view={VIEWS.SOCIETY} id={entityLink.entity_id}>
                           {entities.find((x) => x.id === entityLink.entity_id).name}
                         </ItemLink>
                       </li>
@@ -59,11 +53,7 @@ const People = () => {
                     {selectedFigure.site_link.map((siteLink) => (
                       <li key={siteLink.site_id}>
                         {`Linked as ${siteLink.link_type} to: `}
-                        <ItemLink
-                          handleClick={selectSite}
-                          type={'societyLink'}
-                          id={siteLink.site_id}
-                        >
+                        <ItemLink view={VIEWS.SOCIETY} id={siteLink.site_id}>
                           {sites.find((x) => x.id === siteLink.site_id).name}
                         </ItemLink>
                       </li>
@@ -78,7 +68,7 @@ const People = () => {
                       return (
                         <li key={link.hf_id_other + 'other'}>
                           {`${link.link_type}: `}
-                          <ItemLink handleClick={selectHF} type={'peopleLink'} id={hf.id}>
+                          <ItemLink view={VIEWS.PEOPLE} id={hf.id}>
                             {hf.name}
                           </ItemLink>
                         </li>

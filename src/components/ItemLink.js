@@ -1,5 +1,5 @@
-const ItemLink = ({ children, type, handleClick, id }) => (
-  <span className={`itemLink ${type}`} onClick={() => handleClick(id)}>
+const ItemLink = ({ children, view, id }) => (
+  <span className={`itemLink ${view.itemType}-link`} onClick={() => view.selectItem(id)}>
     {children}
   </span>
 );
