@@ -40,6 +40,7 @@ body {
 
   .view-content > * {
     display: none;
+    pointer-events: none;
   }
 
   div {
@@ -51,6 +52,7 @@ body {
   flex-grow: 10;
   .view-content > * {
     display: inherit;
+    pointer-events: all;
   }
 
   div {

@@ -3,6 +3,20 @@ import { useDwarfViz } from '../hooks/useDwarfViz';
 import cssColors from '../App.scss';
 import * as d3 from 'd3';
 import _ from 'lodash';
+import { renderToString } from 'react-dom/server';
+
+const Tooltip = ({ d }) => (
+  <div>
+    <p>
+      <strong>Type:</strong> {d.type}
+    </p>
+    <p>
+      <strong>Name:</strong> {d.name}
+    </p>
+  </div>
+);
+
+const getTooltipHTML = (d) => renderToString(<Tooltip d={d} />);
 
 const CirclePacking = ({ width, height }) => {
   const {
@@ -110,12 +124,16 @@ const CirclePacking = ({ width, height }) => {
       .data(root.descendants().slice(1))
       .join('circle')
       .attr('fill', (d) => (d.children ? color(d.depth) : cssColors.peopleColor))
+      .attr('data-tip', (d) => getTooltipHTML(d.data))
+      .attr('data-tip-disable', true)
       // .attr('pointer-events', (d) => (!d.children ? 'none' : null))
       .on('mouseover', function () {
         d3.select(this).attr('stroke', '#000');
+        d3.select(this).attr('data-tip-disable', false);
       })
       .on('mouseout', function () {
         d3.select(this).attr('stroke', null);
+        d3.select(this).attr('data-tip-disable', true);
       })
       .on('click', (event, d) => {
         if (!d.children && d.data.assignment) {

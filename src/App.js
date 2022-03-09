@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.scss';
 import { Row, Col, Container } from 'react-bootstrap';
 import React from 'react';
+import ReactTooltip from 'react-tooltip';
 
 import { Places, People, Society, Events } from './components';
 import { useDwarfViz, WorldDataProvider } from './hooks/useDwarfViz';
@@ -35,6 +36,7 @@ const Viz = () => {
         <div>Loading data...</div>
       ) : (
         <Container fluid>
+          <ReactTooltip html={true} />
           <Row>
             <Col
               id='Places'

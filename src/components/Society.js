@@ -5,6 +5,8 @@ import CivPopulation from './CivPopulation/CivPopulation.js';
 import CirclePacking from './CirclePacking';
 import EntityDetails from './EntityDetails/EntityDetails.js';
 import HistoryControls from './HistoryControls.js';
+import ReactTooltip from 'react-tooltip';
+import { useEffect } from 'react';
 
 const Society = () => {
   const {
@@ -12,6 +14,10 @@ const Society = () => {
     societyView: { selectedItem: selectedEntity },
     VIEWS,
   } = useDwarfViz();
+
+  useEffect(() => {
+    ReactTooltip.rebuild();
+  });
 
   return (
     <>
@@ -24,7 +30,7 @@ const Society = () => {
         <Col className={'d-flex flex-wrap'}>
           {selectedEntity && (
             <>
-              <EntityDetails/>
+              <EntityDetails />
               <Card style={{ width: '18rem' }} className={'m-1'}>
                 <Card.Body>
                   <div>
