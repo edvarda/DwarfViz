@@ -32,24 +32,22 @@ const Marks = ({ data, xScale, yScale, xValue, yValue, innerHeight, hue, maxCivP
     for (const [id, civ_pop] of Object.entries(civPops)) {
       //console.log('val', civ_pop, yScale(civ_pop))
       rectArray.push(
-        <>
-          <rect
-            key={id}
-            x={xScale(raceName)}
-            y={yScale(civ_pop) - previousHeight}
-            width={xScale.bandwidth()}
-            height={innerHeight - yScale(civ_pop)}
-            stroke={'grey'}
-            className={'bar'}
-            fill={`hsl(${hue(raceName)},${25 + (civ_pop / maxCivPop) * 75}%,${
-              75 - (civ_pop / maxCivPop) * 10
-            }%)`}
-          >
-            <title>
-              Civilization name: {civName(id)}, Population: {civ_pop}
-            </title>
-          </rect>
-        </>,
+        <rect
+          key={id}
+          x={xScale(raceName)}
+          y={yScale(civ_pop) - previousHeight}
+          width={xScale.bandwidth()}
+          height={innerHeight - yScale(civ_pop)}
+          stroke={'grey'}
+          className={'bar'}
+          fill={`hsl(${hue(raceName)},${25 + (civ_pop / maxCivPop) * 75}%,${
+            75 - (civ_pop / maxCivPop) * 10
+          }%)`}
+        >
+          <title>
+            Civilization name: {civName(id)}, Population: {civ_pop}
+          </title>
+        </rect>,
       );
       previousHeight += innerHeight - yScale(civ_pop);
     }
@@ -57,8 +55,8 @@ const Marks = ({ data, xScale, yScale, xValue, yValue, innerHeight, hue, maxCivP
   };
   return (
     <g>
-      {Object.keys(data).map((raceName) => {
-        return <g>{rectPileArray(raceName)}</g>;
+      {Object.keys(data).map((raceName, i) => {
+        return <g key={`$stackedBarRect#${i}`}>{rectPileArray(raceName)}</g>;
       })}
     </g>
   );
@@ -112,13 +110,12 @@ const CivPopulation = ({ width, height }) => {
   const yScale = scaleLinear().domain([0, maxRacePop]).range([innerHeight, 0]).nice();
   const color = scaleLinear().domain(races).range(['#63a6d6', '#124488']);
   const colorScale = scaleBand().domain(races).range([0, 360]);
-  
+
   useEffect(() => {
     const xAxisG = select(xAxisRef.current);
     const xAxis = axisBottom(xScale).tickSizeOuter(0);
     xAxisG.call(xAxis);
-    xAxisG.selectAll(".tick text")
-      .call(wrap, xScale.bandwidth());
+    xAxisG.selectAll('.tick text').call(wrap, xScale.bandwidth());
 
     const yAxisG = select(yAxisRef.current);
     const yAxis = axisLeft(yScale);
@@ -127,34 +124,36 @@ const CivPopulation = ({ width, height }) => {
 
   function wrap(text, width) {
     text.each(function () {
-        var text = select(this),
-            words = text.text().split(/\s+|_/).reverse(),
-            word,
-            line = [],
-            lineNumber = 0,
-            lineHeight = 0.8, // ems
-            x = 1,
-            y = text.attr("y"),
-            dy = 0, //parseFloat(text.attr("dy")),
-            tspan = text.text(null)
-                        .append("tspan")
-                        .attr("x", x)
-                        .attr("y", y)
-                        .attr("dy", dy + "em");
-        while (word = words.pop()) {
-            line.push(word);
-            tspan.text(line.join(""));
-            if (tspan.node().getComputedTextLength() > width) {
-                line.pop();
-                tspan.text(line.join(""));
-                line = [word];
-                tspan = text.append("tspan")
-                            .attr("x", x)
-                            .attr("y", y)
-                            .attr("dy", ++lineNumber * lineHeight + dy + "em")
-                            .text(word);
-            }
+      var text = select(this),
+        words = text.text().split(/\s+|_/).reverse(),
+        word,
+        line = [],
+        lineNumber = 0,
+        lineHeight = 0.8, // ems
+        x = 1,
+        y = text.attr('y'),
+        dy = 0, //parseFloat(text.attr("dy")),
+        tspan = text
+          .text(null)
+          .append('tspan')
+          .attr('x', x)
+          .attr('y', y)
+          .attr('dy', dy + 'em');
+      while ((word = words.pop())) {
+        line.push(word);
+        tspan.text(line.join(''));
+        if (tspan.node().getComputedTextLength() > width) {
+          line.pop();
+          tspan.text(line.join(''));
+          line = [word];
+          tspan = text
+            .append('tspan')
+            .attr('x', x)
+            .attr('y', y)
+            .attr('dy', ++lineNumber * lineHeight + dy + 'em')
+            .text(word);
         }
+      }
     });
   }
 
