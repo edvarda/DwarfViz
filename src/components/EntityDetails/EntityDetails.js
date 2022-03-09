@@ -9,20 +9,20 @@ const EntityDetails = () => {
   const entPop = entityPopulations.find((e) => e.civ_id == selectedEntity.id);
   let text =
     entPop != undefined ? (
-      <Card.Text>
+      <p>
         Race: {selectedEntity.race}
         <br />
         Population: {entPop.races[0].split(':')[1]}
-      </Card.Text>
+      </p>
     ) : (
-      <Card.Text>Race: {selectedEntity.race}</Card.Text>
+      <p>Race: {selectedEntity.race}</p>
     );
   return (
-    <>
-      <Card.Title>{selectedEntity.name}</Card.Title>
-      <Card.Subtitle className='mb-2 text-muted'>Type: {selectedEntity.type} </Card.Subtitle>
+    <div style={{border:"1px solid lightGrey",padding:'15px',borderRadius:'5px'}}>
+      <h2 style={{fontSize:'1.3em'}}>{selectedEntity.name}</h2>
+      <h3 className='mb-2 text-muted' style={{fontSize:'1.15em'}}>Type: {selectedEntity.type} </h3>
       {text}
-    </>
+    </div>
   );
 };
 
