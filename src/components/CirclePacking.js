@@ -151,10 +151,7 @@ const CirclePacking = ({ width, height }) => {
       node.attr('r', (d) => d.r * k);
     }
 
-    // Can sent
     function zoom(d) {
-      // const focus0 = focus;
-
       focus = d;
 
       const transition = svg
@@ -186,15 +183,23 @@ const CirclePacking = ({ width, height }) => {
     }
 
     zoomFunctionRef.current = (entityId) => {
-      const target = root.find((d) => (d.data.isEntity ?? false) && d.data.id === entityId);
-      zoom(target);
+      if (entityId === 'root') {
+        zoom(root);
+      } else {
+        const target = root.find((d) => (d.data.isEntity ?? false) && d.data.id === entityId);
+        zoom(target);
+      }
     };
 
     return svg.node();
   }, []);
 
   useEffect(() => {
-    if (selectedEntity) zoomFunctionRef.current(selectedEntity.id);
+    if (selectedEntity) {
+      zoomFunctionRef.current(selectedEntity.id);
+    } else {
+      zoomFunctionRef.current('root');
+    }
   }, [selectedEntity]);
 
   return <svg ref={svgRef} width={width} height={height} />;
