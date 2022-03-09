@@ -1,6 +1,6 @@
 import { Card, Row, Col } from 'react-bootstrap';
 import ItemLink from './ItemLink';
-import { useDwarfViz } from '../hooks/useDwarfViz';
+import { useDwarfViz, VIEWS } from '../hooks/useDwarfViz';
 import CivPopulation from './CivPopulation/CivPopulation.js';
 import CirclePacking from './CirclePacking';
 import EntityDetails from './EntityDetails/EntityDetails.js';
@@ -18,7 +18,7 @@ const Society = () => {
       <Row className={'d-flex flex-row'}>
         <Row>
           <Col>
-            <HistoryControls viewName={'societyView'} />
+            <HistoryControls view={VIEWS.SOCIETY} />
           </Col>
         </Row>
         <Col className={'d-flex flex-wrap'}>

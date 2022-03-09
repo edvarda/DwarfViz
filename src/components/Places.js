@@ -1,7 +1,7 @@
 import { Card, Row, Col } from 'react-bootstrap';
 import Map from './Map';
 import ItemLink from './ItemLink';
-import { useDwarfViz } from '../hooks/useDwarfViz';
+import { useDwarfViz, VIEWS } from '../hooks/useDwarfViz';
 import HistoryControls from './HistoryControls.js';
 
 const Places = () => {
@@ -17,7 +17,7 @@ const Places = () => {
       <Row>
         <Row>
           <Col>
-            <HistoryControls viewName={'placesView'} />
+            <HistoryControls view={VIEWS.PLACES} />
           </Col>
         </Row>
         <Col className={'d-flex flex-wrap'}>

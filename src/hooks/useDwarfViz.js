@@ -2,7 +2,7 @@ import axios from 'axios';
 import { createContext, useContext, useEffect, useReducer } from 'react';
 import config from '../dwarfviz.config';
 const { useStaticData, storytellerURL } = config;
-const Actions = {
+const ACTIONS = {
   START_FETCH: 'START_FETCH',
   FETCH_SUCCESS: 'FETCH_SUCCESS',
   FETCH_ERROR: 'FETCH_ERROR',
@@ -13,24 +13,24 @@ const Actions = {
   SET_ACTIVE_VIEW: 'SET_ACTIVE_VIEW',
 };
 
-const Views = {
+const VIEWS = {
   PEOPLE: {
     itemType: 'historicalFigures',
     eventEndpoint: 'link_he_hf',
     name: 'peopleView',
-    actionType: Actions.SELECT_HISTORICAL_FIGURE,
+    actionType: ACTIONS.SELECT_HISTORICAL_FIGURE,
   },
   SOCIETY: {
     itemType: 'entities',
     eventEndpoint: 'link_he_entity',
     name: 'societyView',
-    actionType: Actions.SELECT_ENTITY,
+    actionType: ACTIONS.SELECT_ENTITY,
   },
   PLACES: {
     itemType: 'sites',
     eventEndpoint: 'link_he_site',
     name: 'placesView',
-    actionType: Actions.SELECT_SITE,
+    actionType: ACTIONS.SELECT_SITE,
   },
 };
 
@@ -77,14 +77,14 @@ const WorldDataProvider = ({ children }) => {
       mapImageURL: `${storytellerURL}/map_images/2/image.png`,
     });
     const loadData = async () => {
-      dispatch({ type: Actions.START_FETCH });
+      dispatch({ type: ACTIONS.START_FETCH });
       try {
         const data = useStaticData ? await fetchStaticData() : await fetchRemoteData();
-        dispatch({ type: Actions.FETCH_SUCCESS });
-        dispatch({ type: Actions.SET_DATA, payload: data });
+        dispatch({ type: ACTIONS.FETCH_SUCCESS });
+        dispatch({ type: ACTIONS.SET_DATA, payload: data });
       } catch (error) {
         console.log(error);
-        dispatch({ type: Actions.FETCH_ERROR });
+        dispatch({ type: ACTIONS.FETCH_ERROR });
         return;
       }
     };
@@ -95,10 +95,13 @@ const WorldDataProvider = ({ children }) => {
     const isSelected = (viewName, itemId) =>
       state[viewName].selectedItem && state[viewName].selectedItem.id === itemId;
 
-    const getSelectedItem = (View) => ({
-      ...state.data[View.itemType].find((x) => x.id === action.payload.id),
-      relatedEvents: action.payload.relatedEvents,
-    });
+    const getSelectedItem = (View) =>
+      action.payload.id
+        ? {
+            ...state.data[View.itemType].find((x) => x.id === action.payload.id),
+            relatedEvents: action.payload.relatedEvents,
+          }
+        : null;
 
     const getNewHistory = (View) => {
       let history = state[View.name].history;
@@ -111,26 +114,28 @@ const WorldDataProvider = ({ children }) => {
           payload: { ...action.payload, isHistoryAction: true },
         });
         historyPager = history.length - 1;
-      } else if (action.payload.isHistoryAction) {
+      } else if (action.payload.id === null) {
+        historyPager = history.length;
+      } else {
         historyPager += action.payload.movePager;
       }
       return { history, historyPager };
     };
 
     switch (action.type) {
-      case Actions.START_FETCH:
+      case ACTIONS.START_FETCH:
         return { ...state, isLoading: true };
-      case Actions.FETCH_SUCCESS:
+      case ACTIONS.FETCH_SUCCESS:
         return {
           ...state,
           isLoading: false,
         };
-      case Actions.FETCH_ERROR:
+      case ACTIONS.FETCH_ERROR:
         return { ...state, isError: true, isLoading: false };
-      case Actions.SET_DATA:
+      case ACTIONS.SET_DATA:
         return { ...state, data: action.payload, isDataLoaded: true };
-      case Actions.SELECT_SITE:
-        if (isSelected(Views.PLACES.name, action.payload.id)) {
+      case ACTIONS.SELECT_SITE:
+        if (isSelected(VIEWS.PLACES.name, action.payload.id)) {
           return state;
         }
         return {
@@ -138,14 +143,14 @@ const WorldDataProvider = ({ children }) => {
           placesView: {
             ...state.placesView,
             isActive: true,
-            ...getNewHistory(Views.PLACES),
-            selectedItem: getSelectedItem(Views.PLACES),
+            ...getNewHistory(VIEWS.PLACES),
+            selectedItem: getSelectedItem(VIEWS.PLACES),
           },
           societyView: { ...state.societyView, isActive: false },
           peopleView: { ...state.peopleView, isActive: false },
         };
-      case Actions.SELECT_ENTITY:
-        if (isSelected(Views.SOCIETY.name, action.payload.id)) {
+      case ACTIONS.SELECT_ENTITY:
+        if (isSelected(VIEWS.SOCIETY.name, action.payload.id)) {
           return state;
         }
         return {
@@ -153,14 +158,14 @@ const WorldDataProvider = ({ children }) => {
           societyView: {
             ...state.societyView,
             isActive: true,
-            ...getNewHistory(Views.SOCIETY),
-            selectedItem: getSelectedItem(Views.SOCIETY),
+            ...getNewHistory(VIEWS.SOCIETY),
+            selectedItem: getSelectedItem(VIEWS.SOCIETY),
           },
           peopleView: { ...state.peopleView, isActive: false },
           placesView: { ...state.placesView, isActive: false },
         };
-      case Actions.SELECT_HISTORICAL_FIGURE:
-        if (isSelected(Views.PEOPLE.name, action.payload.id)) {
+      case ACTIONS.SELECT_HISTORICAL_FIGURE:
+        if (isSelected(VIEWS.PEOPLE.name, action.payload.id)) {
           return state;
         }
         return {
@@ -168,13 +173,13 @@ const WorldDataProvider = ({ children }) => {
           peopleView: {
             ...state.peopleView,
             isActive: true,
-            ...getNewHistory(Views.PEOPLE),
-            selectedItem: getSelectedItem(Views.PEOPLE),
+            ...getNewHistory(VIEWS.PEOPLE),
+            selectedItem: getSelectedItem(VIEWS.PEOPLE),
           },
           societyView: { ...state.societyView, isActive: false },
           placesView: { ...state.placesView, isActive: false },
         };
-      case Actions.SET_ACTIVE_VIEW:
+      case ACTIONS.SET_ACTIVE_VIEW:
         if (state[action.payload].isActive) return state; // View already active, don't mutate state
         return {
           ...state,
@@ -197,46 +202,50 @@ const WorldDataProvider = ({ children }) => {
     peopleView: { selectedItem: null, history: [], historyPager: -1, isActive: false },
   };
 
+  const selectItem = async (View, id) => {
+    if (id !== null) {
+      dispatch({ type: ACTIONS.START_FETCH });
+      try {
+        const relatedEvents = await fetchFromStoryteller(View.eventEndpoint, id);
+        dispatch({ type: ACTIONS.FETCH_SUCCESS });
+        dispatch({ type: View.actionType, payload: { id, relatedEvents: relatedEvents } });
+      } catch (error) {
+        console.log(error);
+        dispatch({ type: ACTIONS.FETCH_ERROR });
+        return;
+      }
+    } else {
+      dispatch({ type: View.actionType, payload: { id: null } });
+    }
+  };
+
   const [state, dispatch] = useReducer(stateReducer, initialState);
 
   useEffect(() => {}, [state.placesView, state.societyView, state.peopleView]);
 
   return (
-    <WorldDataContext.Provider value={[state, dispatch]}>{children}</WorldDataContext.Provider>
+    <WorldDataContext.Provider value={[state, dispatch, selectItem]}>
+      {children}
+    </WorldDataContext.Provider>
   );
 };
 
 const useDwarfViz = () => {
-  const [state, dispatch] = useContext(WorldDataContext);
+  const [state, dispatch, selectItem] = useContext(WorldDataContext);
 
   const selectSite = (siteId) => {
     console.log('select site', siteId);
-    selectItem(Views.PLACES, siteId);
+    selectItem(VIEWS.PLACES, siteId);
   };
 
   const selectEntity = (entityId) => {
     console.log('select entity', entityId);
-    selectItem(Views.SOCIETY, entityId);
+    selectItem(VIEWS.SOCIETY, entityId);
   };
 
   const selectHF = (hfId) => {
     console.log('select hf', hfId);
-    selectItem(Views.PEOPLE, hfId);
-  };
-
-  const selectItem = async (View, id) => {
-    if (id !== null) {
-      dispatch({ type: Actions.START_FETCH });
-      try {
-        const relatedEvents = await fetchFromStoryteller(View.eventEndpoint, id);
-        dispatch({ type: Actions.FETCH_SUCCESS });
-        dispatch({ type: View.actionType, payload: { id, relatedEvents: relatedEvents } });
-      } catch (error) {
-        console.log(error);
-        dispatch({ type: Actions.FETCH_ERROR });
-        return;
-      }
-    }
+    selectItem(VIEWS.PEOPLE, hfId);
   };
 
   const find = {
@@ -247,7 +256,7 @@ const useDwarfViz = () => {
   };
 
   const setActiveView = (viewName) => {
-    dispatch({ type: Actions.SET_ACTIVE_VIEW, payload: viewName });
+    dispatch({ type: ACTIONS.SET_ACTIVE_VIEW, payload: viewName });
   };
   const getActiveView = () => [placesView, societyView, peopleView].find((view) => view.isActive);
 
@@ -269,13 +278,14 @@ const useDwarfViz = () => {
   };
 };
 
-const useHistory = (viewName) => {
-  const [state, dispatch] = useContext(WorldDataContext);
+const useHistory = (VIEW) => {
+  const [state, dispatch, selectItem] = useContext(WorldDataContext);
 
-  const { history, historyPager } = state[viewName];
+  const { history, historyPager, selectedItem } = state[VIEW.name];
 
   const hasBack = !!history[historyPager - 1];
   const hasForward = !!history[historyPager + 1];
+  const hasSelection = !!selectedItem;
 
   const goBack = () => {
     if (hasBack) {
@@ -291,7 +301,11 @@ const useHistory = (viewName) => {
     }
   };
 
-  return { goBack, goForward, hasBack, hasForward };
+  const clearSelection = () => {
+    selectItem(VIEW, null);
+  };
+
+  return { goBack, goForward, clearSelection, hasBack, hasForward, hasSelection };
 };
 
-export { WorldDataProvider, useDwarfViz, useHistory };
+export { WorldDataProvider, useDwarfViz, useHistory, VIEWS };

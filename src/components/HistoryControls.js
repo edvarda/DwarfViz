@@ -1,6 +1,6 @@
 import { useHistory } from '../hooks/useDwarfViz';
-const HistoryControls = ({ viewName }) => {
-  const { goBack, hasBack, goForward, hasForward } = useHistory(viewName);
+const HistoryControls = ({ view }) => {
+  const { goBack, hasBack, goForward, hasForward, clearSelection, hasSelection } = useHistory(view);
   return (
     <div>
       <button onClick={() => goBack()} disabled={!hasBack}>
@@ -8,6 +8,9 @@ const HistoryControls = ({ viewName }) => {
       </button>
       <button onClick={() => goForward()} disabled={!hasForward}>
         Forward
+      </button>
+      <button onClick={() => clearSelection()} disabled={!hasSelection}>
+        Clear selection
       </button>
     </div>
   );

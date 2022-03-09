@@ -1,7 +1,7 @@
 import { Card, Row, Col } from 'react-bootstrap';
 
 import ItemLink from './ItemLink.js';
-import { useDwarfViz } from '../hooks/useDwarfViz';
+import { useDwarfViz, VIEWS } from '../hooks/useDwarfViz';
 import FamilyTree from './FamilyTree.js';
 import RelationshipGraph from './RelationshipGraph.js';
 import RelatedEntities from './RelatedEntities.js';
@@ -22,7 +22,7 @@ const People = () => {
       <Row className={'d-flex flex-row'}>
         <Row>
           <Col>
-            <HistoryControls viewName={'peopleView'} />
+            <HistoryControls view={VIEWS.PEOPLE} />
           </Col>
         </Row>
         <Col className={'d-flex flex-wrap'}>
