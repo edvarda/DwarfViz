@@ -66,7 +66,7 @@ const useTooltip = () => {
       },
       {
         displayName: 'Born',
-        accessor: (hf) => (hf.birth_year > 0 ? `year ${hf.birth_year}` : null),
+        accessor: (hf) => (hf.birth_year > 0 ? `year ${hf.birth_year}` : 'in the before times'),
       },
       {
         displayName: 'Died',
