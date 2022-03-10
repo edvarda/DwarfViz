@@ -125,7 +125,6 @@ const Map = ({ mapImage, mapSize, data, regions }) => {
           },
           mouseout: (e) => e.target.setStyle(point),
           click: (e) => {
-            console.log('select');
             selectSite(e.target.feature.properties.id);
           },
         });

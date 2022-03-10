@@ -60,7 +60,6 @@ const RelationshipGraph = ({ width, height }) => {
     children: getRelationships(selectedFigure),
   };
 
-  console.log('data', newData);
   const root = d3.hierarchy(newData, (d) => d.children);
   cluster(root);
 

@@ -107,7 +107,6 @@ const useTooltip = () => {
   };
 
   const hfTooltip = (data) => {
-    console.log('hf tooltip', data);
     return getTooltipGenerator(hfTooltipDefinition)(data);
   };
   const siteTooltip = (data) => getTooltipGenerator(siteTooltipDefinition)(data);

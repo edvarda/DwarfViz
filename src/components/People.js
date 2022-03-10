@@ -20,7 +20,6 @@ const People = () => {
     ReactTooltip.rebuild();
   });
 
-  console.log('People selected', selectedFigure);
   return (
     <>
       <Row className={'d-flex flex-row'}>

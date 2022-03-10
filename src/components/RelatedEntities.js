@@ -32,7 +32,6 @@ const RelatedEntities = ({ width, height }) => {
     .angle((d) => (d.x / 180) * Math.PI)
     .radius((d) => d.y);
 
-  console.log(newData);
   return (
     <svg width={width} height={height}>
       <g transform={`translate(${radius},${radius})`}>

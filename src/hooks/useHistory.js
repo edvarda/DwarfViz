@@ -18,7 +18,6 @@ const useHistory = (view) => {
     }
   };
   const goForward = () => {
-    console.log('Forward:', hasForward, historyPager, history);
     if (hasForward) {
       const historyAction = history[historyPager + 1];
       dispatch({ ...historyAction, payload: { ...historyAction.payload, movePager: 1 } });

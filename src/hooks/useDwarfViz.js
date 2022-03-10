@@ -203,17 +203,14 @@ const WorldDataProvider = ({ children }) => {
   };
 
   const selectSite = (siteId) => {
-    console.log('select site', siteId);
     selectItem(VIEWS.PLACES, siteId);
   };
 
   const selectEntity = (entityId) => {
-    console.log('select entity', entityId);
     selectItem(VIEWS.SOCIETY, entityId);
   };
 
   const selectHF = (hfId) => {
-    console.log('select hf', hfId);
     selectItem(VIEWS.PEOPLE, hfId);
   };
 
