@@ -1,7 +1,10 @@
+import { useEffect } from 'react';
+import ReactTooltip from 'react-tooltip';
 import { Card, Row, Col } from 'react-bootstrap';
 import Map from './Map';
-import ItemLink from './ItemLink';
+import { EntityLink } from './ItemLink';
 import { useDwarfViz } from '../hooks/useDwarfViz';
+import useTooltip from '../hooks/useTooltip';
 import HistoryControls from './HistoryControls.js';
 
 const Places = () => {
@@ -10,6 +13,11 @@ const Places = () => {
     placesView: { selectedItem: selectedSite },
     VIEWS,
   } = useDwarfViz();
+  const { siteTooltip } = useTooltip();
+
+  useEffect(() => {
+    ReactTooltip.rebuild();
+  });
 
   const owningEntity = (selectedSite) => entities.find((x) => x.id === selectedSite.civ_id);
   return (
@@ -24,15 +32,13 @@ const Places = () => {
           {selectedSite && (
             <Card style={{ width: '40rem' }} className={'m-1'}>
               <Card.Body>
-                <Card.Title>{selectedSite.name}</Card.Title>
+                <Card.Title data-tip={siteTooltip(selectedSite)}>{selectedSite.name}</Card.Title>
                 <Card.Subtitle className='mb-2 text-muted'>Type: {selectedSite.type}</Card.Subtitle>
                 <Card.Text>Number of structures: {selectedSite.structures.length} </Card.Text>
-                {owningEntity(selectedSite) && (
+                {selectedSite.civ_id && (
                   <div>
                     Belongs to {owningEntity(selectedSite).type}:{' '}
-                    <ItemLink view={VIEWS.SOCIETY} id={selectedSite.civ_id}>
-                      {owningEntity(selectedSite).name}
-                    </ItemLink>
+                    <EntityLink entityId={selectedSite.civ_id} />
                   </div>
                 )}
               </Card.Body>

@@ -1,10 +1,10 @@
 import { Card, Row, Col } from 'react-bootstrap';
-import ItemLink from './ItemLink';
+import { HfLink } from './ItemLink';
 import { useDwarfViz } from '../hooks/useDwarfViz';
 import CivPopulation from './CivPopulation/CivPopulation.js';
 import CirclePacking from './CirclePacking';
 import CivDetails from './EntityDetails/CivDetails.js';
-import ChildEntityDetails from './EntityDetails/ChildEntityDetails.js'
+import ChildEntityDetails from './EntityDetails/ChildEntityDetails.js';
 import HistoryControls from './HistoryControls.js';
 import ReactTooltip from 'react-tooltip';
 import { useEffect } from 'react';
@@ -31,8 +31,8 @@ const Society = () => {
         <Col className={'d-flex flex-wrap'}>
           {selectedEntity && (
             <>
-              <CivDetails/>
-              <ChildEntityDetails/>
+              <CivDetails />
+              <ChildEntityDetails />
               <Card style={{ width: '18rem' }} className={'m-1'}>
                 <Card.Body>
                   <div>
@@ -42,9 +42,7 @@ const Society = () => {
                         const hf = historicalFigures.find((x) => x.id === hf_id);
                         return (
                           <li key={hf_id}>
-                            <ItemLink view={VIEWS.PEOPLE} id={hf.id}>
-                              {hf.name}
-                            </ItemLink>
+                            <HfLink hfId={hf.id} />
                           </li>
                         );
                       })}

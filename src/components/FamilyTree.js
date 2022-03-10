@@ -2,10 +2,11 @@ import * as d3 from 'd3';
 import { useDwarfViz } from '../hooks/useDwarfViz.js';
 import './FamilyTree.scss';
 import LinkTypes from './LinkTypes.js';
+import useTooltip from '../hooks/useTooltip.js';
 
 const Marks = ({ width, height, familyTree }) => {
+  const { hfTooltip } = useTooltip();
   const { selectHF } = useDwarfViz();
-  console.log(familyTree);
   const parentScale = d3
     .scaleBand()
     .domain(familyTree.parents.map((x) => x.id))
@@ -37,6 +38,7 @@ const Marks = ({ width, height, familyTree }) => {
             r={getRadius(parentScale.bandwidth())}
             onClick={() => selectHF(person.id)}
             cy={height / 6}
+            data-tip={hfTooltip(person)}
           />
           <text
             x={parentScale(person.id) + parentScale.bandwidth() / 2}
@@ -53,6 +55,7 @@ const Marks = ({ width, height, familyTree }) => {
             r={getRadius(rootScale.bandwidth())}
             onClick={() => selectHF(person.id)}
             cy={height / 2}
+            data-tip={hfTooltip(person)}
           />
           <text
             x={rootScale(person.id) + rootScale.bandwidth() / 2}
@@ -69,6 +72,7 @@ const Marks = ({ width, height, familyTree }) => {
             r={getRadius(childrenScale.bandwidth())}
             onClick={() => selectHF(person.id)}
             cy={(height / 6) * 5}
+            data-tip={hfTooltip(person)}
           />
           <text
             x={childrenScale(person.id) + childrenScale.bandwidth() / 2}
@@ -115,7 +119,6 @@ const FamilyTree = ({ width, height }) => {
         .map(getOtherFigureFromLink),
     ],
   });
-  console.log(selectedFigure);
   const familyTree = constructFamilyTree(selectedFigure);
   return (
     <svg width={width} height={height}>

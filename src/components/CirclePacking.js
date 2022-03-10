@@ -1,22 +1,9 @@
 import { useRef, useEffect } from 'react';
 import { useDwarfViz } from '../hooks/useDwarfViz';
+import useTooltip from '../hooks/useTooltip';
 import cssColors from '../App.scss';
 import * as d3 from 'd3';
 import _ from 'lodash';
-import { renderToString } from 'react-dom/server';
-
-const Tooltip = ({ d }) => (
-  <div>
-    <p>
-      <strong>Type:</strong> {d.type}
-    </p>
-    <p>
-      <strong>Name:</strong> {d.name}
-    </p>
-  </div>
-);
-
-const getTooltipHTML = (d) => renderToString(<Tooltip d={d} />);
 
 const CirclePacking = ({ width, height }) => {
   const {
@@ -25,6 +12,7 @@ const CirclePacking = ({ width, height }) => {
     selectHF,
     selectEntity,
   } = useDwarfViz();
+  const { entityTooltip, hfTooltip } = useTooltip();
   const svgRef = useRef(null);
 
   const getChildEntities = (civ_entity) =>
@@ -43,6 +31,8 @@ const CirclePacking = ({ width, height }) => {
             .map((entity) => ({
               name: entity.name,
               type: 'Entity',
+              itemType: 'entity',
+              dataObject: entity,
               isEntity: true,
               id: entity.id,
               children: entity.entity_position.map((position) => ({
@@ -74,6 +64,8 @@ const CirclePacking = ({ width, height }) => {
               .filter((x) => x.type === 'civilization' && raceName === x.race)
               .map((civ) => ({
                 type: 'Civilization',
+                itemType: 'entity',
+                dataObject: civ,
                 name: civ.name,
                 isEntity: true,
                 id: civ.id,
@@ -124,9 +116,16 @@ const CirclePacking = ({ width, height }) => {
       .data(root.descendants().slice(1))
       .join('circle')
       .attr('fill', (d) => (d.children ? color(d.depth) : cssColors.peopleColor))
-      .attr('data-tip', (d) => getTooltipHTML(d.data))
+      .attr('data-tip', (d) => {
+        if (d.data.itemType === 'entity') {
+          return entityTooltip(d.data.dataObject);
+        }
+        // if (d.data.type === 'Social Position' && d.data.assignment) {
+        //   hfTooltip(d.data);
+        // }
+      })
       .attr('data-tip-disable', true)
-      // .attr('pointer-events', (d) => (!d.children ? 'none' : null))
+      .attr('pointer-events', (d) => (!d.children ? 'none' : null))
       .on('mouseover', function () {
         d3.select(this).attr('stroke', '#000');
         d3.select(this).attr('data-tip-disable', false);
@@ -136,7 +135,7 @@ const CirclePacking = ({ width, height }) => {
         d3.select(this).attr('data-tip-disable', true);
       })
       .on('click', (event, d) => {
-        if (!d.children && d.data.assignment) {
+        if (d.data.type === 'Social Position' && d.data.assignment) {
           selectHF(d.data.assignment.hf_id);
         } else if (focus !== d) {
           zoom(d);

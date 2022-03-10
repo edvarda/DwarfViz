@@ -66,16 +66,31 @@ body {
   font-weight: 800;
 }
 
-.sites-link {
+.site-link {
   color: $placesColor;
 }
 
-.historicalFigures-link {
+.hf-link {
   color: $peopleColor;
 }
 
-.entities-link {
+.entity-link {
   color: $societyColor;
+}
+
+.dwarfviz-tooltip {
+  tr {
+    border-bottom: 1px solid #999;
+  }
+  .propName {
+    font-weight: 800;
+    text-align: left;
+  }
+
+  .value {
+    font-weight: 400;
+    text-align: right;
+  }
 }
 
 :export {

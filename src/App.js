@@ -36,7 +36,7 @@ const Viz = () => {
         <div>Loading data...</div>
       ) : (
         <Container fluid>
-          <ReactTooltip html={true} />
+          <ReactTooltip html={true} className={'dwarfviz-tooltip'} />
           <Row>
             <Col
               id='Places'

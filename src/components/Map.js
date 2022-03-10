@@ -3,6 +3,7 @@ import 'leaflet/dist/leaflet.css';
 import React, { useEffect, useRef } from 'react';
 import _ from 'lodash';
 import { useDwarfViz } from '../hooks/useDwarfViz';
+import useTooltip from '../hooks/useTooltip';
 
 const point = {
   color: 'red',
@@ -46,6 +47,7 @@ const fade = {
 };
 
 const Map = ({ mapImage, mapSize, data, regions }) => {
+  const { siteTooltip, regionTooltip } = useTooltip();
   const sitesAsGeoJSONFeatures = (sites) => {
     const getCenterpointOfRect = ({ x1, x2, y1, y2 }) => [
       (x1 + x2) / 2,
@@ -59,10 +61,7 @@ const Map = ({ mapImage, mapSize, data, regions }) => {
           type: 'Point',
           coordinates: getCenterpointOfRect(site.rectangle),
         },
-        properties: {
-          name: site.name,
-          id: site.id,
-        },
+        properties: site,
       }));
     return features;
   };
@@ -89,9 +88,12 @@ const Map = ({ mapImage, mapSize, data, regions }) => {
     geoJSONRef.current = L.geoJSON(data, {
       style: style,
       onEachFeature: (feature, thisLayer) => {
-        const region = regions.find((x) => x.id === +feature.properties.regionId);
+        const regionWithBiome = {
+          ...regions.find((x) => x.id === +feature.properties.regionId),
+          biomeString: feature.properties.biomeInfo.biomeString,
+        };
         thisLayer.bindTooltip(
-          `<div>Biome: ${feature.properties.biomeInfo.biomeString}<br />Region: ${region.name}</div>`,
+          `<div class="dwarfviz-tooltip">${regionTooltip(regionWithBiome)}</div>`,
           { interactive: true },
         );
         thisLayer.on({
@@ -113,7 +115,10 @@ const Map = ({ mapImage, mapSize, data, regions }) => {
     geoJSONSitesRef.current = L.geoJSON(sitesAsGeoJSONFeatures(sites), {
       pointToLayer: (feature, latlng) => L.circleMarker(latlng, point),
       onEachFeature: (feature, thisLayer) => {
-        thisLayer.bindTooltip(`<div>Site: ${feature.properties.name}</div>`, { interactive: true });
+        thisLayer.bindTooltip(
+          `<div class="dwarfviz-tooltip">${siteTooltip(feature.properties)}</div>`,
+          { interactive: true },
+        );
         thisLayer.on({
           mouseover: (e) => {
             e.target.setStyle(pointHover);

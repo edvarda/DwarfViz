@@ -1,4 +1,5 @@
-import { useHistory } from '../hooks/useDwarfViz';
+import useHistory from '../hooks/useHistory';
+
 const HistoryControls = ({ view }) => {
   const { goBack, hasBack, goForward, hasForward, clearSelection, hasSelection } = useHistory(view);
   return (

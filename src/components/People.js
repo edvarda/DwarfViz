@@ -1,6 +1,8 @@
 import { Card, Row, Col } from 'react-bootstrap';
+import { useEffect } from 'react';
+import ReactTooltip from 'react-tooltip';
 
-import ItemLink from './ItemLink.js';
+import { EntityLink, SiteLink, HfLink } from './ItemLink.js';
 import { useDwarfViz } from '../hooks/useDwarfViz';
 import FamilyTree from './FamilyTree.js';
 import RelationshipGraph from './RelationshipGraph.js';
@@ -13,6 +15,10 @@ const People = () => {
     peopleView: { selectedItem: selectedFigure },
     VIEWS,
   } = useDwarfViz();
+
+  useEffect(() => {
+    ReactTooltip.rebuild();
+  });
 
   console.log('People selected', selectedFigure);
   return (
@@ -40,9 +46,7 @@ const People = () => {
                     {selectedFigure.entity_link.map((entityLink) => (
                       <li key={entityLink.entity_id + 'entity'}>
                         {`Linked as ${entityLink.link_type} to: `}
-                        <ItemLink view={VIEWS.SOCIETY} id={entityLink.entity_id}>
-                          {entities.find((x) => x.id === entityLink.entity_id).name}
-                        </ItemLink>
+                        <EntityLink entityId={entityLink.entity_id} />
                       </li>
                     ))}
                   </ul>
@@ -53,9 +57,7 @@ const People = () => {
                     {selectedFigure.site_link.map((siteLink) => (
                       <li key={siteLink.site_id}>
                         {`Linked as ${siteLink.link_type} to: `}
-                        <ItemLink view={VIEWS.SOCIETY} id={siteLink.site_id}>
-                          {sites.find((x) => x.id === siteLink.site_id).name}
-                        </ItemLink>
+                        <SiteLink siteId={siteLink.site_id} />
                       </li>
                     ))}
                   </ul>
@@ -68,9 +70,7 @@ const People = () => {
                       return (
                         <li key={link.hf_id_other + 'other'}>
                           {`${link.link_type}: `}
-                          <ItemLink view={VIEWS.PEOPLE} id={hf.id}>
-                            {hf.name}
-                          </ItemLink>
+                          <HfLink hfId={hf.id} />
                         </li>
                       );
                     })}
@@ -83,7 +83,7 @@ const People = () => {
         <Col className={''}>
           {selectedFigure && <FamilyTree width={400} height={300} />}
           {selectedFigure && <RelationshipGraph width={400} height={400} />}
-          {selectedFigure && <RelatedEntities width={400} height={400} />}
+          {/* {selectedFigure && <RelatedEntities width={400} height={400} />} */}
         </Col>
       </Row>
     </>
