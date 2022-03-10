@@ -176,6 +176,11 @@ function change_hf_state_desc(he, dwarfViz) {
 //TODO: get name of where they died...is subregion_id the same as a region id???
 function hf_died_desc(he, dwarfViz) {
   var hf = dwarfViz.find.hf(he.hf_id); //load historical figure data
+  if (hf.name !== null) {
+    hf.name = formatName(hf.name);
+  } else {
+    hf.name = 'a mysterious stranger';
+  }
   hf.name = formatName(hf.name);
   hf.pronouns = getPronouns(hf.caste);
 
@@ -329,6 +334,15 @@ function hf_died_desc(he, dwarfViz) {
         break;
       case 'struck_down':
         eventDesc = `${hf.name} was struck down`;
+        break;
+      case 'execution_generic':
+        eventDesc = `${hf.name} was summarily executed`;
+        break;
+      case 'leapt_from_height':
+          eventDesc = `${hf.name} fell fatally from a great height`;
+          break;
+      case 'drown_alt2':
+        eventDesc = `${hf.name} drowned surreptitiously`;
         break;
       default:
         console.error('unhandled death type: ' + he.death_cause + ' for ' + he.id);

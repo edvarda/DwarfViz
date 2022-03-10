@@ -82,7 +82,7 @@ const BrushableTimeline = ({ width, height, setYearRange, historicalEvents }) =>
       [innerWidth, innerHeight],
     ]);
     brush(select(brushRef.current));
-    brush.on('end', (event) => {
+    brush.on('brush end', (event) => {
       if (event.selection && event.sourceEvent) {
         const yearSelection = event.selection.map(xScale.invert);
         setYearRange(yearSelection);
