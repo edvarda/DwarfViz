@@ -40,7 +40,6 @@ const getColorToBiomeInfo = (biomeColorKeyFilePath) => {
     const biomeInfo = {
       biomeString,
       biomeType,
-      // regionType: biomeTypeToRegion[biomeType]
     };
     switch (biomeType) {
       case 'mountain':
