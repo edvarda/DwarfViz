@@ -1,4 +1,4 @@
-import { brushX, select, scaleLinear, max, extent, bin, interpolateRgb } from 'd3';
+import { brushX, select, scaleLinear, max, extent, bin, interpolateRgb, sum } from 'd3';
 
 import { useRef, useMemo, useEffect, useState } from 'react';
 import { AxisBottom } from './AxisBottom';
@@ -20,7 +20,7 @@ const yAxisLabelOffset = 50;
 const xAxisLabel = 'Year';
 const yAxisLabel = 'Events';
 
-const yValue = (d) => 1; // +1 per event
+const yValue = (d) => +1; // +1 per event
 const xValue = (d) => d['year'];
 
 const BrushableTimeline = ({ width, height, setYearRange, historicalEvents }) => {
@@ -41,14 +41,14 @@ const BrushableTimeline = ({ width, height, setYearRange, historicalEvents }) =>
     () => scaleLinear().domain(extent(xValueExtent)).range([0, innerWidth]),
     [xValueExtent, innerWidth],
   );
-  const [start_, xStop] = xScale.domain();
+  const [xStart, xStop] = xScale.domain();
   const binnedData = useMemo(() => {
     return bin()
       .value(xValue)
       .domain(xScale.domain())
       .thresholds(xStop)(historicalEvents) // 50 instead of xStop -> Makes ~50 "bins" -> actual number depends on input size, we always get evenly spaced result
       .map((array) => ({
-        y: array.length,
+        y: sum(array, yValue),
         x0: array.x0,
         x1: array.x1,
       }));
@@ -65,16 +65,17 @@ const BrushableTimeline = ({ width, height, setYearRange, historicalEvents }) =>
       ])
       .range(['red', 'blue'])
       .interpolate(interpolateRgb.gamma(2.2))(d);
-
+  
   const yScale = useMemo(
     () =>
       scaleLinear()
-        .domain([0, d3.max(binnedData, (d) => d.y)])
+        .clamp(true)
+        .domain([0, d3.max([d3.max(binnedData, (d) => d.y),1])])
         .range([innerHeight, 0])
         .nice(),
     [binnedData, innerHeight],
   );
-
+  
   const brushRef = useRef();
   useEffect(() => {
     const brush = brushX().extent([
