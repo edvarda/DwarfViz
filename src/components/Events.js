@@ -15,7 +15,7 @@ const Events = () => {
 
   return (
     <>
-      <svg width='100%' height='60%'>
+      <svg width='100%' height='35%'>
         <g>
           {
             <BrushableTimeline
