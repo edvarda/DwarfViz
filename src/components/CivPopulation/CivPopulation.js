@@ -16,6 +16,7 @@ import {
 import React, { useEffect, useRef } from 'react';
 import ItemLink from '../ItemLink.js';
 import { useDwarfViz } from '../../hooks/useDwarfViz';
+import useTooltip from '../../hooks/useTooltip.js';
 import _ from 'lodash';
 
 const Marks = ({ data, xScale, yScale, xValue, yValue, innerHeight, hue, maxCivPop, entities, selectEntity }) => {
@@ -24,6 +25,7 @@ const Marks = ({ data, xScale, yScale, xValue, yValue, innerHeight, hue, maxCivP
     const nameTag = entities.find((ent) => ent.id == civ_id).name;
     return nameTag != null ? nameTag : 'Unnamed';
   };
+  const { entityTooltip } = useTooltip();
   const rectPileArray = (raceName) => {
     const civPops = data[raceName];
     const sortedKeys = Object.keys(civPops).sort((el1, el2) => civPops[el2] - civPops[el1])
@@ -44,13 +46,14 @@ const Marks = ({ data, xScale, yScale, xValue, yValue, innerHeight, hue, maxCivP
           stroke={'grey'}
           className={'bar'}
           fill={`hsl(${hue(raceName)},${25 + (civ_pop / maxCivPop) * 75}%,${
-            75 - (civ_pop / maxCivPop) * 10
+            80 - (civ_pop / maxCivPop) * 15
           }%)`}
-          //onClick={() => selectEntity(id)}
+          //onClick={() => {console.log(id); console.log(entities.find((ent) => ent.id == id)); selectEntity(id)}}
+          data-tip={entityTooltip(entities.find((ent) => ent.id == id))}
         >
-          <title>
+          {/*<title>
             Civilization name: {civName(id)}, Population: {civ_pop}
-          </title>
+        </title>*/}
         </rect>,
       );
       previousHeight += innerHeight - yScale(civ_pop);

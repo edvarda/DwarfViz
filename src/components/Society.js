@@ -3,7 +3,7 @@ import { HfLink } from './ItemLink';
 import { useDwarfViz } from '../hooks/useDwarfViz';
 import CivPopulation from './CivPopulation/CivPopulation.js';
 import CirclePacking from './CirclePacking';
-import { CivDetails, ChildEntityDetails } from './EntityDetails';
+import { EntityDetails } from './EntityDetails';
 import HistoryControls from './HistoryControls.js';
 import ReactTooltip from 'react-tooltip';
 import { useEffect } from 'react';
@@ -24,14 +24,7 @@ const Society = () => {
       <Row className={'d-flex flex-row'}>
         <Row>
           {selectedEntity && (
-            <>
-              <Col>
-                <CivDetails entity={selectedEntity} />
-              </Col>
-              <Col>
-                <ChildEntityDetails entity={selectedEntity} />
-              </Col>
-            </>
+            <EntityDetails entity={selectedEntity}/>
           )}
           <Col>
             <HistoryControls view={VIEWS.SOCIETY} />
