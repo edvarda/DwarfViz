@@ -29,7 +29,6 @@ const EventsList = ({ width, height, yearRange, historicalEvents }) => {
   const narrativizedTypes = ['change_hf_job', 'change_hf_state', 'hf_died', 'hf_relationship', 
   'creature_devoured', 'add_hf_entity_link', 'hf_simple_battle_event']
   
-  
 
   const [types, setTypes] = useState([]);
   const [filteredTypes, setFilteredTypes] = useState([]);
@@ -44,7 +43,9 @@ const EventsList = ({ width, height, yearRange, historicalEvents }) => {
         )
       )
     }
-  }, [types])
+  }, [types, historicalEvents])
+
+  
 
   const filteredEvents = yearRange
     ? filteredTypes
@@ -54,6 +55,7 @@ const EventsList = ({ width, height, yearRange, historicalEvents }) => {
         })
         .slice(0, maxSlice)
     : filteredTypes.slice(0, maxSlice);
+
 
   return (
     <div className={styles.container}>
