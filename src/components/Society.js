@@ -3,8 +3,7 @@ import { HfLink } from './ItemLink';
 import { useDwarfViz } from '../hooks/useDwarfViz';
 import CivPopulation from './CivPopulation/CivPopulation.js';
 import CirclePacking from './CirclePacking';
-import CivDetails from './EntityDetails/CivDetails.js';
-import ChildEntityDetails from './EntityDetails/ChildEntityDetails.js';
+import { CivDetails, ChildEntityDetails } from './EntityDetails';
 import HistoryControls from './HistoryControls.js';
 import ReactTooltip from 'react-tooltip';
 import { useEffect } from 'react';
@@ -24,6 +23,16 @@ const Society = () => {
     <>
       <Row className={'d-flex flex-row'}>
         <Row>
+          {selectedEntity && (
+            <>
+              <Col>
+                <CivDetails entity={selectedEntity} />
+              </Col>
+              <Col>
+                <ChildEntityDetails entity={selectedEntity} />
+              </Col>
+            </>
+          )}
           <Col>
             <HistoryControls view={VIEWS.SOCIETY} />
           </Col>
@@ -31,8 +40,6 @@ const Society = () => {
         <Col className={'d-flex flex-wrap'}>
           {selectedEntity && (
             <>
-              <CivDetails />
-              <ChildEntityDetails />
               <Card style={{ width: '18rem' }} className={'m-1'}>
                 <Card.Body>
                   <div>

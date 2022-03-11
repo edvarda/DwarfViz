@@ -93,6 +93,32 @@ body {
   }
 }
 
+//details components
+
+.detailsView {
+  border: 0.2rem solid black;
+  padding: 0.5rem;
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  li {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.3rem;
+    border-bottom: 0.1rem solid rgb(82, 82, 82);
+  }
+  .propName {
+    font-weight: 800;
+    text-align: left;
+  }
+
+  .value {
+    font-weight: 400;
+    text-align: right;
+  }
+}
+
 :export {
   peopleColor: $peopleColor;
   placesColor: $placesColor;
