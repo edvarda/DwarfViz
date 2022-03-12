@@ -11,7 +11,7 @@ const GetEntityDetails = ({ entity }) => {
   const entityDetailsDefinition = {
     header: _.startCase(entity.name),
     rows: [
-      { displayName: 'Name', accessor: (entity) => _.startCase(entity.name) },
+      //{ displayName: 'Name', accessor: (entity) => _.startCase(entity.name) },
       { displayName: 'Type', accessor: (entity) => _.startCase(entity.type) },
       { displayName: 'Profession', accessor: (entity) => _.startCase(entity.profession) },
       {

@@ -80,12 +80,19 @@ const useTooltip = () => {
   const entityTooltipDefinition = {
     header: 'Entity',
     rows: [
-      { displayName: 'Name', accessor: (entity) => _.startCase(entity.name) },
+      { displayName: 'Name', accessor: (entity) => entity.name ? _.startCase(entity.name) : 'Unknown' },
       { displayName: 'Type', accessor: (entity) => _.startCase(entity.type) },
       { displayName: 'Profession', accessor: (entity) => _.startCase(entity.profession) },
       {
         displayName: 'Race',
         accessor: (entity) => (entity.race ? _.startCase(entity.race) : null),
+      },
+      {
+        displayName: 'Population',
+        accessor: (entity) =>
+          entity.type === 'civilization'
+            ? data.entityPopulations.find((ent) => ent.civ_id == entity.id).races[0].split(':')[1]
+            : null,
       },
       {
         displayName: 'Governed by',
