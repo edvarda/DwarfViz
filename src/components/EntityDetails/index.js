@@ -1,5 +1,6 @@
 import { useDwarfViz } from '../../hooks/useDwarfViz';
 import { EntityLink } from '../ItemLink.js';
+import ItemDetails from '../ItemDetails.js';
 import { Col } from 'react-bootstrap';
 
 import _ from 'lodash';
@@ -19,11 +20,10 @@ const GetEntityDetails = ({ entity }) => {
       },
       {
         displayName: 'Population',
-        accessor: (entity) => (
-          entity.type === 'civilization' 
+        accessor: (entity) =>
+          entity.type === 'civilization'
             ? data.entityPopulations.find((ent) => ent.civ_id == entity.id).races[0].split(':')[1]
-            : null
-        ),
+            : null,
       },
       {
         displayName: 'Governed by',
@@ -45,37 +45,21 @@ const GetEntityDetails = ({ entity }) => {
     ],
   };
 
-  const { header, rows } = entityDetailsDefinition;
-  const nonEmptyRows = rows.filter((row) => !!row.accessor(entity));
-  return (
-    <div className='detailsView'>
-      <h2>{header}</h2>
-      <ul>
-        {nonEmptyRows.map((row) => {
-          return (
-            <li>
-              <div className='propName'>{row.displayName}:</div>
-              <div className='value'>{row.accessor(entity)}</div>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
-  );
+  return <ItemDetails itemDetailsDefinition={entityDetailsDefinition} item={entity} />;
 };
 
 const EntityDetails = ({ entity }) => {
   const {
     data: { entities, entityPopulations },
   } = useDwarfViz();
-  if (entity.type === 'civilization') { //Selected a civilization
+  if (entity.type === 'civilization') {
+    //Selected a civilization
     return (
       <Col>
         <GetEntityDetails entity={entity} />
       </Col>
     );
-  }
-  else {
+  } else {
     let parentCiv = undefined;
     let evalEntity = entity;
     while (parentCiv === undefined) {
@@ -88,7 +72,8 @@ const EntityDetails = ({ entity }) => {
         }
       }
     }
-    if (parentCiv != undefined) { //Selected an entity that belongs to a civilization
+    if (parentCiv != undefined) {
+      //Selected an entity that belongs to a civilization
       return (
         <>
           <Col>
@@ -99,12 +84,13 @@ const EntityDetails = ({ entity }) => {
           </Col>
         </>
       );
-    } else return ( //Selected an entity without parent civilization
-      <Col>
-        <GetEntityDetails entity={entity} />
-      </Col>
-    );
-
+    } else
+      return (
+        //Selected an entity without parent civilization
+        <Col>
+          <GetEntityDetails entity={entity} />
+        </Col>
+      );
   }
 };
 

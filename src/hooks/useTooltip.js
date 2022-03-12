@@ -4,6 +4,7 @@ import _ from 'lodash';
 
 import { WorldDataContext } from './useDwarfViz';
 
+//TODO put in world util lib
 const regionTilesToSquareKm = (regiontiles) => regiontiles * 3.4;
 
 const Tooltip = ({ definition, data }) => {
