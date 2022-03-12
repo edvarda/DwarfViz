@@ -50,11 +50,7 @@ const Marks = ({ data, xScale, yScale, xValue, yValue, innerHeight, hue, maxCivP
           }%)`}
           //onClick={() => {console.log(id); console.log(entities.find((ent) => ent.id == id)); selectEntity(id)}}
           data-tip={entityTooltip(entities.find((ent) => ent.id == id))}
-        >
-          {/*<title>
-            Civilization name: {civName(id)}, Population: {civ_pop}
-        </title>*/}
-        </rect>,
+        />
       );
       previousHeight += innerHeight - yScale(civ_pop);
     }

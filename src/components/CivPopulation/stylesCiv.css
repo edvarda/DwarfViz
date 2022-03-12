@@ -1,16 +1,8 @@
-.barchart {
-  border: 2px solid black;
-}
-
 .title {
   font-size: 2em;
   fill: gray;
 }
 
-.tick line {
-  stroke: #c0c0bb;
-}
-
-.popBar {
-  fill: steelblue;
+rect:focus {
+  outline:none;
 }
