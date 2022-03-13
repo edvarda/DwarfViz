@@ -1,5 +1,6 @@
-import { Card, Row, Col } from 'react-bootstrap';
+import { Row, Col, Container } from 'react-bootstrap';
 import { HfLink } from './ItemLink';
+import { Events } from './';
 import { useDwarfViz } from '../hooks/useDwarfViz';
 import CivPopulation from './CivPopulation/CivPopulation.js';
 import CirclePacking from './CirclePacking';
@@ -11,7 +12,7 @@ import { useEffect } from 'react';
 const Society = () => {
   const {
     data: { historicalFigures },
-    societyView: { selectedItem: selectedEntity },
+    societyView: { selectedItem: selectedEntity, isActive: isViewActive },
     VIEWS,
   } = useDwarfViz();
 
@@ -21,43 +22,45 @@ const Society = () => {
 
   return (
     <>
-      <Row className={'d-flex flex-row'}>
-        <Row>
-          {selectedEntity && (
-            <EntityDetails entity={selectedEntity}/>
-          )}
-          <Col>
-            <HistoryControls view={VIEWS.SOCIETY} />
-          </Col>
-        </Row>
-        <Col className={'d-flex flex-wrap'}>
-          {selectedEntity && (
-            <>
-              <Card style={{ width: '18rem' }} className={'m-1'}>
-                <Card.Body>
-                  <div>
-                    <h2>Associated Historical Figures</h2>
-                    <ul>
-                      {selectedEntity.hf_ids.map((hf_id) => {
-                        const hf = historicalFigures.find((x) => x.id === hf_id);
-                        return (
-                          <li key={hf_id}>
-                            <HfLink hfId={hf.id} />
-                          </li>
-                        );
-                      })}
-                    </ul>
+      <div className='view-title'>
+        <h2>Society</h2>
+      </div>
+      <div className={'view-content'}>
+        {isViewActive && (
+          <Container fluid>
+            <Row>
+              <Col>
+                <HistoryControls view={VIEWS.SOCIETY} />
+              </Col>
+            </Row>
+
+            <Row>
+              <Col className={'col-sm-4'}>
+                <div className='view-element'>
+                  <CirclePacking width={500} height={500} />
+                </div>
+              </Col>
+              <Col className={'col-sm-6'}>
+                {selectedEntity ? (
+                  <div className='view-element'>
+                    <EntityDetails entity={selectedEntity} />
                   </div>
-                </Card.Body>
-              </Card>
-            </>
-          )}
-        </Col>
-        <Col>
-          <CivPopulation width={500} height={250} className={'barchart'} />
-          <CirclePacking width={500} height={500} />
-        </Col>
-      </Row>
+                ) : (
+                  <div className={'view-element noSelection'}>No entity selected</div>
+                )}
+              </Col>
+            </Row>
+            <Row>
+              <Col className={'col-sm-4'}>
+                <div className='view-element'>
+                  <CivPopulation width={500} height={250} className={'barchart'} />
+                </div>
+              </Col>
+            </Row>
+            <Row>{selectedEntity && <Events />}</Row>
+          </Container>
+        )}
+      </div>
     </>
   );
 };

@@ -4,7 +4,7 @@ import { Row, Col, Container } from 'react-bootstrap';
 import React from 'react';
 import ReactTooltip from 'react-tooltip';
 
-import { Places, People, Society, Events } from './components';
+import { Places, People, Society } from './components';
 import { useDwarfViz, WorldDataProvider } from './hooks/useDwarfViz';
 
 function App() {
@@ -37,48 +37,27 @@ const Viz = () => {
       ) : (
         <Container fluid>
           <ReactTooltip html={true} className={'dwarfviz-tooltip'} />
-          <Row>
-            <Col
-              id='Places'
-              className={`view ${placesView.isActive && `expanded`}`}
+          <Row id='header'>DwarfViz</Row>
+          <ul className='view-container'>
+            <li
+              className={`view places ${placesView.isActive && `expanded`}`}
               onClick={() => setActiveView('placesView')}
             >
-              <h2>Places</h2>
-              <div className={'view-content'}>
-                <Places />
-              </div>
-            </Col>
-            <Col
-              id='Society'
-              className={`view ${societyView.isActive && `expanded`}`}
+              <Places />
+            </li>
+            <li
+              className={`view society ${societyView.isActive && `expanded`}`}
               onClick={() => setActiveView('societyView')}
             >
-              <h2
-                onClick={() => {
-                  selectEntity(23);
-                }}
-              >
-                Society
-              </h2>
-              <div className={'view-content'}>
-                <Society />
-              </div>
-            </Col>
-            <Col
-              id='People'
-              className={`view ${peopleView.isActive && `expanded`}`}
+              <Society />
+            </li>
+            <li
+              className={`view people ${peopleView.isActive && `expanded`}`}
               onClick={() => setActiveView('peopleView')}
             >
-              <h2>People</h2>
-              <div className={'view-content'}>
-                <People />
-              </div>
-            </Col>
-          </Row>
-
-          <Row id='Events' className={'view expanded'}>
-            {!isLoading && <Events />}
-          </Row>
+              <People />
+            </li>
+          </ul>
         </Container>
       )}
     </>

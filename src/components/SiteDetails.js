@@ -6,7 +6,7 @@ const SiteDetails = ({ site }) => {
   const { data } = useDwarfViz();
 
   const siteDetailsDefinition = {
-    header: _.startCase(site.name),
+    header: `Site: ${_.startCase(site.name)}`,
     rows: [
       { displayName: 'Type', accessor: (site) => _.startCase(site.type) },
       { displayName: 'Region', accessor: (site) => `[${site.coord.x},${site.coord.y}]` },

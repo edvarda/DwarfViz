@@ -19,7 +19,18 @@ import { useDwarfViz } from '../../hooks/useDwarfViz';
 import useTooltip from '../../hooks/useTooltip.js';
 import _ from 'lodash';
 
-const Marks = ({ data, xScale, yScale, xValue, yValue, innerHeight, hue, maxCivPop, entities, selectEntity }) => {
+const Marks = ({
+  data,
+  xScale,
+  yScale,
+  xValue,
+  yValue,
+  innerHeight,
+  hue,
+  maxCivPop,
+  entities,
+  selectEntity,
+}) => {
   const totalPop = (popObject) => _.sum(Object.values(popObject));
   const civName = (civ_id) => {
     const nameTag = entities.find((ent) => ent.id == civ_id).name;
@@ -28,13 +39,13 @@ const Marks = ({ data, xScale, yScale, xValue, yValue, innerHeight, hue, maxCivP
   const { entityTooltip } = useTooltip();
   const rectPileArray = (raceName) => {
     const civPops = data[raceName];
-    const sortedKeys = Object.keys(civPops).sort((el1, el2) => civPops[el2] - civPops[el1])
+    const sortedKeys = Object.keys(civPops).sort((el1, el2) => civPops[el2] - civPops[el1]);
     let rectArray = [];
     let previousHeight = 0;
     //console.log('race: ', raceName, color(raceName))
     //for (const [id, civ_pop] of Object.entries(civPops)) {
     for (const id of sortedKeys) {
-      const civ_pop = civPops[id]
+      const civ_pop = civPops[id];
       //console.log('val', civ_pop, yScale(civ_pop))
       rectArray.push(
         <rect
@@ -50,7 +61,7 @@ const Marks = ({ data, xScale, yScale, xValue, yValue, innerHeight, hue, maxCivP
           }%)`}
           //onClick={() => {console.log(id); console.log(entities.find((ent) => ent.id == id)); selectEntity(id)}}
           data-tip={entityTooltip(entities.find((ent) => ent.id == id))}
-        />
+        />,
       );
       previousHeight += innerHeight - yScale(civ_pop);
     }
@@ -166,7 +177,7 @@ const CivPopulation = ({ width, height }) => {
   const TootlipFactory = ({ text }) => <div>{text}</div>;
 
   return (
-    <svg style={{ border: '3px solid red' }} width={width} height={height}>
+    <svg width={width} height={height}>
       <g transform={`translate(${margin.left},${margin.top})`}>
         <g ref={xAxisRef} transform={`translate(0,${innerHeight})`}></g>
         <g ref={yAxisRef} />

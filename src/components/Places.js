@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 import ReactTooltip from 'react-tooltip';
-import { Card, Row, Col } from 'react-bootstrap';
+import { Row, Col, Container } from 'react-bootstrap';
 import Map from './Map';
+import { Events } from './';
 import SiteDetails from './SiteDetails.js';
 import RegionDetails from './RegionDetails.js';
 import { useDwarfViz } from '../hooks/useDwarfViz';
@@ -11,7 +12,7 @@ import HistoryControls from './HistoryControls.js';
 const Places = () => {
   const {
     data: { mapImageURL, regions, regionsGeoJSON },
-    placesView: { selectedItem: selectedSite },
+    placesView: { selectedItem: selectedSite, isActive: isViewActive },
     VIEWS,
   } = useDwarfViz();
 
@@ -25,38 +26,52 @@ const Places = () => {
 
   return (
     <>
-      <Row>
-        <Row>
-          <Col>
-            <HistoryControls view={VIEWS.PLACES} />
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <Map
-              mapImage={mapImageURL}
-              mapSize={{
-                width: 528,
-                height: 528,
-                bounds: [
-                  [0, 0],
-                  [527, 527],
-                ],
-              }}
-              data={regionsGeoJSON}
-              regions={regions}
-            />
-          </Col>
-          <Col className={'d-flex flex-column'}>
-            {selectedSite && (
-              <>
-                <RegionDetails region={getRegionFromSite(selectedSite)} />
-                <SiteDetails site={selectedSite} />
-              </>
-            )}
-          </Col>
-        </Row>
-      </Row>
+      <div className='view-title'>
+        <h2>Places</h2>
+      </div>
+      <div className={'view-content'}>
+        {isViewActive && (
+          <Container fluid>
+            <Row>
+              <Row>
+                <Col>
+                  <HistoryControls view={VIEWS.PLACES} />
+                </Col>
+              </Row>
+              <Row>
+                <Col className={'view-element col-sm-4'}>
+                  <Map
+                    mapImage={mapImageURL}
+                    mapSize={{
+                      width: 528,
+                      height: 528,
+                      bounds: [
+                        [0, 0],
+                        [527, 527],
+                      ],
+                    }}
+                    data={regionsGeoJSON}
+                    regions={regions}
+                  />
+                </Col>
+                <Col className={'flex-column col-sm-4'}>
+                  {selectedSite && (
+                    <>
+                      <div className='view-element'>
+                        <RegionDetails region={getRegionFromSite(selectedSite)} />
+                      </div>
+                      <div className='view-element'>
+                        <SiteDetails site={selectedSite} />
+                      </div>
+                    </>
+                  )}
+                </Col>
+              </Row>
+              <Row>{selectedSite && <Events />}</Row>
+            </Row>
+          </Container>
+        )}
+      </div>
     </>
   );
 };

@@ -15,25 +15,19 @@ const Events = () => {
 
   return (
     <>
-      <svg width='100%' height='35%'>
-        <g>
-          {
-            <BrushableTimeline
-              width={1400}
-              height={250}
-              setYearRange={setYearRange}
-              historicalEvents={events}
-            />
-          }
-        </g>
-      </svg>
-
-      <EventsList
-        width={1400}
-        height={0}
-        yearRange={yearRange}
-        historicalEvents={events}
-      ></EventsList>
+      <div className={'view-element'}>
+        {
+          <BrushableTimeline
+            width={800}
+            height={250}
+            setYearRange={setYearRange}
+            historicalEvents={events}
+          />
+        }
+      </div>
+      <div className={'view-element'}>
+        <EventsList yearRange={yearRange} historicalEvents={events} />
+      </div>
     </>
   );
 };

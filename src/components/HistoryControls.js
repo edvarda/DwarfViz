@@ -4,14 +4,19 @@ const HistoryControls = ({ view }) => {
   const { goBack, hasBack, goForward, hasForward, clearSelection, hasSelection } = useHistory(view);
   return (
     <div>
-      <button onClick={() => goBack()} disabled={!hasBack}>
-        Back
+      <button className={'history-button'} onClick={() => goBack()} disabled={!hasBack}>
+        {`<`}
       </button>
-      <button onClick={() => goForward()} disabled={!hasForward}>
-        Forward
+      <button className={'history-button'} onClick={() => goForward()} disabled={!hasForward}>
+        {`>`}
       </button>
-      <button onClick={() => clearSelection()} disabled={!hasSelection}>
-        Clear selection
+
+      <button
+        className={'history-button'}
+        onClick={() => clearSelection()}
+        disabled={!hasSelection}
+      >
+        Deselect
       </button>
     </div>
   );

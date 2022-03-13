@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 
 import useTable from './UseTable.js';
-import styles from './Table.module.css';
+import styles from './Table.module.scss';
+import { Row, Col } from 'react-bootstrap';
 import TableFooter from './TableFooter/index.js';
 import { useDwarfViz } from '../../hooks/useDwarfViz.js';
 import narrate from '../../lib/narrativization.js';

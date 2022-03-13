@@ -1,7 +1,16 @@
-$placesColor: rgb(113, 93, 190);
-$peopleColor: rgb(90, 151, 70);
-$societyColor: rgb(193, 73, 71);
-$eventsColor: rgb(179, 128, 50);
+:root {
+  --background-color: #868374;
+  --shadow-color: #4d4b49;
+  --view-background-color: #edebe3;
+
+  --people-color: rgb(90, 151, 70);
+  --people-color-shadow: rgb(51, 87, 39);
+  --places-color: rgb(113, 93, 190);
+  --places-color-shadow: rgb(70, 58, 119);
+  --society-color: rgb(193, 73, 71);
+  --society-color-shadow: rgb(136, 51, 49);
+  --events-color: rgb(179, 128, 50);
+}
 
 body {
   font-family: 'Lato';
@@ -9,56 +18,121 @@ body {
   -moz-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizelegibility;
+  background-color: var(--background-color);
+}
+
+#header {
+  margin-left: 6rem;
+  font-weight: 800;
+  font-size: 8rem;
+}
+
+.view-element {
+  padding: 0.3rem;
+  margin: 0.5rem;
+  box-shadow: 0rem 0.1rem 0.3rem var(--shadow-color);
+  background-color: white;
 }
 
 .App {
   text-align: center;
 }
 
-#People {
-  border-color: $peopleColor;
+.view-container {
+  margin-left: 1em;
+  margin-right: 1em;
+  display: flex;
+  list-style-type: none;
+  padding: 0;
+  box-shadow: 0.5rem 0.5rem 0 var(--shadow-color);
 }
 
-#Society {
-  border-color: $societyColor;
-}
-#Places {
-  border-color: $placesColor;
-}
-#Events {
-  border-color: $eventsColor;
-  min-height: 20vh;
+.noSelection {
+  min-height: 50vh;
+  font-size: 5rem;
+  font-weight: 800;
+  color: var(--shadow-color);
+  text-align: center;
 }
 
 .view {
-  border: 1.5em solid;
+  display: flex;
+  flex: 0 1 5rem;
   transition: all 0.8s ease;
-  flex-grow: 1;
-  overflow: hidden;
-  height: 100vh;
-  overflow-y: scroll;
+  background-color: var(--view-color);
 
-  .view-content > * {
-    display: none;
-    pointer-events: none;
-  }
-
-  div {
+  .view-content {
+    flex: 0 0 0;
     opacity: 0;
+    pointer-events: none;
+    padding: 0;
+    background-color: var(--view-background-color);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    .view-element {
+      display: none;
+    }
+  }
+
+  .view-title {
+    flex: 0 0 5rem;
+    background-color: var(--view-color);
+    position: relative;
+    // box-shadow: 0.3rem 0.3rem 0 var(--view-color-shadow);
+    // z-index: 5;
+
+    h2 {
+      position: absolute;
+      top: 1rem;
+      left: 1.5rem;
+      transform-origin: 0 0;
+      transform: rotate(-90deg) translateX(-100%);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+  }
+
+  &.expanded {
+    flex: 10;
+    width: 100%;
+    .view-content {
+      flex: 7;
+      opacity: 1;
+      padding: 1rem;
+      pointer-events: all;
+      .view-element {
+        display: inherit;
+      }
+    }
   }
 }
 
-.expanded {
-  flex-grow: 10;
-  .view-content > * {
-    display: inherit;
-    pointer-events: all;
-  }
-
-  div {
-    opacity: 1;
+.people {
+  --view-color: var(--people-color);
+  --view-color-shadow: var(--people-color-shadow);
+  border-color: var(--view-color);
+  .placeholder {
+    height: 60vh;
   }
 }
+.society {
+  --view-color: var(--society-color);
+  --view-color-shadow: var(--society-color-shadow);
+  border-color: var(--view-color);
+}
+.places {
+  --view-color: var(--places-color);
+  --view-color-shadow: var(--places-color-shadow);
+  border-color: var(--view-color);
+}
+.events {
+  --view-color: var(--events-color);
+  border-color: var(--view-color);
+}
+
+// Nothing to see here
 
 .itemLink {
   cursor: pointer;
@@ -67,15 +141,15 @@ body {
 }
 
 .site-link {
-  color: $placesColor;
+  color: var(--places-color);
 }
 
 .hf-link {
-  color: $peopleColor;
+  color: var(--people-color);
 }
 
 .entity-link {
-  color: $societyColor;
+  color: var(--society-color);
 }
 
 .dwarfviz-tooltip {
@@ -93,10 +167,28 @@ body {
   }
 }
 
+//History
+.history-button {
+  color: var(--shadow-color);
+  background-color: transparent;
+  font-size: 2rem;
+  font-weight: 800;
+  &:disabled {
+    opacity: 0.4;
+  }
+  &:hover:enabled {
+    color: var(--background-color);
+  }
+  &:active:enabled {
+    color: var(--shadow-color);
+  }
+
+  border: 0;
+}
+
 //details components
 
 .detailsView {
-  border: 0.2rem solid black;
   padding: 0.5rem;
   width: 100%;
   ul {
@@ -121,8 +213,8 @@ body {
 }
 
 :export {
-  peopleColor: $peopleColor;
-  placesColor: $placesColor;
-  societyColor: $societyColor;
-  eventsColor: $eventsColor;
+  peopleColor: var(--people-color);
+  placesColor: var(--places-color);
+  societyColor: var(--society-color);
+  eventsColor: var(--events-color);
 }

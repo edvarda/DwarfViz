@@ -75,14 +75,10 @@ const EntityDetails = ({ entity }) => {
     if (parentCiv != undefined) {
       //Selected an entity that belongs to a civilization
       return (
-        <>
-          <Col>
-            <GetEntityDetails entity={parentCiv} />
-          </Col>
-          <Col>
-            <GetEntityDetails entity={entity} />
-          </Col>
-        </>
+        <Col>
+          <GetEntityDetails entity={parentCiv} />
+          <GetEntityDetails entity={entity} />
+        </Col>
       );
     } else
       return (

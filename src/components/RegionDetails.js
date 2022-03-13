@@ -8,7 +8,7 @@ const RegionDetails = ({ region }) => {
   const { data } = useDwarfViz();
 
   const regionDetailsDefinition = {
-    header: _.startCase(region.name),
+    header: `Region: ${_.startCase(region.name)}`,
     rows: [
       { displayName: 'Name', accessor: (region) => _.startCase(region.name) },
       { displayName: 'Type', accessor: (region) => _.startCase(region.type) },

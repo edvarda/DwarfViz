@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 
-import styles from "./TableFooter.module.css";
+import styles from './TableFooter.module.scss';
 
 const TableFooter = ({ range, setPage, page, slice }) => {
   useEffect(() => {

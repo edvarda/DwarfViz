@@ -65,17 +65,17 @@ const BrushableTimeline = ({ width, height, setYearRange, historicalEvents }) =>
       ])
       .range(['red', 'blue'])
       .interpolate(interpolateRgb.gamma(2.2))(d);
-  
+
   const yScale = useMemo(
     () =>
       scaleLinear()
         .clamp(true)
-        .domain([0, d3.max([d3.max(binnedData, (d) => d.y),1])])
+        .domain([0, d3.max([d3.max(binnedData, (d) => d.y), 1])])
         .range([innerHeight, 0])
         .nice(),
     [binnedData, innerHeight],
   );
-  
+
   const brushRef = useRef();
   useEffect(() => {
     const brush = brushX().extent([
@@ -95,39 +95,41 @@ const BrushableTimeline = ({ width, height, setYearRange, historicalEvents }) =>
   }, [innerWidth, innerHeight]);
 
   return (
-    <>
-      <rect width={width} height={height} fill='white' />
-      <g transform={`translate(${margin.left},${margin.top})`}>
-        <AxisBottom xScale={xScale} innerHeight={innerHeight} tickOffset={10} />
-        <AxisLeft yScale={yScale} innerWidth={innerWidth} tickOffset={8} />
-        <text
-          className='axis-label'
-          x={innerWidth / 2}
-          y={innerHeight + xAxisLabelOffset}
-          textAnchor='middle'
-          style={{ fontWeight: 'bold' }}
-        >
-          {xAxisLabel}
-        </text>
-        <text
-          className='axis-label'
-          textAnchor='middle'
-          transform={`translate(${-yAxisLabelOffset},${innerHeight / 2}) rotate(-90)`}
-          style={{ fontWeight: 'bold' }}
-        >
-          {yAxisLabel}
-        </text>
-        <Marks
-          binnedData={binnedData}
-          xScale={xScale}
-          yScale={yScale}
-          tooltipFormat={(d) => d}
-          innerHeight={innerHeight}
-          colorScale={colorScale}
-        />
-        <g ref={brushRef} />
+    <svg width={width} height={height}>
+      <g>
+        <rect width={width} height={height} fill='white' />
+        <g transform={`translate(${margin.left},${margin.top})`}>
+          <AxisBottom xScale={xScale} innerHeight={innerHeight} tickOffset={10} />
+          <AxisLeft yScale={yScale} innerWidth={innerWidth} tickOffset={8} />
+          <text
+            className='axis-label'
+            x={innerWidth / 2}
+            y={innerHeight + xAxisLabelOffset}
+            textAnchor='middle'
+            style={{ fontWeight: 'bold' }}
+          >
+            {xAxisLabel}
+          </text>
+          <text
+            className='axis-label'
+            textAnchor='middle'
+            transform={`translate(${-yAxisLabelOffset},${innerHeight / 2}) rotate(-90)`}
+            style={{ fontWeight: 'bold' }}
+          >
+            {yAxisLabel}
+          </text>
+          <Marks
+            binnedData={binnedData}
+            xScale={xScale}
+            yScale={yScale}
+            tooltipFormat={(d) => d}
+            innerHeight={innerHeight}
+            colorScale={colorScale}
+          />
+          <g ref={brushRef} />
+        </g>
       </g>
-    </>
+    </svg>
   );
 };
 
