@@ -13,9 +13,9 @@ const Tooltip = ({ definition, data }) => {
   return (
     <table>
       <th className='header'>{header}</th>
-      {tooltipRows.map((row) => {
+      {tooltipRows.map((row,i) => {
         return (
-          <tr>
+          <tr key={`tt-${i}-${data.id}`}>
             <td className='propName'>{row.displayName}:</td>
             <td className='value'>{row.accessor(data)}</td>
           </tr>
@@ -80,7 +80,10 @@ const useTooltip = () => {
   const entityTooltipDefinition = {
     header: 'Entity',
     rows: [
-      { displayName: 'Name', accessor: (entity) => entity.name ? _.startCase(entity.name) : 'Unknown' },
+      {
+        displayName: 'Name',
+        accessor: (entity) => (entity.name ? _.startCase(entity.name) : 'Unknown'),
+      },
       { displayName: 'Type', accessor: (entity) => _.startCase(entity.type) },
       { displayName: 'Profession', accessor: (entity) => _.startCase(entity.profession) },
       {

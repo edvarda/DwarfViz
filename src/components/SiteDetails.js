@@ -11,10 +11,14 @@ const SiteDetails = ({ site }) => {
     rows: [
       { displayName: 'Type', accessor: (site) => _.startCase(site.type) },
       { displayName: 'Region', accessor: (site) => `[${site.coord.x},${site.coord.y}]` },
-      { displayName: 'Civilization', 
-        accessor: (site) => site.civ_id ? <EntityLink entityId={site.civ_id} /> : null},
-      { displayName: 'Current owner', 
-        accessor: (site) => site.cur_owner_id ?  <HfLink hfId={site.cur_owner_id} /> : null},
+      {
+        displayName: 'Civilization',
+        accessor: (site) => (site.civ_id ? <EntityLink id={site.civ_id} /> : null),
+      },
+      {
+        displayName: 'Current owner',
+        accessor: (site) => (site.cur_owner_id ? <HfLink id={site.cur_owner_id} /> : null),
+      },
     ],
   };
   return <ItemDetails itemDetailsDefinition={siteDetailsDefinition} item={site} />;
