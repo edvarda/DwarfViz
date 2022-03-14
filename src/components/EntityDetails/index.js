@@ -1,5 +1,6 @@
 import { useDwarfViz } from '../../hooks/useDwarfViz';
-import { EntityLink, HfLink } from '../ItemLink.js';
+import { GovernedSitesDetails } from './GovernedSitesDetails.js';
+import { EntityLink, HfLink, SiteLink } from '../ItemLink.js';
 import ItemDetails from '../ItemDetails.js';
 import { Col } from 'react-bootstrap';
 
@@ -10,8 +11,9 @@ const GetEntityDetails = ({ entity }) => {
 
   const getLeader = (entity) => {
     for (const position of Object.values(entity.entity_position)) {
-      return position.name ? { id: position.local_id, name: position.name } : null;
+      return position ? ({ id: position.local_id, name: position.name }) : ({id: null, name: null});
     }
+    return ({id: null, name: null});
   };
 
   const entityDetailsDefinition = {
@@ -25,9 +27,10 @@ const GetEntityDetails = ({ entity }) => {
         accessor: (entity) => (entity.race ? _.startCase(entity.race) : null),
       },
       {
-        displayName: 'Leader (' + getLeader(entity).name + ')',
+        displayName: `Leader (${getLeader(entity).name})`,
         accessor: (entity) => {
           const localId = getLeader(entity).id;
+          if(localId === null) return null; 
           const leaderAssignment = entity.entity_position_assignment.find(
             (pers) => pers.position_id == localId,
           );
@@ -60,6 +63,21 @@ const GetEntityDetails = ({ entity }) => {
           if (numberOfChildEntities.length > 0) return `${numberOfChildEntities.length} entities`;
         },
       },
+      {
+        displayName: 'Owns sites',
+        accessor: (entity) => {
+          let list_elements = []
+          for (const site of data.sites.filter((s) => s.cur_owner_id == entity.id)) {
+            list_elements.push(<li className="ownSiteList"><SiteLink id={site.id}/></li>)
+          }
+          return list_elements.length > 0
+            ? (
+              <ul>
+                {list_elements}
+              </ul>)
+            : null;
+        }
+      },
     ],
   };
 
@@ -75,6 +93,7 @@ const EntityDetails = ({ entity }) => {
     return (
       <Col>
         <GetEntityDetails entity={entity} />
+        <GovernedSitesDetails entity={entity}/>
       </Col>
     );
   } else {
