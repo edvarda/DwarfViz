@@ -83,21 +83,23 @@ const CirclePacking = ({ width, height }) => {
     .range(['hsl(152,80%,80%)', 'hsl(228,30%,40%)'])
     .interpolate(d3.interpolateHcl);
 
-  const pack = (data) =>
-    d3.pack().size([width, height]).padding(3)(
-      d3
-        .hierarchy(data)
-        .sum((d) => {
-          return d.value;
-        })
-        .sort(function (a, b) {
-          return b.value - a.value;
-        }),
-    );
-
   const zoomFunctionRef = useRef();
 
   useEffect(() => {
+    const width = svgRef.current.parentElement.offsetWidth;
+    const height = width;
+
+    const pack = (data) =>
+      d3.pack().size([width, height]).padding(3)(
+        d3
+          .hierarchy(data)
+          .sum((d) => {
+            return d.value;
+          })
+          .sort(function (a, b) {
+            return b.value - a.value;
+          }),
+      );
     const root = pack(data);
     let focus = root;
     let view;
@@ -106,7 +108,6 @@ const CirclePacking = ({ width, height }) => {
       .select(svgRef.current)
       .attr('viewBox', `-${width / 2} -${height / 2} ${width} ${height}`)
       .style('display', 'block')
-      .style('margin', '0 -14px')
       .style('cursor', 'pointer')
       .on('click', () => zoom(root));
 
@@ -219,7 +220,7 @@ const CirclePacking = ({ width, height }) => {
     }
   }, [selectedEntity]);
 
-  return <svg ref={svgRef} width={width} height={height} />;
+  return <svg ref={svgRef} />;
 };
 
 export default CirclePacking;

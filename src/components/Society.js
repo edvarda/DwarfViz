@@ -1,5 +1,4 @@
 import { Row, Col, Container } from 'react-bootstrap';
-import { HfLink } from './ItemLink';
 import { Events } from './';
 import { useDwarfViz } from '../hooks/useDwarfViz';
 import CivPopulation from './CivPopulation/CivPopulation.js';
@@ -11,7 +10,6 @@ import { useEffect } from 'react';
 
 const Society = () => {
   const {
-    data: { historicalFigures },
     societyView: { selectedItem: selectedEntity, isActive: isViewActive },
     VIEWS,
   } = useDwarfViz();
@@ -35,12 +33,12 @@ const Society = () => {
             </Row>
 
             <Row>
-              <Col className={'col-sm-4'}>
+              <Col className={'col-sm-7'}>
                 <div className='view-element'>
-                  <CirclePacking width={500} height={500} />
+                  <CirclePacking />
                 </div>
               </Col>
-              <Col className={'col-sm-6'}>
+              <Col className={'col-sm-4'}>
                 {selectedEntity ? (
                   <div className='view-element'>
                     <EntityDetails entity={selectedEntity} />
@@ -51,9 +49,9 @@ const Society = () => {
               </Col>
             </Row>
             <Row>
-              <Col className={'col-sm-4'}>
+              <Col className={'col-sm-6'}>
                 <div className='view-element'>
-                  <CivPopulation width={500} height={250} className={'barchart'} />
+                  <CivPopulation width={450} height={300} className={'barchart'} />
                 </div>
               </Col>
             </Row>

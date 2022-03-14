@@ -9,14 +9,14 @@ const point = {
   color: 'red',
   fillColor: '#f03',
   fillOpacity: 0.5,
-  radius: 3,
+  radius: 5,
 };
 
 const pointHover = {
-  color: 'black',
-  fillColor: '#f03',
+  color: 'red',
+  fillColor: '#51f',
   fillOpacity: 1,
-  radius: 5,
+  radius: 8,
 };
 
 const style = {
@@ -46,7 +46,7 @@ const fade = {
   opacity: 1,
 };
 
-const Map = ({ mapImage, mapSize, data, regions }) => {
+const Map = ({ mapImage, mapSize, data, regions, dim }) => {
   const { siteTooltip, regionTooltip } = useTooltip();
   const sitesAsGeoJSONFeatures = (sites) => {
     const getCenterpointOfRect = ({ x1, x2, y1, y2 }) => [
@@ -77,9 +77,9 @@ const Map = ({ mapImage, mapSize, data, regions }) => {
     // create map
     mapRef.current = L.map('map', {
       center: [mapSize.width / 2, mapSize.height / 2],
-      zoom: 0,
+      zoomSnap: 0,
       attributionControl: false,
-      zoomControl: true,
+      zoomControl: false,
       crs: L.CRS.Simple,
       maxBounds: mapSize.bounds,
       layers: [L.imageOverlay(mapImage, mapSize.bounds)],
@@ -130,14 +130,19 @@ const Map = ({ mapImage, mapSize, data, regions }) => {
         });
       },
     }).addTo(mapRef.current);
+    setTimeout(function () {
+      mapRef.current.fitBounds(mapSize.bounds);
+    }, 500);
     return () => {
       mapRef.current.remove();
     };
   }, [mapImage, mapSize, data, regions]);
 
-  useEffect(() => {}, []);
-
-  return <div id='map' style={{ height: mapSize.height, width: mapSize.width }} />;
+  return (
+    <div className={'map-container'}>
+      <div id='map' style={{ width: '100%', height: 'auto' }} />
+    </div>
+  );
 };
 
 export default Map;

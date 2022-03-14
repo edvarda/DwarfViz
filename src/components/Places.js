@@ -6,7 +6,6 @@ import { Events } from './';
 import SiteDetails from './SiteDetails.js';
 import RegionDetails from './RegionDetails.js';
 import { useDwarfViz } from '../hooks/useDwarfViz';
-import useTooltip from '../hooks/useTooltip';
 import HistoryControls from './HistoryControls.js';
 
 const Places = () => {
@@ -39,7 +38,7 @@ const Places = () => {
                 </Col>
               </Row>
               <Row>
-                <Col className={'view-element col-sm-4'}>
+                <Col className={'view-element col-sm-7'}>
                   <Map
                     mapImage={mapImageURL}
                     mapSize={{
