@@ -6,7 +6,6 @@ const HfDetailSkills = ({ hf }) => {
   const { data } = useDwarfViz();
   const topSkills = hf.skills.sort((a, b) => a.total_ip > b.total_ip).slice(-3);
   const numericals = ["", "Second", "Third"]
-  console.log(hf.skills)
   let num = 0;
   const hfSkillsDetailsDefinition = {
     header: `Top Skills`,
@@ -39,8 +38,6 @@ const GetSkillLevel = (skill) => {
     {skill: "Grand Master", xp:16100},
     {skill: "Legendary", xp:18000},
   ]
-  console.log(skill)
-  console.log(skillLevels)
   for (let i = skillLevels.length-1; i > 0; i--){
     if (skill.total_ip > skillLevels[i].xp) {
       return skillLevels[i].skill;
