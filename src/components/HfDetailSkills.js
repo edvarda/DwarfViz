@@ -1,6 +1,6 @@
 import { useDwarfViz } from '../hooks/useDwarfViz';
-import { EntityLink, HfLink } from './ItemLink.js';
-import { ItemDetails } from './ItemDetails.js';
+import ItemDetails from './ItemDetails.js';
+import _ from 'lodash';
 
 const HfDetailSkills = ({ hf }) => {
   const { data } = useDwarfViz();
