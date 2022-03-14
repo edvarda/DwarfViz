@@ -75,35 +75,53 @@ const Add_hf_entity_link_desc = ({ he }) => {
 
   switch (he.link_type) {
     case 'prisoner':
-      eventDesc += `${hf.name} was imprisoned by ${getEntityName(civ, 'nameRace')}`;
+      eventDesc = 
+        <>
+          <HfLink id={hf.id} /> was imprisoned by<EntityLink id={civ.id}/>
+        </>
       break;
     case 'enemy':
-      eventDesc += `${hf.name} became an enemy of ${getEntityName(civ, 'nameRace')}.`;
+      eventDesc =
+        <>
+          <HfLink id={hf.id}/> became an enemy of <EntityLink id={civ.id}/>
+        </>
       break;
     case 'member':
-      eventDesc += `${hf.name} became a member of ${getEntityName(civ, 'nameRace')}.`;
+      eventDesc =
+        <>
+          <HfLink id={hf.id}/> became a member of <EntityLink id={civ.id}/>
+        </>
       break;
     case 'former member':
-      eventDesc += `${hf.name} became a former member of ${getEntityName(civ, 'nameRace')}.`;
+      eventDesc =
+        <>
+          <HfLink id={hf.id}/> became a former member of <EntityLink id={civ.id}/>
+        </>
       break;
     case 'slave':
-      eventDesc += `${hf.name} was enslaved by ${getEntityName(civ, 'nameRace')}`;
+      eventDesc =
+        <>
+          <HfLink id={hf.id}/> was enslaved by <EntityLink id={civ.id}/>
+        </>
       break;
     case 'position':
       if (he.position !== undefined) {
-        eventDesc += `${hf.name} was given the position of ${he.position} within ${getEntityName(
-          civ,
-          'nameRace',
-        )}.`;
+        eventDesc = 
+          <>
+            <HfLink id={hf.id}/> was given the position of ${he.position} within <EntityLink id={civ.id}/>
+          </>
       } else {
-        eventDesc += `${hf.name} was given a new position within ${getEntityName(
-          civ,
-          'nameRace',
-        )}.`;
+        eventDesc =
+          <>
+            <HfLink id={hf.id}/> was given a new position within <EntityLink id={civ.id}/>
+          </>
       }
       break;
     case 'squad':
-      eventDesc += `${hf.name} became a member of ${getEntityName(civ, 'nameRace')}`;
+      eventDesc =
+        <>
+          <HfLink id={hf.id}/> became a member of <EntityLink id={civ.id}/>
+        </>
       break;
     default:
       console.error('unhandled link type: ' + he.link_type);
@@ -123,14 +141,21 @@ const Change_hf_job_desc = ({ he }) => {
 
   if (he.new_job !== 'standard' && he.old_job !== 'standard') {
     //create text
-    eventDesc += `${hf.name} stopped being ${a_an(he.old_job)} and became ${a_an(he.new_job)}`;
+    eventDesc =
+      <>
+        <HfLink id={hf.id}/> stopped being {a_an(he.old_job)} and became {a_an(he.new_job)}
+      </>
   } else if (he.new_job !== 'standard') {
-    eventDesc += `${hf.name} became ${a_an(he.new_job)}`;
+    eventDesc =
+      <>
+        <HfLink id={hf.id}/> became {a_an(he.new_job)}
+      </>
   } else {
-    eventDesc += `${hf.name} stopped being a ${a_an(he.old_job)}`;
+    eventDesc =
+      <>
+        <HfLink id={hf.id}/> stopped being a {a_an(he.old_job)}
+      </>
   }
-
-  eventDesc += '.';
 
   return eventDesc;
 };
