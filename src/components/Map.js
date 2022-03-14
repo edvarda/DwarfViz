@@ -132,7 +132,7 @@ const Map = ({ mapImage, mapSize, data, regions, dim }) => {
     }).addTo(mapRef.current);
     setTimeout(function () {
       mapRef.current.fitBounds(mapSize.bounds);
-    }, 500);
+    }, 1000);
     return () => {
       mapRef.current.remove();
     };

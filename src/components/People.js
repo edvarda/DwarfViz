@@ -47,7 +47,7 @@ const People = () => {
                     </Col>
                     <Col className={'col-sm-4'}>
                       <div className={'view-element'}>
-                        {selectedFigure && <RelationshipGraph width={400} height={400} />}
+                        {selectedFigure && <RelationshipGraph />}
                       </div>
                     </Col>
                   </Row>

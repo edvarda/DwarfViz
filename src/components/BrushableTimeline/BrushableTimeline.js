@@ -100,9 +100,11 @@ const BrushableTimeline = ({ setYearRange, historicalEvents }) => {
 
   const widthCallback = useCallback((node) => {
     if (node !== null) {
-      const width = node.parentElement.getBoundingClientRect().width;
-      setWidth(width);
-      setHeight(width / widthToHeightRatio);
+      setTimeout(function () {
+        const width = node.parentElement.getBoundingClientRect().width;
+        setWidth(width);
+        setHeight(width / widthToHeightRatio);
+      }, 1000);
     }
   }, []);
 

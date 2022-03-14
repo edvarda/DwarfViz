@@ -73,7 +73,9 @@ const RelationshipGraph = () => {
 
   const widthCallback = useCallback((node) => {
     if (node !== null) {
-      setWidth(node.parentElement.getBoundingClientRect().width);
+      setTimeout(function () {
+        setWidth(node.parentElement.getBoundingClientRect().width);
+      }, 1000);
     }
   }, []);
 

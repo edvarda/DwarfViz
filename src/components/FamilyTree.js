@@ -123,18 +123,13 @@ const FamilyTree = () => {
     ],
   });
 
-  // const svgRef = useRef(null);
-  // useEffect(() => {
-  //   const width = svgRef.current.parentElement.offsetWidth;
-  //   const height = width;
-  //   d3.select(svgRef.current).attr('width', width).attr('height', height);
-  // });
-
   const [width, setWidth] = useState(null);
 
   const widthCallback = useCallback((node) => {
     if (node !== null) {
-      setWidth(node.parentElement.getBoundingClientRect().width);
+      setTimeout(function () {
+        setWidth(node.parentElement.getBoundingClientRect().width);
+      }, 1000);
     }
   }, []);
 
