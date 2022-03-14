@@ -1,5 +1,5 @@
 import { useDwarfViz } from '../../hooks/useDwarfViz';
-import { EntityLink, HfLink } from '../ItemLink.js';
+import { EntityLink, HfLink, SiteLink } from '../ItemLink.js';
 import ItemDetails from '../ItemDetails.js';
 import { Col } from 'react-bootstrap';
 
@@ -59,6 +59,21 @@ const GetEntityDetails = ({ entity }) => {
           const numberOfChildEntities = entity.entity_link.filter((link) => link.type === 'CHILD');
           if (numberOfChildEntities.length > 0) return `${numberOfChildEntities.length} entities`;
         },
+      },
+      {
+        displayName: 'Governs sites',
+        accessor: (entity) => {
+          let list_elements = []
+          for (const site of data.sites.filter((s) => s.cur_owner_id == entity.id)) {
+            list_elements.push(<li><SiteLink id={site.id}/></li>)
+          }
+          return list_elements.length > 0
+            ? (
+              <ul>
+                {list_elements}
+              </ul>)
+            : null;
+        }
       },
     ],
   };
