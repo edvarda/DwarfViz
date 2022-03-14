@@ -4,13 +4,15 @@ import _ from 'lodash';
 
 const HfDetailSkills = ({ hf }) => {
   const { data } = useDwarfViz();
-
+  const topSkills = hf.skills.sort((a, b) => a.total_ip > b.total_ip).slice(-3);
+  const numericals = ["", "Second", "Third"]
+  let num = 0;
   const hfSkillsDetailsDefinition = {
     header: `Skills`,
-    rows: hf.skills.map((link) => {
+    rows: topSkills.map((link) => {
       return {
-        displayName: link.skill,
-        accessor: () => _.startCase(link.skill),
+        displayName: numericals[num++] + " Best Skill",
+        accessor: () => _.startCase(_.lowerCase(link.skill)),
       };
     }),
   };
