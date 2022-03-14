@@ -1,5 +1,6 @@
 import { useDwarfViz } from '../hooks/useDwarfViz';
 import ItemDetails from './ItemDetails.js';
+import HfDetailSkills from './HfDetailSkills';
 import _ from 'lodash';
 
 const HfDetails = ({ hf }) => {
@@ -31,10 +32,11 @@ const HfDetails = ({ hf }) => {
       { displayName: 'Owns Artifact', accessor: (hf) => hf.holds_artifact ? _.startCase(find.artifact(hf.holds_artifact).name) : null },
       { displayName: 'Animated String', accessor: (hf) => hf.animated_string ? _.startCase(hf.animated_string) : null },
       // Following are technically lists
-      { displayName: 'Skills', accessor: (hf) => hf.skills[0] ? (hf.skills.map(x => (x.skill)).join(", ")) : null },
+      // { displayName: 'Skills', accessor: (hf) => hf.skills[0] ? hfDetailSkills(hf) : null },
 
     ],
   };
+
   return <ItemDetails itemDetailsDefinition={hfDetailsDefinition} item={hf} />;
 };
 
