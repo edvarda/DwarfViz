@@ -39,21 +39,21 @@ const People = () => {
               {selectedFigure ? (
                 <>
                   <Row>
-                    <Col className={'col-sm-4'}>
+                    <Col className={'col-sm-6'}>
                       <div className={'view-element'}>
                         <HfDetails hf={selectedFigure} />
                         <HfDetailSkills hf={selectedFigure} />
                         <RelatedEntitiesDetails hf={selectedFigure} />
                       </div>
                     </Col>
-                    <Col className={'col-sm-4'}>
+                    <Col className={'col-sm-6'}>
                       <div className={'view-element'}>{selectedFigure && <FamilyTree />}</div>
-                    </Col>
-                    <Col className={'col-sm-4'}>
                       <div className={'view-element'}>
                         {selectedFigure && <RelationshipGraph />}
                       </div>
                     </Col>
+                    {/* <Col className={'col-sm-4'}>
+                    </Col> */}
                   </Row>
                   <Row>
                     <Events />

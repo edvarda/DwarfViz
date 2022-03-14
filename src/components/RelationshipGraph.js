@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 import { useCallback, useState } from 'react';
 import { useDwarfViz } from '../hooks/useDwarfViz.js';
+import './GraphStyles.scss';
 import linkTypes from './LinkTypes.js';
 import _ from 'lodash';
 import useTooltip from '../hooks/useTooltip.js';
@@ -84,20 +85,14 @@ const RelationshipGraph = () => {
       {width > 0 && (
         <g transform={`translate(${radius},${radius})`}>
           {root.links().map((link) => (
-            <path stroke={'#ccc'} fill={'none'} d={linksGenerator(link)}></path>
+            <path d={linksGenerator(link)}></path>
           ))}
           {root.descendants().map((d) => (
             <g
               transform={`rotate(${d.x - 90})translate(${d.y})`}
               onClick={() => selectHF(d.data.hf.id)}
             >
-              <circle
-                r={7}
-                fill={'red'}
-                stroke={'black'}
-                strokeWidth={2}
-                data-tip={hfTooltip(d.data.hf)}
-              ></circle>
+              <circle className={'radial'} r={7} data-tip={hfTooltip(d.data.hf)}></circle>
               <text transform={`rotate(${-(d.x - 90)})`} textAnchor={'middle'} x={0} y={20}>
                 {d.data.type}
               </text>

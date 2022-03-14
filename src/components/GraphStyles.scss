@@ -1,0 +1,41 @@
+@use '../App.scss';
+
+text {
+  font-weight: 400;
+  color: var(--shadow-color);
+  &.link-label {
+    font-size: 0.8rem;
+    opacity: 0.7;
+  }
+  &.node-label {
+    font-size: 0.8rem;
+  }
+}
+
+.genderGlyph {
+  pointer-events: none;
+  stroke: none;
+  fill: var(--view-color-shadow);
+}
+
+circle {
+  fill: var(--view-color);
+  &:not(.radial) {
+    filter: drop-shadow(0rem 0.3rem var(--view-color-shadow));
+    &:hover {
+      filter: drop-shadow(0rem 0.4rem var(--view-color-shadow));
+    }
+  }
+  &.selected {
+    fill: var(--view-color-highlight);
+    stroke: var(--view-color-shadow);
+    stroke-width: 0.15rem;
+  }
+}
+
+path {
+  stroke: var(--shadow-color);
+  stroke-width: 0.2rem;
+  opacity: 0.4;
+  fill: none;
+}
