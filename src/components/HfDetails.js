@@ -29,12 +29,12 @@ const HfDetails = ({ hf }) => {
       { displayName: 'Deity', accessor: (hf) => _.capitalize(hf.deity) },
       { displayName: 'Sphere', accessor: (hf) => _.capitalize(hf.sphere[0]) },
       { displayName: 'Owns Artifact', accessor: (hf) => hf.holds_artifact ? _.startCase(find.artifact(hf.holds_artifact).name) : null },
+      { displayName: 'Animated String', accessor: (hf) => hf.animated_string ? _.startCase(hf.animated_string) : null },
+      // Following are technically lists
+      { displayName: 'Skills', accessor: (hf) => hf.skills[0] ? (hf.skills.map(x => (x.skill)).join(", ")) : null },
 
     ],
   };
-  if (hf.journey_pet[0]){
-    console.log(hf.journey_pet[0])
-  }
   return <ItemDetails itemDetailsDefinition={hfDetailsDefinition} item={hf} />;
 };
 
