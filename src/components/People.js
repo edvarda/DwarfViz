@@ -4,6 +4,7 @@ import { Row, Col, Container } from 'react-bootstrap';
 
 import { useDwarfViz } from '../hooks/useDwarfViz';
 import HfDetails from './HfDetails';
+import RelatedEntitiesDetails from './RelatedEntitiesDetails';
 import FamilyTree from './FamilyTree.js';
 import RelationshipGraph from './RelationshipGraph.js';
 import HistoryControls from './HistoryControls.js';
@@ -39,7 +40,8 @@ const People = () => {
                   <Row>
                     <Col className={'col-sm-4'}>
                       <div className={'view-element'}>
-                        {selectedFigure && <HfDetails hf={selectedFigure} />}
+                        <HfDetails hf={selectedFigure} />
+                        <RelatedEntitiesDetails hf={selectedFigure} />
                       </div>
                     </Col>
                     <Col className={'col-sm-4'}>
