@@ -171,33 +171,62 @@ const Change_hf_state_desc = ({ he }) => {
   switch (he.state) {
     case 'settled':
       site
-        ? (eventDesc += `${hf.name} settled in ${site.name}`)
-        : (eventDesc += `${hf.name} settled in ${region.name}`);
+        ? (
+          eventDesc =
+            <>
+              <HfLink id={hf.id}/> settled in <SiteLink id={site.id}/>
+            </>
+        )
+        : (
+          eventDesc =
+            <>
+              <HfLink id={hf.id}/> settled in {region.name}
+            </>
+        );
       break;
     case 'wandering':
-      eventDesc += `${hf.name} began wandering the world`; //TODO: why?
+      eventDesc =
+        <>
+          <HfLink id={hf.id}/> began wandering the world
+        </>//TODO: why?
       break;
     case 'scouting':
-      eventDesc += `${hf.name} began scouting around ${site.name}`; //TODO: scouting where? why?
+      eventDesc =
+        <>
+          <HfLink id={hf.id}/> began scouting around {site.name} 
+        </>//TODO: why?
       break;
     case 'snatcher':
-      eventDesc += `${hf.name} started looking for someone to abduct`; //TODO: why?
+      eventDesc =
+        <>
+          <HfLink id={hf.id}/> started looking for someone to abduct
+        </>//TODO: why?
       break;
     case 'refugee':
-      eventDesc += `${hf.name} became a refugee`; //TODO: of what conflict? Why?
-      break;
+      eventDesc =
+        <>
+          <HfLink id={hf.id}/> became a refugee
+        </>
+      break;//TODO: of what conflict? Why?
     case 'thief':
-      eventDesc += `${hf.name} became a thief`;
+      eventDesc =
+        <>
+          <HfLink id={hf.id}/> became a thief
+        </>
       break;
     case 'hunting':
-      eventDesc += `${hf.name} starting hunting for game around ${site.name}`; //TODO: biome-specific?
-      break;
+      eventDesc =
+        <>
+          <HfLink id={hf.id}/> starting hunting for game around {site.name}
+        </>
+      break;//TODO: biome-specific?
     default:
-      eventDesc += `${hf.name} changed their state in some unknown way`;
+      eventDesc =
+        <>
+          <HfLink id={hf.id}/> changed their state in some unknown way
+        </>
       break;
   }
-
-  eventDesc += '.';
 
   return eventDesc;
 };
