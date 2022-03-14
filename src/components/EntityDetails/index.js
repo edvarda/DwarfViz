@@ -1,4 +1,5 @@
 import { useDwarfViz } from '../../hooks/useDwarfViz';
+import { GovernedSitesDetails } from './GovernedSitesDetails.js';
 import { EntityLink, HfLink, SiteLink } from '../ItemLink.js';
 import ItemDetails from '../ItemDetails.js';
 import { Col } from 'react-bootstrap';
@@ -92,6 +93,7 @@ const EntityDetails = ({ entity }) => {
     return (
       <Col>
         <GetEntityDetails entity={entity} />
+        <GovernedSitesDetails entity={entity}/>
       </Col>
     );
   } else {

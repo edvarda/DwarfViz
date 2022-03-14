@@ -203,13 +203,13 @@ body {
     border-bottom: 0.1rem solid rgb(82, 82, 82);
   }
   .siteList {
-    border-bottom: none;
+    display: block; 
+    text-align: center;
   }
   .propName {
     font-weight: 800;
     text-align: left;
   }
-
   .value {
     font-weight: 400;
     text-align: right;
