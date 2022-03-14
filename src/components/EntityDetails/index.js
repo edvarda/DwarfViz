@@ -10,8 +10,9 @@ const GetEntityDetails = ({ entity }) => {
 
   const getLeader = (entity) => {
     for (const position of Object.values(entity.entity_position)) {
-      return position.name ? { id: position.local_id, name: position.name } : null;
+      return position ? ({ id: position.local_id, name: position.name }) : ({id: null, name: null});
     }
+    return ({id: null, name: null});
   };
 
   const entityDetailsDefinition = {
@@ -25,9 +26,10 @@ const GetEntityDetails = ({ entity }) => {
         accessor: (entity) => (entity.race ? _.startCase(entity.race) : null),
       },
       {
-        displayName: 'Leader (' + getLeader(entity).name + ')',
+        displayName: `Leader (${getLeader(entity).name})`,
         accessor: (entity) => {
           const localId = getLeader(entity).id;
+          if(localId === null) return null; 
           const leaderAssignment = entity.entity_position_assignment.find(
             (pers) => pers.position_id == localId,
           );
@@ -61,11 +63,11 @@ const GetEntityDetails = ({ entity }) => {
         },
       },
       {
-        displayName: 'Governs sites',
+        displayName: 'Owns sites',
         accessor: (entity) => {
           let list_elements = []
           for (const site of data.sites.filter((s) => s.cur_owner_id == entity.id)) {
-            list_elements.push(<li><SiteLink id={site.id}/></li>)
+            list_elements.push(<li className="siteList"><SiteLink id={site.id}/></li>)
           }
           return list_elements.length > 0
             ? (
