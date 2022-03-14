@@ -15,34 +15,35 @@ import {
   a_an,
 } from './description-utils';
 
-// function artifact_created_desc(he, dwarfViz) {
-//   var eventDesc = '';
+const Artifact_created_desc = ({ he, dwarfViz }) => {
+  const { find } = useDwarfViz();
+  var eventDesc = '';
 
-//   var creator = dwarfViz.find.hf(he.creator_hf_id);
-//   var artifact = await load_ref_data(`artifacts/${he.artifact_id}`);
-//   var site = dwarfViz.find.site(he.site_id);
+  var creator = find.hf(he.creator_hf_id);
+  var artifact = find.artifact(he.artifact_id);
+  var site = find.site(he.site_id);
 
-//   creator.name = creator.name !== null ? formatName(creator.name) : 'an unknown person';
+  creator.name = creator.name !== null ? formatName(creator.name) : 'an unknown person';
 
-//   // item_types can contain underscores, item_subtypes do not
-//   var itemType =
-//     artifact.item_subtype !== null ? artifact.item_subtype : format(artifact.item_type);
-//   itemType = artifact.item_mat !== null ? artifact.item_mat + ' ' + itemType : itemType;
+  // item_types can contain underscores, item_subtypes do not
+  var itemType =
+    artifact.item_subtype !== null ? artifact.item_subtype : format(artifact.item_type);
+  itemType = artifact.item_mat !== null ? artifact.item_mat + ' ' + itemType : itemType;
 
-//   if (he.name_only) {
-//     // artifact wasn't created, it just got named (for having a long kill list)
-//     eventDesc += `${creator.name} named ${getPronouns(creator.caste).their} ${itemType} '${
-//       artifact.name
-//     }'`;
-//     if (he.site_id > -1 && site.name !== null) eventDesc += ` in ${site.name}`;
-//   } else {
-//     eventDesc += `${creator.name} created ${a_an(itemType)}`;
-//     if (artifact.name !== null) eventDesc += ` called '${artifact.name}'`;
-//     if (he.site_id > -1 && site.name !== null) eventDesc += ` in ${site.name}`;
-//   }
+  if (he.name_only) {
+    // artifact wasn't created, it just got named (for having a long kill list)
+    eventDesc += `${creator.name} named ${getPronouns(creator.caste).their} ${itemType} '${
+      artifact.name
+    }'`;
+    if (he.site_id > -1 && site.name !== null) eventDesc += ` in ${site.name}`;
+  } else {
+    eventDesc += `${creator.name} created ${a_an(itemType)}`;
+    if (artifact.name !== null) eventDesc += ` called '${artifact.name}'`;
+    if (he.site_id > -1 && site.name !== null) eventDesc += ` in ${site.name}`;
+  }
 
-//   return eventDesc + '.';
-// }
+  return eventDesc + '.';
+}
 
 // function written_content_composed_desc(he, dwarfViz) {
 //   var eventDesc = '';
@@ -986,7 +987,7 @@ const Hf_simple_battle_event_desc = ({ he }) => {
 };
 
 export {
-  // artifact_created_desc,
+  Artifact_created_desc,
   // written_content_composed_desc,
   Add_hf_entity_link_desc,
   Change_hf_job_desc,

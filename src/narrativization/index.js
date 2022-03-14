@@ -7,7 +7,7 @@ import {
   // written_content_composed_desc,
   Add_hf_entity_link_desc,
   Hf_simple_battle_event_desc,
-  // artifact_created_desc,
+  Artifact_created_desc,
 } from './supported-events';
 
 const Narrate = ({ historicalEvent }) => {
@@ -68,13 +68,12 @@ const Narrate = ({ historicalEvent }) => {
           In the year {historicalEvent.year} <Hf_simple_battle_event_desc he={historicalEvent} />
         </>
       );
-    // case 'artifact_created':
-    // return (
-    //   <>
-    //     // In the year {historicalEvent.year} <artifact_created_desc he={historicalEvent} />
-    //   </>
-    // );
-    //   break;
+    case 'artifact_created':
+    return (
+      <>
+        In the year {historicalEvent.year} <Artifact_created_desc he={historicalEvent} />
+      </>
+    );
     default:
       return (
         <>

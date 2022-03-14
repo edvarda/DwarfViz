@@ -22,6 +22,7 @@ const EventsList = ({ yearRange, historicalEvents }) => {
     'creature_devoured',
     'add_hf_entity_link',
     'hf_simple_battle_event',
+    'artifact_created',
   ];
 
   const [types, setTypes] = useState([]);
