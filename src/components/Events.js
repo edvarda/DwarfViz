@@ -16,14 +16,7 @@ const Events = () => {
   return (
     <>
       <div className={'view-element'}>
-        {
-          <BrushableTimeline
-            width={800}
-            height={250}
-            setYearRange={setYearRange}
-            historicalEvents={events}
-          />
-        }
+        {<BrushableTimeline setYearRange={setYearRange} historicalEvents={events} />}
       </div>
       <div className={'view-element'}>
         <EventsList yearRange={yearRange} historicalEvents={events} />

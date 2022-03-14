@@ -13,6 +13,7 @@ const People = () => {
   const {
     peopleView: { selectedItem: selectedFigure, isActive: isViewActive },
     VIEWS,
+    selectHF,
   } = useDwarfViz();
 
   useEffect(() => {
@@ -36,15 +37,15 @@ const People = () => {
               {selectedFigure ? (
                 <>
                   <Row>
-                    <Col className={'col-sm-6'}>
+                    <Col className={'col-sm-4'}>
                       <div className={'view-element'}>
                         {selectedFigure && <HfDetails hf={selectedFigure} />}
                       </div>
                     </Col>
-                    <Col className={'col-sm-6'}>
-                      <div className={'view-element'}>
-                        {selectedFigure && <FamilyTree width={400} height={300} />}
-                      </div>
+                    <Col className={'col-sm-4'}>
+                      <div className={'view-element'}>{selectedFigure && <FamilyTree />}</div>
+                    </Col>
+                    <Col className={'col-sm-4'}>
                       <div className={'view-element'}>
                         {selectedFigure && <RelationshipGraph width={400} height={400} />}
                       </div>
@@ -56,7 +57,9 @@ const People = () => {
                 </>
               ) : (
                 <Col>
-                  <div className={'view-element noSelection'}>No person selected</div>
+                  <div className={'view-element noSelection'} onClick={() => selectHF(1042)}>
+                    No person selected
+                  </div>
                 </Col>
               )}
             </Row>

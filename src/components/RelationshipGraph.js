@@ -1,10 +1,11 @@
 import * as d3 from 'd3';
+import { useCallback, useState } from 'react';
 import { useDwarfViz } from '../hooks/useDwarfViz.js';
 import linkTypes from './LinkTypes.js';
 import _ from 'lodash';
 import useTooltip from '../hooks/useTooltip.js';
 
-const RelationshipGraph = ({ width, height }) => {
+const RelationshipGraph = () => {
   const {
     data: { historicalFigures },
     peopleView: { selectedItem: selectedFigure },
@@ -50,48 +51,58 @@ const RelationshipGraph = ({ width, height }) => {
     return [...fromLinks(hf), ...fromVagueRelationships(hf), ...fromRelationshipProfile(hf)];
   };
 
-  const radius = width / 2;
-  const margin = 50;
-  const cluster = d3.cluster().size([360, radius - margin]);
-
-  const newData = {
+  const data = {
     name: selectedFigure.name,
     hf: selectedFigure,
     children: getRelationships(selectedFigure),
   };
-
-  const root = d3.hierarchy(newData, (d) => d.children);
-  cluster(root);
 
   const linksGenerator = d3
     .linkRadial()
     .angle((d) => (d.x / 180) * Math.PI)
     .radius((d) => d.y);
 
+  const [width, setWidth] = useState(null);
+
+  const radius = width / 2;
+  const margin = 50;
+  const cluster = (node) => d3.cluster().size([360, radius - margin])(node);
+
+  const root = d3.hierarchy(data, (d) => d.children);
+  cluster(root);
+
+  const widthCallback = useCallback((node) => {
+    if (node !== null) {
+      setWidth(node.parentElement.getBoundingClientRect().width);
+    }
+  }, []);
+
   return (
-    <svg width={width} height={height}>
-      <g transform={`translate(${radius},${radius})`}>
-        {root.links().map((link) => (
-          <path stroke={'#ccc'} fill={'none'} d={linksGenerator(link)}></path>
-        ))}
-        {root.descendants().map((d) => (
-          <g
-            transform={`rotate(${d.x - 90})translate(${d.y})`}
-            onClick={() => selectHF(d.data.hf.id)}
-          >
-            <circle
-              r={7}
-              fill={'red'}
-              stroke={'black'}
-              strokeWidth={2}
-              data-tip={hfTooltip(d.data.hf)}
-            ></circle>
-            <text transform={`rotate(${-(d.x - 90)})`} textAnchor={'middle'} x={0} y={20}>
-              {d.data.type}
-            </text>
-          </g>
-        ))}
-      </g>
+    <svg ref={widthCallback} width={width} height={width}>
+      {width > 0 && (
+        <g transform={`translate(${radius},${radius})`}>
+          {root.links().map((link) => (
+            <path stroke={'#ccc'} fill={'none'} d={linksGenerator(link)}></path>
+          ))}
+          {root.descendants().map((d) => (
+            <g
+              transform={`rotate(${d.x - 90})translate(${d.y})`}
+              onClick={() => selectHF(d.data.hf.id)}
+            >
+              <circle
+                r={7}
+                fill={'red'}
+                stroke={'black'}
+                strokeWidth={2}
+                data-tip={hfTooltip(d.data.hf)}
+              ></circle>
+              <text transform={`rotate(${-(d.x - 90)})`} textAnchor={'middle'} x={0} y={20}>
+                {d.data.type}
+              </text>
+            </g>
+          ))}
+        </g>
+      )}
     </svg>
   );
 };

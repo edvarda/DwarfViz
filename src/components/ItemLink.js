@@ -2,15 +2,18 @@ import _ from 'lodash';
 import useTooltip from '../hooks/useTooltip';
 import { useDwarfViz } from '../hooks/useDwarfViz';
 
-const ItemLink = ({ dataObject, tooltipFunction, className, selectItem, children }) => (
-  <span
-    className={`itemLink ${className}`}
-    onClick={() => selectItem(dataObject.id)}
-    data-tip={tooltipFunction(dataObject)}
-  >
-    {children}
-  </span>
-);
+const ItemLink = ({ dataObject, tooltipFunction, className, selectItem }) =>
+  dataObject ? (
+    <span
+      className={`itemLink ${className}`}
+      onClick={() => selectItem(dataObject.id)}
+      data-tip={tooltipFunction(dataObject)}
+    >
+      {_.startCase(dataObject.name)}
+    </span>
+  ) : (
+    <span className={`itemLink ${className}`}>Unknown</span>
+  );
 
 const EntityLink = ({ id }) => {
   const { selectEntity, find } = useDwarfViz();
@@ -22,9 +25,7 @@ const EntityLink = ({ id }) => {
       tooltipFunction={entityTooltip}
       className={'entity-link'}
       selectItem={selectEntity}
-    >
-      {_.startCase(entity.name)}
-    </ItemLink>
+    />
   );
 };
 
@@ -38,9 +39,7 @@ const SiteLink = ({ id }) => {
       tooltipFunction={siteTooltip}
       className={'site-link'}
       selectItem={selectSite}
-    >
-      {_.startCase(site.name)}
-    </ItemLink>
+    />
   );
 };
 
@@ -57,9 +56,7 @@ const HfLink = ({ id }) => {
       tooltipFunction={hfTooltip}
       className={'hf-link'}
       selectItem={selectHF}
-    >
-      {_.startCase(hf.name)}
-    </ItemLink>
+    />
   );
 };
 

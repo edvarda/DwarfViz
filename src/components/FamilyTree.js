@@ -1,10 +1,13 @@
 import * as d3 from 'd3';
+import { useState, useCallback } from 'react';
 import { useDwarfViz } from '../hooks/useDwarfViz.js';
 import './FamilyTree.scss';
 import LinkTypes from './LinkTypes.js';
 import useTooltip from '../hooks/useTooltip.js';
 
-const Marks = ({ width, height, familyTree }) => {
+const Marks = ({ width, familyTree }) => {
+  const height = width;
+
   const { hfTooltip } = useTooltip();
   const { selectHF } = useDwarfViz();
   const parentScale = d3
@@ -85,17 +88,17 @@ const Marks = ({ width, height, familyTree }) => {
   );
 };
 
-const Levels = ({ width, height }) => {
-  return (
-    <g>
-      <rect className={'parentLevel'} y={0} height={height / 3} width={width} />
-      <rect className={'rootLevel'} y={height / 3} height={height / 3} width={width} />
-      <rect className={'childLevel'} y={2 * (height / 3)} height={height / 3} width={width} />
-    </g>
-  );
-};
+// const Levels = ({ width, height }) => {
+//   return (
+//     <g>
+//       <rect className={'parentLevel'} y={0} height={height / 3} width={width} />
+//       <rect className={'rootLevel'} y={height / 3} height={height / 3} width={width} />
+//       <rect className={'childLevel'} y={2 * (height / 3)} height={height / 3} width={width} />
+//     </g>
+//   );
+// };
 
-const FamilyTree = ({ width, height }) => {
+const FamilyTree = () => {
   const {
     data: { historicalFigures },
     peopleView: { selectedItem: selectedFigure },
@@ -119,14 +122,26 @@ const FamilyTree = ({ width, height }) => {
         .map(getOtherFigureFromLink),
     ],
   });
+
+  // const svgRef = useRef(null);
+  // useEffect(() => {
+  //   const width = svgRef.current.parentElement.offsetWidth;
+  //   const height = width;
+  //   d3.select(svgRef.current).attr('width', width).attr('height', height);
+  // });
+
+  const [width, setWidth] = useState(null);
+
+  const widthCallback = useCallback((node) => {
+    if (node !== null) {
+      setWidth(node.parentElement.getBoundingClientRect().width);
+    }
+  }, []);
+
   const familyTree = constructFamilyTree(selectedFigure);
   return (
-    <svg width={width} height={height}>
-      <Levels width={width} height={height} />
-      <Marks width={width} height={height} familyTree={familyTree} />
-      <g id='parentGroup'></g>
-      <g id='rootGroup'></g>
-      <g id='childrenGroup'></g>
+    <svg ref={widthCallback} width={width} height={width}>
+      {width > 0 && <Marks width={width} familyTree={familyTree} />}
     </svg>
   );
 };
