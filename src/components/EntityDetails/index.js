@@ -68,7 +68,7 @@ const GetEntityDetails = ({ entity }) => {
         accessor: (entity) => {
           let list_elements = []
           for (const site of data.sites.filter((s) => s.cur_owner_id == entity.id)) {
-            list_elements.push(<li className="siteList"><SiteLink id={site.id}/></li>)
+            list_elements.push(<li className="ownSiteList"><SiteLink id={site.id}/></li>)
           }
           return list_elements.length > 0
             ? (

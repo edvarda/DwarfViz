@@ -9,7 +9,7 @@ const GovernedSitesDetails = ({entity}) => {
         <div className='detailsView'>
             <h3>Governed Sites</h3>
             <ul>
-                {governedSites.map((site) => <li className='siteList'><SiteLink id={site.id} /></li>)}
+                {governedSites.map((site) => <li className='govSiteList'><SiteLink id={site.id} /></li>)}
             </ul>
         </div>
     );
