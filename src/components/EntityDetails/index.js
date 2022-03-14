@@ -10,9 +10,9 @@ const GetEntityDetails = ({ entity }) => {
 
   const getLeader = (entity) => {
     for (const position of Object.values(entity.entity_position)) {
-      return position.name ? {id: position.local_id, name: position.name} : null;
+      return position.name ? { id: position.local_id, name: position.name } : null;
     }
-  }
+  };
 
   const entityDetailsDefinition = {
     header: _.startCase(entity.name),
@@ -24,14 +24,17 @@ const GetEntityDetails = ({ entity }) => {
         displayName: 'Race',
         accessor: (entity) => (entity.race ? _.startCase(entity.race) : null),
       },
-      { displayName: 'Leader ('+getLeader(entity).name+')',
+      {
+        displayName: 'Leader (' + getLeader(entity).name + ')',
         accessor: (entity) => {
           const localId = getLeader(entity).id;
-          const leaderAssignment = entity.entity_position_assignment.find((pers) => pers.position_id == localId);
-          if(leaderAssignment != undefined) {
-            return leaderAssignment.hf_id ? <HfLink id={leaderAssignment.hf_id}/> : "Unocupied"
+          const leaderAssignment = entity.entity_position_assignment.find(
+            (pers) => pers.position_id == localId,
+          );
+          if (leaderAssignment != undefined) {
+            return leaderAssignment.hf_id ? <HfLink id={leaderAssignment.hf_id} /> : 'Unocupied';
           }
-        }
+        },
       },
       {
         displayName: 'Population',
