@@ -4,6 +4,7 @@ import { Row, Col, Container } from 'react-bootstrap';
 
 import { useDwarfViz } from '../hooks/useDwarfViz';
 import HfDetails from './HfDetails';
+import RelatedEntitiesDetails from './RelatedEntitiesDetails';
 import FamilyTree from './FamilyTree.js';
 import RelationshipGraph from './RelationshipGraph.js';
 import HistoryControls from './HistoryControls.js';
@@ -13,6 +14,7 @@ const People = () => {
   const {
     peopleView: { selectedItem: selectedFigure, isActive: isViewActive },
     VIEWS,
+    selectHF,
   } = useDwarfViz();
 
   useEffect(() => {
@@ -36,17 +38,18 @@ const People = () => {
               {selectedFigure ? (
                 <>
                   <Row>
-                    <Col className={'col-sm-6'}>
+                    <Col className={'col-sm-4'}>
                       <div className={'view-element'}>
-                        {selectedFigure && <HfDetails hf={selectedFigure} />}
+                        <HfDetails hf={selectedFigure} />
+                        <RelatedEntitiesDetails hf={selectedFigure} />
                       </div>
                     </Col>
-                    <Col className={'col-sm-6'}>
+                    <Col className={'col-sm-4'}>
+                      <div className={'view-element'}>{selectedFigure && <FamilyTree />}</div>
+                    </Col>
+                    <Col className={'col-sm-4'}>
                       <div className={'view-element'}>
-                        {selectedFigure && <FamilyTree width={400} height={300} />}
-                      </div>
-                      <div className={'view-element'}>
-                        {selectedFigure && <RelationshipGraph width={400} height={400} />}
+                        {selectedFigure && <RelationshipGraph />}
                       </div>
                     </Col>
                   </Row>
@@ -56,7 +59,9 @@ const People = () => {
                 </>
               ) : (
                 <Col>
-                  <div className={'view-element noSelection'}>No person selected</div>
+                  <div className={'view-element noSelection'} onClick={() => selectHF(1042)}>
+                    No person selected
+                  </div>
                 </Col>
               )}
             </Row>

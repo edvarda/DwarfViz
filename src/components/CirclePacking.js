@@ -5,7 +5,7 @@ import cssColors from '../App.scss';
 import * as d3 from 'd3';
 import _ from 'lodash';
 
-const CirclePacking = ({ width, height }) => {
+const CirclePacking = () => {
   const {
     data: { entities, historicalFigures },
     societyView: { selectedItem: selectedEntity },

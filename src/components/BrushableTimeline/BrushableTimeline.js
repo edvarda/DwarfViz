@@ -1,33 +1,37 @@
 import { brushX, select, scaleLinear, max, extent, bin, interpolateRgb, sum } from 'd3';
 
-import { useRef, useMemo, useEffect, useState } from 'react';
+import { useRef, useMemo, useEffect, useState, useCallback } from 'react';
 import { AxisBottom } from './AxisBottom';
 import { AxisLeft } from './AxisLeft';
 import { Marks } from './Marks';
 import { useDwarfViz } from '../../hooks/useDwarfViz';
 
+import './Timeline.scss';
+
 const d3 = { max };
 
 const margin = {
-  top: 10,
-  right: 0,
-  bottom: 0,
-  left: 65,
+  top: 15,
+  right: 15,
+  bottom: 60,
+  left: 60,
 };
 
-const xAxisLabelOffset = 40;
-const yAxisLabelOffset = 50;
+const widthToHeightRatio = 7;
+const xAxisLabelOffset = 50;
+const yAxisLabelOffset = 40;
 const xAxisLabel = 'Year';
-const yAxisLabel = 'Events';
+const yAxisLabel = 'Number of events';
 
 const yValue = (d) => +1; // +1 per event
 const xValue = (d) => d['year'];
 
-const BrushableTimeline = ({ width, height, setYearRange, historicalEvents }) => {
+const BrushableTimeline = ({ setYearRange, historicalEvents }) => {
   const {
     data: { worldsInfo },
   } = useDwarfViz();
-  //const [brushExtent, setYearRange] = useState();
+  const [width, setWidth] = useState(null);
+  const [height, setHeight] = useState(null);
 
   const maxYears = worldsInfo[0].year;
   const xValueExtent = useMemo(() => {
@@ -94,10 +98,19 @@ const BrushableTimeline = ({ width, height, setYearRange, historicalEvents }) =>
     });
   }, [innerWidth, innerHeight]);
 
+  const widthCallback = useCallback((node) => {
+    if (node !== null) {
+      setTimeout(function () {
+        const width = node.parentElement.getBoundingClientRect().width;
+        setWidth(width);
+        setHeight(width / widthToHeightRatio);
+      }, 1000);
+    }
+  }, []);
+
   return (
-    <svg width={width} height={height}>
-      <g>
-        <rect width={width} height={height} fill='white' />
+    <svg ref={widthCallback} width={width} height={height}>
+      {width > 0 && (
         <g transform={`translate(${margin.left},${margin.top})`}>
           <AxisBottom xScale={xScale} innerHeight={innerHeight} tickOffset={10} />
           <AxisLeft yScale={yScale} innerWidth={innerWidth} tickOffset={8} />
@@ -128,7 +141,7 @@ const BrushableTimeline = ({ width, height, setYearRange, historicalEvents }) =>
           />
           <g ref={brushRef} />
         </g>
-      </g>
+      )}
     </svg>
   );
 };

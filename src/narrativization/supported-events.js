@@ -597,9 +597,11 @@ const Creature_devoured_desc = ({ he }) => {
   if (eater === undefined) {
     eater = { name: 'a creature' };
   }
-
-  eventDesc += `${victim.name} was devoured by ${eater.name}.`;
-
+  eventDesc = (
+    <>
+      <HfLink id={victim.id} /> was devoured by <HfLink id={eater.id} />
+    </>
+  );
   return eventDesc;
 };
 
@@ -629,23 +631,47 @@ const Hf_relationship_desc = ({ he }) => {
 
   switch (he.relationship) {
     case 'mother':
-      eventDesc = `${source_hf.name} became the proud mother of ${target_hf.name}.`;
+      eventDesc = (
+        <>
+          <HfLink id={source_hf.id} /> became the proud mother of <HfLink id={target_hf.id} />
+        </>
+      );
       break;
     case 'father':
-      eventDesc = `${source_hf.name} became the proud father of ${target_hf.name}.`;
+      eventDesc = (
+        <>
+          <HfLink id={source_hf.id} /> became the proud father of <HfLink id={target_hf.id} />
+        </>
+      );
       break;
     case 'spouse':
-      eventDesc = `${source_hf.name} and ${target_hf.name} were married.`;
+      eventDesc = (
+        <>
+          <HfLink id={source_hf.id} /> and <HfLink id={target_hf.id}/> were married
+        </>
+      );
       break;
     //TODO: is adoption a thing? Check if birth year matches event year?
     case 'child':
-      eventDesc = `${source_hf.name} became the child of ${target_hf.name}.`;
+      eventDesc = (
+        <>
+          <HfLink id={source_hf.id} /> became the child of <HfLink id={target_hf.id} />
+        </>
+      );
       break;
     case 'deity':
-      eventDesc = `${source_hf.name} became a fervant worshipper of ${target_hf.name}.`;
+      eventDesc = (
+        <>
+          <HfLink id={source_hf.id} /> became a fervant worshipper of <HfLink id={target_hf.id} />
+        </>
+      );
       break;
     case 'lover':
-      eventDesc = `${source_hf.name} and ${target_hf.name} became lovers.`;
+      eventDesc = (
+        <>
+          <HfLink id={source_hf.id} /> and <HfLink id={target_hf.id} /> became lovers
+        </>
+      );
       if (
         source_hf.name === 'a mysterious stranger' &&
         target_hf.name === 'a mysterious stranger'
@@ -654,90 +680,199 @@ const Hf_relationship_desc = ({ he }) => {
       }
       break;
     case 'former_lover':
-      eventDesc = `${source_hf.name} and ${target_hf.name} broke off their romantic entanglement.`;
+      eventDesc = (
+        <>
+          <HfLink id={source_hf.id} /> and <HfLink id={target_hf.id} /> broke off their romantic entanglement
+        </>
+      );
       break;
     case 'prisoner':
-      eventDesc = `${source_hf.name} was imprisoned by ${target_hf.name}.`;
+      eventDesc = (
+        <>
+          <HfLink id={source_hf.id} /> was imprisoned by <HfLink id={target_hf.id} />
+        </>
+      );
       break;
     case 'imprisoner':
-      eventDesc = `${source_hf.name} imprisoned ${target_hf.name}.`;
+      eventDesc = (
+        <>
+          <HfLink id={source_hf.id} /> imprisoned <HfLink id={target_hf.id} />
+        </>
+      );
       break;
     //TODO: would be great to check for skill increases (if possible) after this to find out what they were apprenticed for?
     case 'master':
-      eventDesc = `${source_hf.name} became ${target_hf.name}'s master.`;
+      eventDesc = (
+        <>
+          <HfLink id={source_hf.id} /> became <HfLink id={target_hf.id}/>'s master
+        </>
+      );
       break;
     case 'apprentice':
-      eventDesc = `${source_hf.name} became ${target_hf.name}'s apprentice.`;
+      eventDesc = (
+        <>
+          <HfLink id={source_hf.id} /> became <HfLink id={target_hf.id} />'s apprentice
+        </>
+      );
       break;
     case 'companion':
-      eventDesc = `${source_hf.name} became a trusty companion of ${target_hf.name}.`;
+      eventDesc = (
+        <>
+          <HfLink id={source_hf.id} /> became a trusty companion of <HfLink id={target_hf.id} />
+        </>
+      );
       break;
     //TODO: would be great to find out if there are different reasons these end, and update accordingly
     case 'former_master':
-      eventDesc = `${target_hf.name} ended ${target_hf.pronouns.their} apprenticeship under ${source_hf.name}.`;
+      eventDesc = (
+        <>
+          <HfLink id={target_hf.id} /> ended {target_hf.pronouns.their} apprenticeship under <HfLink id={source_hf.id} />
+        </>
+      );
       break;
     case 'former_apprentice':
-      eventDesc = `${source_hf.name} ended ${source_hf.pronouns.their} apprenticeship under ${target_hf.name}.`;
+      eventDesc = (
+        <>
+          <HfLink id={source_hf.id} /> ended {source_hf.pronouns.their} apprenticeship under <HfLink id={target_hf.id} />
+        </>
+      );
       break;
     case 'pet_owner':
-      eventDesc = `${source_hf.name} adopted ${target_hf.name} as a pet.`;
+      eventDesc = (
+        <>
+          <HfLink id={source_hf.id} /> adopted <HfLink id={target_hf.id} /> as a pet
+        </>
+      );
+      //eventDesc = `${source_hf.name} adopted ${target_hf.name} as a pet.`;
       break;
     case 'former_spouse':
-      eventDesc = `${source_hf.name} divorced their partner ${target_hf.name}.`;
+      eventDesc = (
+        <>
+          <HfLink id={source_hf.id} /> divorced their partner <HfLink id={target_hf.id} />
+        </>
+      );
       break;
     case 'deceased_spouse':
       var term;
       if (source_hf.caste === 'male') {
-        eventDesc = `${source_hf.name} became a widower.`;
+        eventDesc = (
+          <>
+            <HfLink id={source_hf.id} /> became a widower
+          </>
+        );
       } else if (source_hf.caste === 'female') {
-        eventDesc = `${source_hf.name} was widowed.`;
+        eventDesc = (
+          <>
+            <HfLink id={source_hf.id} />was widowed
+          </>
+        );
       } else {
-        eventDesc = `${source_hf.name}'s partner died.`;
+        eventDesc = (
+          <>
+            <HfLink id={source_hf.id} />'s partner died
+          </>
+        );
       }
       break;
     //-----all cases below are "vague relationships"...not sure what that means??
     case 'war_buddy':
-      eventDesc = `${source_hf.name} and ${target_hf.name} became war buddies.`;
+      eventDesc = (
+        <>
+          <HfLink id={source_hf.id} /> and <HfLink id={target_hf.id} /> became war buddies
+        </>
+      );
       break;
     case 'athlete_buddy':
-      eventDesc = `${source_hf.name} and ${target_hf.name} bonded over feats of athleticism.`;
+      eventDesc = (
+        <>
+          <HfLink id={source_hf.id} /> and <HfLink id={target_hf.id} /> bonded over feats of athleticism
+        </>
+      );
       break;
     case 'childhood_friend':
-      eventDesc = `${source_hf.name} and ${target_hf.name} became childhood friends.`;
+      eventDesc = (
+        <>
+          <HfLink id={source_hf.id} /> and <HfLink id={target_hf.id} /> became childhood friends
+        </>
+      );
       break;
     case 'persecution_grudge':
-      eventDesc = `${source_hf.name} came to hate ${target_hf.name} due to ${target_hf.pronouns.their} unending persecution.`;
+      eventDesc = (
+        <>
+          <HfLink id={source_hf.id} /> came to hate <HfLink id={target_hf.id} /> due to {target_hf.pronouns.their} unending persecution
+        </>
+      );
       break;
     case 'supernatural_grudge':
-      eventDesc = `${source_hf.name} formed a supernatural grudge against ${target_hf.name}.`;
+      eventDesc = (
+        <>
+          <HfLink id={source_hf.id} /> formed a supernatural grudge against <HfLink id={target_hf.id} />
+        </>
+      );
       break;
     case 'religious_persecution_grudge':
-      eventDesc = `${source_hf.name} came to hate ${target_hf.name} due to ${target_hf.pronouns.their} relentless religious persecution.`;
+      eventDesc = (
+        <>
+          <HfLink id={source_hf.id} /> came to hate <HfLink id={target_hf.id} /> due to {target_hf.pronouns.their} relentless religious persecution
+        </>
+      );
       break;
     case 'artistic_buddy':
-      eventDesc = `${source_hf.name} and ${target_hf.name}'s common interest in art kindled to friendship.`;
+      eventDesc = (
+        <>
+          <HfLink id={source_hf.id} /> and <HfLink id={target_hf.id} />'s common interest in art kindled to friendship
+        </>
+      );
       break;
     case 'jealous_obsession':
-      eventDesc = `${source_hf.name} became jealously obsessed with ${target_hf.name}.`;
+      eventDesc = (
+        <>
+          <HfLink id={source_hf.id} /> became jealously obsessed with <HfLink id={target_hf.id} />
+        </>
+      );
       break;
     case 'grudge':
-      eventDesc = `${source_hf.name} formed a grudge against ${target_hf.name}.`;
+      eventDesc = (
+        <>
+          <HfLink id={source_hf.id} /> formed a grudge against <HfLink id={target_hf.id} />
+        </>
+      );
       break;
     case 'jealous_relationship_grudge':
-      eventDesc = `${source_hf.name}, jealous of ${target_hf.name}'s relationships, formed a grudge against ${target_hf.pronouns.them}.`;
+      eventDesc = (
+        <>
+          <HfLink id={source_hf.id} />, jealous of <HfLink id={target_hf.id} />'s relationships, formed a grudge against {target_hf.pronouns.them}
+        </>
+      );
       break;
     case 'scholar_buddy':
-      eventDesc = `${source_hf.name} and ${target_hf.name} bonded over their common interest in scholarly matters.`;
+      eventDesc = (
+        <>
+          <HfLink id={source_hf.id} /> and <HfLink id={target_hf.id} /> bonded over their common interest in scholarly matters
+        </>
+      );
       break;
     case 'business_rival':
-      eventDesc = `${source_hf.name} and ${target_hf.name} became fierce business rivals.`;
+      eventDesc = (
+        <>
+          <HfLink id={source_hf.id} /> and <HfLink id={target_hf.id} /> became fierce business rivals
+        </>
+      );
       break;
     case 'atheletic_rival': //this is misspelled but is the correct key value
-      eventDesc = `${source_hf.name} and ${target_hf.name} became heated athletic rivals.`;
+      eventDesc = (
+        <>
+          <HfLink id={source_hf.id} /> and <HfLink id={target_hf.id} /> became heated athletic rivals
+        </>
+      );
       break;
     default:
       console.error("unhandled relationship type '" + he.relationship);
-      eventDesc = `${source_hf.name} formed some kind of relationship with ${target_hf.name}`;
+      eventDesc = (
+        <>
+          <HfLink id={source_hf.id} /> formed some kind of relationship with <HfLink id={target_hf.id} />
+        </>
+      );
       break;
   }
 
@@ -755,50 +890,98 @@ const Hf_simple_battle_event_desc = ({ he }) => {
 
   switch (he.subtype) {
     case 'attacked':
-      eventDesc += `${group1.name} attacked ${group2.name}`;
+      eventDesc = (
+        <>
+          <HfLink id={group1.id} /> attacked <HfLink id={group2.id} />
+        </>
+      );
       break;
     case 'scuffle':
-      eventDesc += `${group1.name} scuffled with ${group2.name}`;
+      eventDesc = (
+        <>
+          <HfLink id={group1.id} /> scuffled with <HfLink id={group2.id} />
+        </>
+      );
       break;
     case 'confront':
-      eventDesc += `${group1.name} confronted ${group2.name}`;
+      eventDesc = (
+        <>
+          <HfLink id={group1.id} /> confronted <HfLink id={group2.id} />
+        </>
+      );
       break;
     case '2 lost after receiving wounds':
-      eventDesc += `${group1.name} defeated ${group2.name}, inflicting serious wounds upon ${
-        getPronouns(group2.caste).them
-      }`;
+      eventDesc = (
+        <>
+          <HfLink id={group1.id} /> defeated <HfLink id={group2.id} />, inflicting serious wounds upon {getPronouns(group2.caste).them}
+        </>
+      );
       break;
     case '2 lost after giving wounds':
-      eventDesc += `${group1.name} defeated ${group2.name}, but was wounded badly in the fight`;
+      eventDesc = (
+        <>
+          <HfLink id={group1.id} /> defeated <HfLink id={group2.id} />, but was wounded badly in the fight
+        </>
+      );
       break;
     case '2 lost after mutual wounds':
-      eventDesc += `${group1.name} defeated ${group2.name}, after serious wounds were inflicted on both`;
+      eventDesc = (
+        <>
+          <HfLink id={group1.id} /> defeated <HfLink id={group2.id} />, after serious wounds were inflicted on both
+        </>
+      );
       break;
     case 'happen upon':
-      eventDesc += `${group1.name} happened upon ${group2.name}`;
+      eventDesc = (
+        <>
+          <HfLink id={group1.id} /> happened upon <HfLink id={group2.id} />
+        </>
+      );
       break;
     case 'ambushed':
-      eventDesc += `${group1.name} ambushed ${group2.name}`;
+      eventDesc = (
+        <>
+          <HfLink id={group1.id} /> ambushed <HfLink id={group2.id} />
+        </>
+      );
       break;
     case 'corner':
-      eventDesc += `${group1.name} cornered ${group2.name}`;
+      eventDesc = (
+        <>
+          <HfLink id={group1.id} /> cornered <HfLink id={group2.id} />
+        </>
+      );
       break;
     case 'surprised':
-      eventDesc += `${group1.name} surprised ${group2.name}`;
+      eventDesc = (
+        <>
+          <HfLink id={group1.id} /> surprised <HfLink id={group2.id} />
+        </>
+      );
       break;
     case 'got into a brawl':
-      eventDesc += `${group1.name} got into a brawl with ${group2.name}`;
+      eventDesc = (
+        <>
+          <HfLink id={group1.id} /> got into a brawl with <HfLink id={group2.id} />
+        </>
+      );
       break;
     case 'subdued':
-      eventDesc += `${group1.name} subdued ${group2.name}`;
+      eventDesc = (
+        <>
+          <HfLink id={group1.id} /> subdued <HfLink id={group2.id} />
+        </>
+      );
       break;
     default:
       console.error('Unknown battle subtype: ' + he.subtype);
-      eventDesc += `${group1.name} encountered ${group2.name}`;
+      eventDesc = (
+        <>
+          <HfLink id={group1.id} /> encountered <HfLink id={group2.id} />
+        </>
+      );
       break;
   }
-
-  eventDesc += '.';
   return eventDesc;
 };
 
