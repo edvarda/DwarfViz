@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import useTable from './UseTable.js';
 import styles from './Table.module.scss';
-import { Row, Col } from 'react-bootstrap';
 import TableFooter from './TableFooter/index.js';
-import { useDwarfViz } from '../../hooks/useDwarfViz.js';
-import narrate from '../../lib/narrativization.js';
+import ReactTooltip from 'react-tooltip';
+import Narrate from '../../narrativization';
 
 const Table = ({ data, rowsPerPage }) => {
   const [page, setPage] = useState(1);
   const { slice, range } = useTable(data, page, rowsPerPage);
-  const dwarfViz = useDwarfViz();
+  useEffect(() => {
+    ReactTooltip.rebuild();
+  });
+
   return (
     <>
       <table className={styles.table}>
@@ -28,7 +30,9 @@ const Table = ({ data, rowsPerPage }) => {
               <td className={styles.tableCell}>{el.id}</td>
               <td className={styles.tableCell}>{el.year}</td>
               <td className={styles.tableCell}>{el.type}</td>
-              <td className={styles.tableCell}>{narrate(el, dwarfViz)}</td>
+              <td className={styles.tableCell}>
+                <Narrate historicalEvent={el} />
+              </td>
             </tr>
           ))}
         </tbody>

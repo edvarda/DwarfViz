@@ -32,7 +32,7 @@ const GetEntityDetails = ({ entity }) => {
           const parentEntity = parentEntityLink
             ? data.entities.find((x) => x.id === parentEntityLink.target)
             : null;
-          if (parentEntity) return <EntityLink entityId={parentEntity.id} />;
+          if (parentEntity) return <EntityLink id={parentEntity.id} />;
         },
       },
       {

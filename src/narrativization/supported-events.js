@@ -1,3 +1,5 @@
+import { useDwarfViz } from '../hooks/useDwarfViz';
+import { SiteLink, EntityLink, HfLink } from '../components/ItemLink.js';
 import {
   formatName,
   format,
@@ -61,12 +63,13 @@ import {
 //   return `${author.name} wrote ${workPart}.`;
 // }
 
-function add_hf_entity_link_desc(he, dwarfViz) {
-  var hf = dwarfViz.find.hf(he.hf_id); //load historical figure data
+const Add_hf_entity_link_desc = ({ he }) => {
+  const { find } = useDwarfViz();
+  var hf = find.hf(he.hf_id); //load historical figure data
   hf.name = formatName(hf.name);
-  var appointer = dwarfViz.find.hf(he.appointer_hf_id); //load historical figure data
-  var hfActionPromisedTo = dwarfViz.find.hf(he.promise_to_hf_id); //load historical figure data
-  var civ = dwarfViz.find.entity(he.civ_id);
+  var appointer = find.hf(he.appointer_hf_id); //load historical figure data
+  var hfActionPromisedTo = find.hf(he.promise_to_hf_id); //load historical figure data
+  var civ = find.entity(he.civ_id);
 
   var eventDesc = '';
 
@@ -107,10 +110,11 @@ function add_hf_entity_link_desc(he, dwarfViz) {
       break;
   }
   return eventDesc;
-}
+};
 
-function change_hf_job_desc(he, dwarfViz) {
-  var hf = dwarfViz.find.hf(he.hf_id); //load data for the historical figure (he.hf_id)
+const Change_hf_job_desc = ({ he }) => {
+  const { find } = useDwarfViz();
+  var hf = find.hf(he.hf_id); //load data for the historical figure (he.hf_id)
 
   var eventDesc = ''; //create a blank string
 
@@ -129,12 +133,13 @@ function change_hf_job_desc(he, dwarfViz) {
   eventDesc += '.';
 
   return eventDesc;
-}
+};
 //---------------------------------------------------------------
-function change_hf_state_desc(he, dwarfViz) {
-  var site = dwarfViz.find.site(he.site_id); //load data for the event's site (he.site_id)
-  var hf = dwarfViz.find.hf(he.hf_id); //load data for the historical figure (he.hf_id)
-  var region = dwarfViz.find.region(he.region_id); //load data for the historical figure (he.hf_id)
+const Change_hf_state_desc = ({ he }) => {
+  const { find } = useDwarfViz();
+  var site = find.site(he.site_id); //load data for the event's site (he.site_id)
+  var hf = find.hf(he.hf_id); //load data for the historical figure (he.hf_id)
+  var region = find.region(he.region_id); //load data for the historical figure (he.hf_id)
 
   var eventDesc = '';
 
@@ -170,12 +175,13 @@ function change_hf_state_desc(he, dwarfViz) {
   eventDesc += '.';
 
   return eventDesc;
-}
+};
 
 //---------------------------------------------------------------
 //TODO: get name of where they died...is subregion_id the same as a region id???
-function hf_died_desc(he, dwarfViz) {
-  var hf = dwarfViz.find.hf(he.hf_id); //load historical figure data
+const Hf_died_desc = ({ he }) => {
+  const { find } = useDwarfViz();
+  var hf = find.hf(he.hf_id); //load historical figure data
   if (hf.name !== null) {
     hf.name = formatName(hf.name);
   } else {
@@ -184,12 +190,14 @@ function hf_died_desc(he, dwarfViz) {
   hf.name = formatName(hf.name);
   hf.pronouns = getPronouns(hf.caste);
 
+  let eventDesc;
+
   if (he.slayer_hf_id > 0 || he.slayer_race !== undefined) {
     //if hf was killed...
 
     var slayer = {};
     if (he.slayer_hf_id > -1) {
-      slayer = dwarfViz.find.hf(he.slayer_hf_id); //load slayer data
+      slayer = find.hf(he.slayer_hf_id); //load slayer data
       if (slayer.name === null) {
         slayer.name = `an unknown ${he.slayer_race.toLowerCase()}`;
       } else {
@@ -206,177 +214,345 @@ function hf_died_desc(he, dwarfViz) {
 
     slayer.pronouns = getPronouns(slayer.caste);
 
-    var eventDesc = '';
     switch (
       he.death_cause //TODO: find out if it would be good to put race in here (undead, monster, etc)
     ) {
       case 'dragons_fire':
-        eventDesc = `${hf.name} was incinerated by a blast of fire from ${slayer.name}.`;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> was incinerated by a blast of fire from <HfLink id={slayer.id} />
+          </>
+        );
         break;
       case 'burned':
-        eventDesc = `${hf.name} was burned to death by ${slayer.name}'s fire.`;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> was burned to death by <HfLink id={slayer.id} />
+            's fire.
+          </>
+        );
         break;
       case 'murdered':
-        eventDesc = `${hf.name} was cruelly murdered by ${slayer.name}`;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> was cruelly murdered by <HfLink id={slayer.id} />
+          </>
+        );
         break;
       case 'murder':
-        eventDesc = `${hf.name} was cruelly murdered by ${slayer.name}`;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> was cruelly murdered by <HfLink id={slayer.id} />
+          </>
+        );
         break;
       case 'shot':
-        eventDesc = `${hf.name} was shot by ${slayer.name}`;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> was shot by <HfLink id={slayer.id} />
+          </>
+        );
         break;
       case 'struck_down':
-        eventDesc = `${hf.name} was struck down by ${slayer.name}`;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> was struck down by <HfLink id={slayer.id} />
+          </>
+        );
         break;
       case 'executed_buried_alive':
-        eventDesc = `${hf.name} was buried alive by ${slayer.name} for ${hf.pronouns.their} crimes`;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> was buried alive by <HfLink id={slayer.id} /> for $
+            {hf.pronouns.their} crimes
+          </>
+        );
         break;
       case 'executed_burned_alive':
-        eventDesc = `${hf.name} was burned alive by ${slayer.name} for ${hf.pronouns.their} crimes`;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> was burned alive by <HfLink id={slayer.id} /> for $
+            {hf.pronouns.their} crimes
+          </>
+        );
         break;
       case 'executed_crucified':
-        eventDesc = `${hf.name} was crucified by ${slayer.name} for ${hf.pronouns.their} crimes`;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> was crucified by <HfLink id={slayer.id} /> for $
+            {hf.pronouns.their} crimes
+          </>
+        );
         break;
       case 'executed_drowned':
-        eventDesc = `${hf.name} was drowned by ${slayer.name} for ${hf.pronouns.their} crimes`;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> was drowned by <HfLink id={slayer.id} /> for ${hf.pronouns.their}{' '}
+            crimes
+          </>
+        );
         break;
       case 'executed_fed_to_beasts':
-        eventDesc = `${hf.name} was fed to beasts by ${slayer.name} for ${hf.pronouns.their} crimes`;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> was fed to beasts by <HfLink id={slayer.id} /> for $
+            {hf.pronouns.their} crimes
+          </>
+        );
         break;
       case 'executed_hacked_to_pieces':
-        eventDesc = `${hf.name} was hacked to pieces by ${slayer.name} for ${hf.pronouns.their} crimes`;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> was hacked to pieces by <HfLink id={slayer.id} /> for $
+            {hf.pronouns.their} crimes
+          </>
+        );
         break;
       case 'executed_beheaded':
-        eventDesc = `${hf.name} was buried alive for ${hf.pronouns.their} crimes`;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> was buried alive for ${hf.pronouns.their} crimes
+          </>
+        );
         break;
       case 'drained_blood':
-        eventDesc = `${hf.name} was drained of ${hf.pronouns.their} blood by ${slayer.name}`;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> was drained of ${hf.pronouns.their} blood by{' '}
+            <HfLink id={slayer.id} />
+          </>
+        );
         break;
       case 'collapsed':
-        eventDesc = `${hf.name} collapsed, succumbing to wounds inflicted by ${slayer.name}`;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> collapsed, succumbing to wounds inflicted by{' '}
+            <HfLink id={slayer.id} />
+          </>
+        );
         break;
       case 'scared_to_death':
-        eventDesc = `${hf.name} was scared to death by  ${slayer.name}`;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> was scared to death by <HfLink id={slayer.id} />
+          </>
+        );
         break;
       default:
         console.error('unhandled death type: ' + he.death_cause + ' for ' + he.id);
-        eventDesc = `${hf.name} was slain by ${slayer.name}.`;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> was slain by <HfLink id={slayer.id} />.
+          </>
+        );
         break;
     }
 
-    if (he.SlayerItemID >= 0) {
-      eventDesc += ' using a (' + he.SlayerItemID + ')'; //TODO: how do we get the item name???
-    } else if (he.SlayerShooterItemID >= 0) {
-      eventDesc += ' with a shot from a (' + he.SlayerShooterItemID + ')';
-    } else {
-      eventDesc += '.';
-    }
+    // if (he.SlayerItemID >= 0) {
+    //   eventDesc += ' using a (' + he.SlayerItemID + ')'; //TODO: how do we get the item name???
+    // } else if (he.SlayerShooterItemID >= 0) {
+    //   eventDesc += ' with a shot from a (' + he.SlayerShooterItemID + ')';
+    // } else {
+    //   eventDesc += '.';
+    // }
   } else {
     //if they died some other way...
 
     switch (he.death_cause) {
       case 'thirst':
-        eventDesc = `${hf.name} died of thirst`;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> died of thirst
+          </>
+        );
         break;
       case 'old_age':
         if (hf.birth_year !== -1 && hf.death_year !== -1) {
-          eventDesc = `${hf.name} died naturally at the ripe age of ${Math.abs(
-            hf.death_year - hf.birth_year,
-          )}`;
+          eventDesc = (
+            <>
+              <HfLink id={hf.id} /> died naturally at the ripe age of
+              {Math.abs(hf.death_year - hf.birth_year)}
+            </>
+          );
         } else {
-          eventDesc = `${hf.name} died naturally of old age`;
+          eventDesc = (
+            <>
+              <HfLink id={hf.id} /> died naturally of old age
+            </>
+          );
         }
         break;
       case 'suffocated':
-        eventDesc = `${hf.name} suffocated`;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> suffocated
+          </>
+        );
         break;
       case 'bled':
-        eventDesc = `${hf.name} bled to death`; //TODO: get wounds caused by
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> bled to death;
+          </>
+        ); //TODO: get wounds caused by
         break;
       case 'cold':
-        eventDesc = `${hf.name} froze to death`;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> froze to death
+          </>
+        );
         break;
       case 'crushed_by_a_bridge':
-        eventDesc = `${hf.name} was crushed by a lowering drawbridge`; //TODO: get site of drawbridge
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> was crushed by a lowering drawbridge;
+          </>
+        ); //TODO: get site of drawbridge
         break;
       case 'drowned':
-        eventDesc = `${hf.name} drowned`; //TODO: get name of water body
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> drowned;
+          </>
+        ); //TODO: get name of water body
         break;
       case 'starved':
-        eventDesc = `${hf.name} starved to death`;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> starved to death
+          </>
+        );
         break;
       case 'infection':
-        eventDesc = `${hf.name} succumbed to infection`; //TODO: find out if being treated / what disease if possible?
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> succumbed to infection;
+          </>
+        ); //TODO: find out if being treated / what disease if possible?
         break;
       case 'collided_with_an_obstacle':
-        eventDesc = `${hf.name} died after smashing into something`;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> died after smashing into something
+          </>
+        );
         break;
       case 'put_to_rest':
-        eventDesc = `${hf.name} was laid to rest`;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> was laid to rest
+          </>
+        );
         break;
       case 'starved_quit':
-        eventDesc = `${hf.name} starved to death`;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> starved to death
+          </>
+        );
         break;
       case 'trap':
-        eventDesc = `${hf.name} was killed by a clever trap`;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> was killed by a clever trap
+          </>
+        );
         break;
       case 'cave_in':
-        eventDesc = `${hf.name} was crushed by falling rocks`; //TODO: find out if in fortress or not
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> was crushed by falling rocks;
+          </>
+        ); //TODO: find out if in fortress or not
         break;
       case 'in_a_cage':
-        eventDesc = `${hf.name} died confined in a cage`;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> died confined in a cage
+          </>
+        );
         break;
       case 'frozen_in_water':
-        eventDesc = `${hf.name} died after being encased in ice `;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> died after being encased in ice
+          </>
+        );
         break;
       case 'scuttled':
-        eventDesc = `${hf.name} was scuttled`;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> was scuttled
+          </>
+        );
         break;
       case 'struck_down':
-        eventDesc = `${hf.name} was struck down`;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> was struck down
+          </>
+        );
         break;
       case 'execution_generic':
-        eventDesc = `${hf.name} was summarily executed`;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> was summarily executed
+          </>
+        );
         break;
       case 'leapt_from_height':
-          eventDesc = `${hf.name} fell fatally from a great height`;
-          break;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> fell fatally from a great height
+          </>
+        );
+        break;
       case 'drown_alt2':
-        eventDesc = `${hf.name} drowned surreptitiously`;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> drowned surreptitiously
+          </>
+        );
         break;
       default:
         console.error('unhandled death type: ' + he.death_cause + ' for ' + he.id);
-        eventDesc = `${hf.name} died of some unknown cause`;
+        eventDesc = (
+          <>
+            <HfLink id={hf.id} /> died of some unknown cause
+          </>
+        );
         break;
     }
 
-    eventDesc += '.';
+    // eventDesc += '.';
   }
-
   return eventDesc;
-}
+};
 
 //---------------------------------------------------------------
-function creature_devoured_desc(he, dwarfViz) {
-  var victim = dwarfViz.find.hf(he.victim); //load historical figure data
-  var eater = dwarfViz.find.hf(he.eater_hf_id); //load historical figure data
+const Creature_devoured_desc = ({ he }) => {
+  const { find } = useDwarfViz();
+  var victim = find.hf(he.victim); //load historical figure data
+  var eater = find.hf(he.eater_hf_id); //load historical figure data
 
   var eventDesc = '';
-  if (victim === undefined){
-    victim = {name: "A creature"}
+  if (victim === undefined) {
+    victim = { name: 'A creature' };
   }
-  if (eater === undefined){
-    eater = {name: "a creature"}
+  if (eater === undefined) {
+    eater = { name: 'a creature' };
   }
 
   eventDesc += `${victim.name} was devoured by ${eater.name}.`;
 
   return eventDesc;
-}
+};
 
-function hf_relationship_desc(he, dwarfViz) {
-  var source_hf = dwarfViz.find.hf(he.source_hf_id); //load historical figure data
-  var target_hf = dwarfViz.find.hf(he.target_hf_id);
+const Hf_relationship_desc = ({ he }) => {
+  const { find } = useDwarfViz();
+  var source_hf = find.hf(he.source_hf_id); //load historical figure data
+  var target_hf = find.hf(he.target_hf_id);
 
   // await source_hf;
   // await target_hf;
@@ -512,12 +688,13 @@ function hf_relationship_desc(he, dwarfViz) {
   }
 
   return eventDesc;
-}
+};
 
-function hf_simple_battle_event_desc(he, dwarfViz) {
-  var group1 = dwarfViz.find.hf(he.group_1_hf_id); //load historical figure data
+const Hf_simple_battle_event_desc = ({ he }) => {
+  const { find } = useDwarfViz();
+  var group1 = find.hf(he.group_1_hf_id); //load historical figure data
   group1.name = formatName(group1.name);
-  var group2 = dwarfViz.find.hf(he.group_2_hf_id); //load historical figure data
+  var group2 = find.hf(he.group_2_hf_id); //load historical figure data
   group2.name = formatName(group2.name);
 
   var eventDesc = '';
@@ -569,16 +746,16 @@ function hf_simple_battle_event_desc(he, dwarfViz) {
 
   eventDesc += '.';
   return eventDesc;
-}
+};
 
 export {
   // artifact_created_desc,
   // written_content_composed_desc,
-  add_hf_entity_link_desc,
-  change_hf_job_desc,
-  change_hf_state_desc,
-  hf_died_desc,
-  creature_devoured_desc,
-  hf_relationship_desc,
-  hf_simple_battle_event_desc,
+  Add_hf_entity_link_desc,
+  Change_hf_job_desc,
+  Change_hf_state_desc,
+  Hf_died_desc,
+  Creature_devoured_desc,
+  Hf_relationship_desc,
+  Hf_simple_battle_event_desc,
 };

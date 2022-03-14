@@ -12,10 +12,10 @@ const ItemLink = ({ dataObject, tooltipFunction, className, selectItem, children
   </span>
 );
 
-const EntityLink = ({ entityId }) => {
+const EntityLink = ({ id }) => {
   const { selectEntity, find } = useDwarfViz();
   const { entityTooltip } = useTooltip();
-  const entity = find.entity(entityId);
+  const entity = find.entity(id);
   return (
     <ItemLink
       dataObject={entity}
@@ -28,10 +28,10 @@ const EntityLink = ({ entityId }) => {
   );
 };
 
-const SiteLink = ({ siteId }) => {
+const SiteLink = ({ id }) => {
   const { selectSite, find } = useDwarfViz();
   const { siteTooltip } = useTooltip();
-  const site = find.site(siteId);
+  const site = find.site(id);
   return (
     <ItemLink
       dataObject={site}
@@ -44,10 +44,10 @@ const SiteLink = ({ siteId }) => {
   );
 };
 
-const HfLink = ({ hfId }) => {
+const HfLink = ({ id }) => {
   const { selectHF, find } = useDwarfViz();
   const { hfTooltip } = useTooltip();
-  const hf = find.hf(hfId);
+  const hf = find.hf(id);
   return (
     <ItemLink
       dataObject={hf}
