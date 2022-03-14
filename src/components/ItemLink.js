@@ -47,7 +47,10 @@ const SiteLink = ({ id }) => {
 const HfLink = ({ id }) => {
   const { selectHF, find } = useDwarfViz();
   const { hfTooltip } = useTooltip();
-  const hf = find.hf(id);
+  let hf = find.hf(id);
+  if (hf === undefined){
+    hf = { name: "Unknown"}
+  }
   return (
     <ItemLink
       dataObject={hf}

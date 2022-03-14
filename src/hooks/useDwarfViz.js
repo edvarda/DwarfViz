@@ -47,6 +47,7 @@ const WorldDataProvider = ({ children }) => {
       entityPopulations: (await import('../data/entityPopulations.json')).data,
       worldsInfo: (await import('../data/worldsInfo.json')).data,
       historicalEvents: (await import('../data/historicalEvents.json')).data,
+      artifacts: (await import('../data/artifacts.json')).data,
     });
     const fetchRemoteData = async () => ({
       regionsGeoJSON: await import('../data/regions.geo.json'),
@@ -57,6 +58,7 @@ const WorldDataProvider = ({ children }) => {
       entityPopulations: await fetchFromStoryteller('entity_populations'),
       worldsInfo: await fetchFromStoryteller('worlds_info'),
       historicalEvents: await fetchFromStoryteller('historical_events'),
+      artifacts: await fetchFromStoryteller('artifacts'),
       mapImageURL: `${storytellerURL}/map_images/2/image.png`,
     });
     const loadData = async () => {
@@ -260,6 +262,7 @@ const useDwarfViz = () => {
     entity: (id) => data.entities.find((x) => x.id === id),
     site: (id) => data.sites.find((x) => x.id === id),
     region: (id) => data.regions.find((x) => x.id === id),
+    artifact: (id) => data.artifacts.find((x) => x.id === id),
   };
 
   const setActiveView = (viewName) => {
