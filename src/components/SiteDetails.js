@@ -1,5 +1,5 @@
 import { useDwarfViz } from '../hooks/useDwarfViz';
-import { EntityLink } from './ItemLink.js';
+import { EntityLink, HfLink } from './ItemLink.js';
 import ItemDetails from './ItemDetails.js';
 import _ from 'lodash';
 
@@ -11,6 +11,13 @@ const SiteDetails = ({ site }) => {
     rows: [
       { displayName: 'Type', accessor: (site) => _.startCase(site.type) },
       { displayName: 'Region', accessor: (site) => `[${site.coord.x},${site.coord.y}]` },
+      { displayName: 'Builder',
+        accessor: (site) => {
+          const site_creation = data.historicalEvents.find((he) => (he.type === 'created_site' && he.site_id == site.id));
+          const builder_hf = site_creation ? site_creation.builder_hf_id : null;
+          return builder_hf ? <HfLink id={builder_hf}/> : null;
+        },
+      },
       {
         displayName: 'Civilization',
         accessor: (site) => (site.civ_id ? <EntityLink id={site.civ_id} /> : null),
