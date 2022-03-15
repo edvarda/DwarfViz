@@ -32,17 +32,43 @@ const Artifact_created_desc = ({ he, dwarfViz }) => {
 
   if (he.name_only) {
     // artifact wasn't created, it just got named (for having a long kill list)
-    eventDesc += `${creator.name} named ${getPronouns(creator.caste).their} ${itemType} '${
-      artifact.name
-    }'`;
-    if (he.site_id > -1 && site.name !== null) eventDesc += ` in ${site.name}`;
+    eventDesc = (
+      <>
+        <HfLink id={creator.id}/> named {a_an(itemType)} 
+        {getPronouns(creator.caste).their} {itemType} '{artifact.name}'
+      </>
+    );
+    if (he.site_id > -1 && site.name !== null) {
+      eventDesc = (
+        <>
+          <HfLink id={creator.id}/> named {a_an(itemType)} 
+          {getPronouns(creator.caste).their} {itemType} '{artifact.name}' in <SiteLink id={site.id}/>
+        </>
+      );
+    }
   } else {
-    eventDesc += `${creator.name} created ${a_an(itemType)}`;
-    if (artifact.name !== null) eventDesc += ` called '${artifact.name}'`;
-    if (he.site_id > -1 && site.name !== null) eventDesc += ` in ${site.name}`;
+    eventDesc = (
+      <>
+        <HfLink id={creator.id}/> created {a_an(itemType)}
+      </>
+    );
+    if (artifact.name !== null) {
+      eventDesc = (
+        <>
+          <HfLink id={creator.id}/> created {a_an(itemType)} called '{artifact.name}'
+        </>
+      );
+    }
+    if (he.site_id > -1 && site.name !== null) {
+      eventDesc = (
+        <>
+          <HfLink id={creator.id}/> created {a_an(itemType)} called '{artifact.name}' in <SiteLink id={site.id}/>
+        </>
+      );
+    }
   }
 
-  return eventDesc + '.';
+  return eventDesc;
 }
 
 // function written_content_composed_desc(he, dwarfViz) {

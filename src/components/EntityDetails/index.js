@@ -121,6 +121,7 @@ const EntityDetails = ({ entity }) => {
         //Selected an entity without parent civilization
         <Col>
           <GetEntityDetails entity={entity} />
+          <GovernedSitesDetails entity={entity} />
         </Col>
       );
   }
