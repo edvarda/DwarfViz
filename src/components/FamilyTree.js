@@ -186,7 +186,7 @@ const FamilyTree = () => {
 
   const marginBottom = 25;
   return (
-    <svg ref={widthCallback} width={width} height={height}>
+    <svg className={'graph-viz'} ref={widthCallback} width={width} height={height}>
       <g transform={`translate(0,${-marginBottom})`}>
         {width > 0 && (
           <Marks

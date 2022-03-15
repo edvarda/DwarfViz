@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
+import ReactTooltip from 'react-tooltip';
 import { useDwarfViz } from '../hooks/useDwarfViz.js';
 import './GraphStyles.scss';
 import linkTypes from './LinkTypes.js';
@@ -80,8 +81,12 @@ const RelationshipGraph = () => {
     }
   }, []);
 
+  useEffect(() => {
+    ReactTooltip.rebuild();
+  });
+
   return (
-    <svg ref={widthCallback} width={width} height={width}>
+    <svg className={'graph-viz'} ref={widthCallback} width={width} height={width}>
       {width > 0 && (
         <g transform={`translate(${radius},${radius})`}>
           {root.links().map((link) => (

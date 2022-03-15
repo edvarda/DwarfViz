@@ -17,7 +17,7 @@ const margin = {
   left: 60,
 };
 
-const widthToHeightRatio = 7;
+const widthToHeightRatio = 6;
 const xAxisLabelOffset = 50;
 const yAxisLabelOffset = 40;
 const xAxisLabel = 'Year';

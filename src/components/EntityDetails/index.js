@@ -11,9 +11,9 @@ const GetEntityDetails = ({ entity }) => {
 
   const getLeader = (entity) => {
     for (const position of Object.values(entity.entity_position)) {
-      return position ? ({ id: position.local_id, name: position.name }) : ({id: null, name: null});
+      return position ? { id: position.local_id, name: position.name } : { id: null, name: null };
     }
-    return ({id: null, name: null});
+    return { id: null, name: null };
   };
 
   const entityDetailsDefinition = {
@@ -30,12 +30,12 @@ const GetEntityDetails = ({ entity }) => {
         displayName: `Leader (${getLeader(entity).name})`,
         accessor: (entity) => {
           const localId = getLeader(entity).id;
-          if(localId === null) return null; 
+          if (localId === null) return null;
           const leaderAssignment = entity.entity_position_assignment.find(
             (pers) => pers.position_id == localId,
           );
           if (leaderAssignment != undefined) {
-            return leaderAssignment.hf_id ? <HfLink id={leaderAssignment.hf_id} /> : 'Unocupied';
+            return leaderAssignment.hf_id ? <HfLink id={leaderAssignment.hf_id} /> : 'Unoccupied';
           }
         },
       },
@@ -66,17 +66,16 @@ const GetEntityDetails = ({ entity }) => {
       {
         displayName: 'Owns sites',
         accessor: (entity) => {
-          let list_elements = []
+          let list_elements = [];
           for (const site of data.sites.filter((s) => s.cur_owner_id == entity.id)) {
-            list_elements.push(<li className="ownSiteList"><SiteLink id={site.id}/></li>)
+            list_elements.push(
+              <li className='ownSiteList'>
+                <SiteLink id={site.id} />
+              </li>,
+            );
           }
-          return list_elements.length > 0
-            ? (
-              <ul>
-                {list_elements}
-              </ul>)
-            : null;
-        }
+          return list_elements.length > 0 ? <ul>{list_elements}</ul> : null;
+        },
       },
     ],
   };
@@ -93,7 +92,7 @@ const EntityDetails = ({ entity }) => {
     return (
       <Col>
         <GetEntityDetails entity={entity} />
-        <GovernedSitesDetails entity={entity}/>
+        <GovernedSitesDetails entity={entity} />
       </Col>
     );
   } else {
