@@ -13,7 +13,7 @@ const Tooltip = ({ definition, data }) => {
   return (
     <table>
       <th className='header'>{header}</th>
-      {tooltipRows.map((row,i) => {
+      {tooltipRows.map((row, i) => {
         return (
           <tr key={`tt-${i}-${data.id}`}>
             <td className='propName'>{row.displayName}:</td>
@@ -51,21 +51,26 @@ const useTooltip = () => {
       { displayName: 'Name', accessor: (site) => _.startCase(site.name) },
       { displayName: 'Type', accessor: (site) => _.startCase(site.type) },
       { displayName: 'Region', accessor: (site) => `[${site.coord.x},${site.coord.y}]` },
-      { displayName: 'Builder',
+      {
+        displayName: 'Builder',
         accessor: (site) => {
-          const site_creation = data.historicalEvents.find((he) => (he.type === 'created_site' && he.site_id == site.id));
+          const site_creation = data.historicalEvents.find(
+            (he) => he.type === 'created_site' && he.site_id == site.id,
+          );
           const builder_hf = site_creation ? site_creation.builder_hf_id : null;
           const builder = data.historicalFigures.find((hf) => hf.id == builder_hf);
           return builder ? _.startCase(builder.name) : null;
         },
       },
-      { displayName: 'Civilization', 
+      {
+        displayName: 'Civilization',
         accessor: (site) => {
           const civ = data.entities.find((ent) => ent.id == site.civ_id);
           return civ ? _.startCase(civ.name) : null;
         },
       },
-      { displayName: 'Current owner', 
+      {
+        displayName: 'Current owner',
         accessor: (site) => {
           const civ = data.entities.find((ent) => ent.id == site.cur_owner_id);
           return civ ? _.startCase(civ.name) : null;

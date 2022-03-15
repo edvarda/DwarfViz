@@ -39,7 +39,8 @@ const WorldDataProvider = ({ children }) => {
   useEffect(() => {
     const fetchStaticData = async () => ({
       regionsGeoJSON: await import('../data/regions.geo.json'),
-      mapImageURL: await (await import('../data/image.png')).default,
+      // mapImageURL: await (await import('../data/image.png')).default,
+      mapImageURL: `${storytellerURL}/map_images/2/image.png`, // get from remote because
       regions: (await import('../data/regions.json')).data,
       historicalFigures: (await import('../data/historicalFigures.json')).data,
       sites: (await import('../data/sites.json')).data,

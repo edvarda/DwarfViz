@@ -61,7 +61,7 @@ body {
 .view {
   display: flex;
   flex: 0 1 5rem;
-  transition: all 0.8s ease;
+  // transition: all 0.8s ease;
   background-color: var(--view-color);
 
   .view-content {
@@ -73,7 +73,7 @@ body {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
-    transition: all 0.8s ease;
+    // transition: all 0.8s ease;
     .view-element {
       display: none;
     }
@@ -207,7 +207,7 @@ body {
     border-bottom: 0.1rem solid rgb(82, 82, 82);
   }
   .govSiteList {
-    display: block; 
+    display: block;
     text-align: center;
   }
   .ownSiteList {
@@ -237,6 +237,40 @@ body {
     display: block;
     padding-top: 100%;
   }
+}
+
+.circlePacking {
+  text {
+    font-weight: 400;
+    font-size: 0.7rem;
+  }
+  circle {
+    stroke: var(--shadow-color);
+    stroke-width: 0.1rem;
+  }
+}
+
+.colorLegend {
+  text {
+    font-weight: 400;
+    font-size: 0.8rem;
+    text-decoration: none;
+  }
+  circle {
+    stroke-width: 0.2rem;
+    fill-opacity: 1;
+    // &:hover {
+    //   fill-opacity: 0.5;
+    // }
+  }
+  // .active {
+  //   text {
+  //
+  //   }
+  //   circle {
+  //
+  //   }
+  // }
 }
 
 :export {

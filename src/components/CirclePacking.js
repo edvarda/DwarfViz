@@ -1,81 +1,27 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useMemo, useState } from 'react';
 import { useDwarfViz } from '../hooks/useDwarfViz';
+import { Row, Col } from 'react-bootstrap';
 import useTooltip from '../hooks/useTooltip';
-import cssColors from '../App.scss';
+import ReactTooltip from 'react-tooltip';
 import * as d3 from 'd3';
 import _ from 'lodash';
+import { useColorLegend } from './useColorLegend';
 
 const CirclePacking = () => {
   const {
-    data: { entities, historicalFigures },
+    data: { entities },
     societyView: { selectedItem: selectedEntity },
-    selectHF,
     selectEntity,
+    find,
   } = useDwarfViz();
-  const { entityTooltip, hfTooltip } = useTooltip();
+  const { entityTooltip } = useTooltip();
   const svgRef = useRef(null);
-
-  const getChildEntities = (civ_entity) =>
-    entities.filter((x) =>
-      civ_entity.entity_link.find((link) => link.target === x.id && link.type === 'CHILD'),
-    );
-
-  const getCivSubtree = (civ) => {
-    const subtree = _.uniq(getChildEntities(civ).map((childEntity) => childEntity.type)).map(
-      (entity_type) => ({
-        name: entity_type,
-        type: 'Type of child-entity',
-        children: [
-          ...getChildEntities(civ)
-            .filter((entity) => entity_type === entity.type)
-            .map((entity) => ({
-              name: entity.name,
-              type: 'Entity',
-              itemType: 'entity',
-              dataObject: entity,
-              isEntity: true,
-              id: entity.id,
-              children: entity.entity_position.map((position) => ({
-                name: position.name,
-                type: 'Social Position',
-                value: 1,
-                assignment: entity.entity_position_assignment.find(
-                  (assignment) => position.local_id === assignment.position_id,
-                ),
-              })),
-            })),
-        ],
-      }),
-    );
-    return subtree;
-  };
-
-  const data = {
-    name: 'root',
-    children: [
-      {
-        name: 'Social entities',
-        type: 'Social entities',
-        children: ['dwarf', 'elf', 'human', 'goblin', 'kobold'].map((raceName) => ({
-          type: 'Race',
-          name: raceName,
-          children: [
-            ...entities
-              .filter((x) => x.type === 'civilization' && raceName === x.race)
-              .map((civ) => ({
-                type: 'Civilization',
-                itemType: 'entity',
-                dataObject: civ,
-                name: civ.name,
-                isEntity: true,
-                id: civ.id,
-                children: [...getCivSubtree(civ)],
-              })),
-          ],
-        })),
-      },
-    ],
-  };
+  const circles = useRef(null);
+  const labels = useRef(null);
+  const zoomRef = useRef();
+  const [size, setSize] = useState(null);
+  const entityTypes = useMemo(() => _.uniq(entities.map((x) => x.type)), [entities]);
+  const { colorScale, ColorLegend } = useColorLegend(entityTypes);
 
   const color = d3
     .scaleLinear()
@@ -83,24 +29,47 @@ const CirclePacking = () => {
     .range(['hsl(152,80%,80%)', 'hsl(228,30%,40%)'])
     .interpolate(d3.interpolateHcl);
 
-  const zoomFunctionRef = useRef();
+  const data = useMemo(() => {
+    const getChildren = (entity) =>
+      entity.entity_link.filter((x) => x.type === 'CHILD').map((link) => find.entity(link.target));
+
+    const getSubTree = (entity) => {
+      return {
+        entity,
+        children: [...getChildren(entity).map((child) => getSubTree(child))],
+      };
+    };
+
+    const isRootLevelEntity = (entity) =>
+      _.every(entity.entity_link, (link) => link.type !== 'PARENT');
+
+    const races = ['dwarf', 'elf', 'human', 'goblin', null];
+    return {
+      children: [
+        ...entities
+          .filter((e) => isRootLevelEntity(e) && races.includes(e.race))
+          .map((e) => getSubTree(e)),
+      ],
+    };
+  }, [entities]);
 
   useEffect(() => {
-    const width = svgRef.current.parentElement.offsetWidth;
-    const height = width;
+    if (!size) return;
+    const { width, height } = size;
 
     const pack = (data) =>
       d3.pack().size([width, height]).padding(3)(
         d3
           .hierarchy(data)
           .sum((d) => {
-            return d.value;
+            return 1;
           })
           .sort(function (a, b) {
             return b.value - a.value;
           }),
       );
     const root = pack(data);
+
     let focus = root;
     let view;
 
@@ -109,36 +78,31 @@ const CirclePacking = () => {
       .attr('viewBox', `-${width / 2} -${height / 2} ${width} ${height}`)
       .style('display', 'block')
       .style('cursor', 'pointer')
-      .on('click', () => zoom(root));
+      .on('click', () => zoom(root))
+      .append('g');
 
     const node = svg
-      .append('g')
       .selectAll('circle')
       .data(root.descendants().slice(1))
       .join('circle')
-      .attr('fill', (d) => (d.children ? color(d.depth) : cssColors.peopleColor))
+      .attr('fill', (d) =>
+        colorScale.domain().includes(d.data.entity.type)
+          ? colorScale(d.data.entity.type)
+          : color(d.depth),
+      )
       .attr('data-tip', (d) => {
-        if (d.data.itemType === 'entity') {
-          return entityTooltip(d.data.dataObject);
+        if (d.data.entity) {
+          return entityTooltip(d.data.entity);
         }
-        // if (d.data.type === 'Social Position' && d.data.assignment) {
-        //   hfTooltip(d.data);
-        // }
       })
-      .attr('data-tip-disable', true)
-      .attr('pointer-events', (d) => (!d.children ? 'none' : null))
       .on('mouseover', function () {
         d3.select(this).attr('stroke', '#000');
-        d3.select(this).attr('data-tip-disable', false);
       })
       .on('mouseout', function () {
         d3.select(this).attr('stroke', null);
-        d3.select(this).attr('data-tip-disable', true);
       })
       .on('click', (event, d) => {
-        if (d.data.type === 'Social Position' && d.data.assignment) {
-          selectHF(d.data.assignment.hf_id);
-        } else if (focus !== d) {
+        if (focus !== d) {
           zoom(d);
         }
         event.stopPropagation();
@@ -146,18 +110,15 @@ const CirclePacking = () => {
       });
 
     const label = svg
-      .append('g')
-      .style('font', '2em leto')
+      .selectAll('text')
+      .data(root.descendants().slice(1))
+      .join('text')
       .attr('pointer-events', 'none')
       .attr('text-anchor', 'middle')
-      .selectAll('text')
-      .data(root.descendants())
-      .join('text')
+      .text((d) => (d.data.entity.race ? d.data.entity.race : ''))
+      .style('font-size', (d) => `${d.r * 0.7}px`)
       .style('fill-opacity', (d) => (d.parent === root ? 1 : 0))
-      .style('display', (d) => (d.parent === root ? 'inline' : 'none'))
-      .text((d) => d.data.name);
-
-    zoomTo([root.x, root.y, root.r * 2]);
+      .style('display', (d) => (d.parent === root ? 'inline' : 'none'));
 
     function zoomTo(v) {
       const k = width / v[2];
@@ -171,18 +132,18 @@ const CirclePacking = () => {
 
     function zoom(d) {
       focus = d;
-
+      let zoomDistance = d.depth === 0 ? 1 : d.depth * 1.8;
       const transition = svg
         .transition()
         .duration(750)
         .tween('zoom', (d) => {
-          const i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2]);
+          const i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2 * zoomDistance]);
           return (t) => zoomTo(i(t));
         })
         .end()
         .then(() => {
-          if (d.data.isEntity ?? false) {
-            selectEntity(d.data.id);
+          if (d.data.entity) {
+            selectEntity(d.data.entity.id);
           }
         });
 
@@ -200,27 +161,40 @@ const CirclePacking = () => {
         });
     }
 
-    zoomFunctionRef.current = (entityId) => {
-      if (entityId === 'root') {
-        zoom(root);
-      } else {
-        const target = root.find((d) => (d.data.isEntity ?? false) && d.data.id === entityId);
-        zoom(target);
-      }
-    };
+    view = [root.x, root.y, root.r * 2];
 
-    return svg.node();
-  }, []);
+    if (selectedEntity) {
+      const d = root
+        .descendants()
+        .slice(1)
+        .find((d) => d.data.entity.id === selectedEntity.id);
+      zoom(d);
+    } else {
+      zoomTo(view);
+    }
+
+    ReactTooltip.rebuild();
+
+    return () => svg.node();
+  }, [size, data]);
 
   useEffect(() => {
-    if (selectedEntity) {
-      zoomFunctionRef.current(selectedEntity.id);
-    } else {
-      zoomFunctionRef.current('root');
-    }
-  }, [selectedEntity]);
+    setSize({
+      width: svgRef.current.parentElement.offsetWidth,
+      height: svgRef.current.parentElement.offsetWidth,
+    });
+  }, [svgRef]);
 
-  return <svg ref={svgRef} />;
+  return (
+    <Row>
+      <Col className='col-sm-9'>
+        <svg className={'circlePacking'} ref={svgRef} />
+      </Col>
+      <Col className='col-sm-3'>
+        <ColorLegend height={size ? size.height : 0} />
+      </Col>
+    </Row>
+  );
 };
 
 export default CirclePacking;

@@ -130,9 +130,9 @@ const Map = ({ mapImage, mapSize, data, regions, dim }) => {
         });
       },
     }).addTo(mapRef.current);
-    setTimeout(function () {
-      mapRef.current.fitBounds(mapSize.bounds);
-    }, 1000);
+
+    mapRef.current.fitBounds(mapSize.bounds);
+
     return () => {
       mapRef.current.remove();
     };
