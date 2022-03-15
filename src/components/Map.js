@@ -80,7 +80,7 @@ const Map = () => {
     radius: 16,
     stroke: true,
     color: 'black',
-    weight: 3,
+    weight: 5,
     fill: true,
     fillColor: colorScale(type),
     fillOpacity: 1,
@@ -144,7 +144,7 @@ const Map = () => {
           { interactive: true },
         );
         if (selectedSite && feature.properties.id === selectedSite.id) {
-          thisLayer.setStyle(siteSelected);
+          thisLayer.setStyle(siteSelected(feature.properties.type));
         }
         thisLayer.on({
           mouseover: (e) => {
@@ -165,7 +165,7 @@ const Map = () => {
     return () => {
       mapRef.current.remove();
     };
-  }, [mapImageURL, mapSize, regionsGeoJSON, regions]);
+  }, [mapImageURL, mapSize, regionsGeoJSON, regions, selectedSite]);
 
   return (
     <div className={'map-container'}>
