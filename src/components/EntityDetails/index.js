@@ -107,9 +107,10 @@ const EntityDetails = ({ entity }) => {
     );
   } else {
     let parentCiv = undefined;
-    let evalEntity = entity;
-    while (parentCiv === undefined) {
-      if (evalEntity.entity_link == undefined || evalEntity.entity_link.length == 0) break;
+    let parentEntities = [entity];
+    while (parentCiv === undefined && parentEntities.length > 0) {
+      let evalEntity = parentEntities.pop();
+      if (evalEntity.entity_link.length == 0) break;
       for (const link of evalEntity.entity_link) {
         if (link.type === 'PARENT') {
           const parent = entities.find((ent) => ent.id == link.target);
@@ -117,7 +118,7 @@ const EntityDetails = ({ entity }) => {
             parentCiv = parent;
             break;
           }
-          else evalEntity = parent;
+          else parentEntities.push(parent);
         }
       }
     }
