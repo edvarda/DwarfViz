@@ -5,10 +5,8 @@ import _ from 'lodash';
 const regionTilesToSquareKm = (regiontiles) => regiontiles * 3.4;
 
 const RegionDetails = ({ region }) => {
-  const { data } = useDwarfViz();
-
   const regionDetailsDefinition = {
-    header: `Region: ${_.startCase(region.name)}`,
+    header: `Surrounding region`,
     rows: [
       { displayName: 'Name', accessor: (region) => _.startCase(region.name) },
       { displayName: 'Type', accessor: (region) => _.startCase(region.type) },

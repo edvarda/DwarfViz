@@ -7,15 +7,18 @@ const SiteDetails = ({ site }) => {
   const { data } = useDwarfViz();
 
   const siteDetailsDefinition = {
-    header: `Site: ${_.startCase(site.name)}`,
+    header: `${_.startCase('details')}`,
     rows: [
       { displayName: 'Type', accessor: (site) => _.startCase(site.type) },
       { displayName: 'Region', accessor: (site) => `[${site.coord.x},${site.coord.y}]` },
-      { displayName: 'Builder',
+      {
+        displayName: 'Builder',
         accessor: (site) => {
-          const site_creation = data.historicalEvents.find((he) => (he.type === 'created_site' && he.site_id == site.id));
+          const site_creation = data.historicalEvents.find(
+            (he) => he.type === 'created_site' && he.site_id == site.id,
+          );
           const builder_hf = site_creation ? site_creation.builder_hf_id : null;
-          return builder_hf ? <HfLink id={builder_hf}/> : null;
+          return builder_hf ? <HfLink id={builder_hf} /> : null;
         },
       },
       {

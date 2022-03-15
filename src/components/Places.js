@@ -7,6 +7,7 @@ import SiteDetails from './SiteDetails.js';
 import RegionDetails from './RegionDetails.js';
 import { useDwarfViz } from '../hooks/useDwarfViz';
 import HistoryControls from './HistoryControls.js';
+import _ from 'lodash';
 
 const Places = () => {
   const {
@@ -56,12 +57,10 @@ const Places = () => {
                 <Col className={'flex-column col-sm-4'}>
                   {selectedSite ? (
                     <>
-                      <div className='view-element'>
-                        <RegionDetails region={getRegionFromSite(selectedSite)} />
-                      </div>
-                      <div className='view-element'>
-                        <SiteDetails site={selectedSite} />
-                      </div>
+                      <h2>{`${_.startCase(selectedSite.name)}`}</h2>
+                      <RegionDetails region={getRegionFromSite(selectedSite)} />
+
+                      <SiteDetails site={selectedSite} />
                     </>
                   ) : (
                     <div className={'view-element noSelection'}>Select a site from the map</div>
