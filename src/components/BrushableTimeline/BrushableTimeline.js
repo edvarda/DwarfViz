@@ -107,43 +107,48 @@ const BrushableTimeline = ({ setYearRange, historicalEvents }) => {
       }, 1000);
     }
   }, []);
-
-  return (
-    <svg ref={widthCallback} width={width} height={height}>
-      {width > 0 && (
-        <g transform={`translate(${margin.left},${margin.top})`}>
-          <AxisBottom xScale={xScale} innerHeight={innerHeight} tickOffset={10} />
-          <AxisLeft yScale={yScale} innerWidth={innerWidth} tickOffset={8} />
-          <text
-            className='axis-label'
-            x={innerWidth / 2}
-            y={innerHeight + xAxisLabelOffset}
-            textAnchor='middle'
-            style={{ fontWeight: 'bold' }}
-          >
-            {xAxisLabel}
-          </text>
-          <text
-            className='axis-label'
-            textAnchor='middle'
-            transform={`translate(${-yAxisLabelOffset},${innerHeight / 2}) rotate(-90)`}
-            style={{ fontWeight: 'bold' }}
-          >
-            {yAxisLabel}
-          </text>
-          <Marks
-            binnedData={binnedData}
-            xScale={xScale}
-            yScale={yScale}
-            tooltipFormat={(d) => d}
-            innerHeight={innerHeight}
-            colorScale={colorScale}
-          />
-          <g ref={brushRef} />
-        </g>
-      )}
-    </svg>
-  );
+  console.log(historicalEvents)
+  if (historicalEvents.length != 0){
+    return (
+      <svg ref={widthCallback} width={width} height={height}>
+        {width > 0 && (
+          <g transform={`translate(${margin.left},${margin.top})`}>
+            <AxisBottom xScale={xScale} innerHeight={innerHeight} tickOffset={10} />
+            <AxisLeft yScale={yScale} innerWidth={innerWidth} tickOffset={8} />
+            <text
+              className='axis-label'
+              x={innerWidth / 2}
+              y={innerHeight + xAxisLabelOffset}
+              textAnchor='middle'
+              style={{ fontWeight: 'bold' }}
+            >
+              {xAxisLabel}
+            </text>
+            <text
+              className='axis-label'
+              textAnchor='middle'
+              transform={`translate(${-yAxisLabelOffset},${innerHeight / 2}) rotate(-90)`}
+              style={{ fontWeight: 'bold' }}
+            >
+              {yAxisLabel}
+            </text>
+            <Marks
+              binnedData={binnedData}
+              xScale={xScale}
+              yScale={yScale}
+              tooltipFormat={(d) => d}
+              innerHeight={innerHeight}
+              colorScale={colorScale}
+            />
+            <g ref={brushRef} />
+          </g>
+        )}
+      </svg>
+    );
+  } else {
+    return null
+  }
+  
 };
 
 export default BrushableTimeline;

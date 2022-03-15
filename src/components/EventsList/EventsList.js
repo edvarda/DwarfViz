@@ -48,23 +48,27 @@ const EventsList = ({ yearRange, historicalEvents }) => {
         })
         .slice(0, maxSlice)
     : filteredTypes.slice(0, maxSlice);
-
-  return (
-    <Container fluid>
-      <Row>
-        <Col className={'col-sm-10'}>
-          <Table data={filteredEvents} rowsPerPage={12} />
-        </Col>
-        <Col className={'col-sm-2'}>
-          <EventCheckboxes
-            setTypes={setTypes}
-            types={types}
-            narrativizedTypes={narrativizedTypes}
-          ></EventCheckboxes>
-        </Col>
-      </Row>
-    </Container>
-  );
+  if (filteredEvents.length != 0){
+    return (
+      <Container fluid>
+        <Row>
+          <Col className={'col-sm-10'}>
+            <Table data={filteredEvents} rowsPerPage={12} />
+          </Col>
+          <Col className={'col-sm-2'}>
+            <EventCheckboxes
+              setTypes={setTypes}
+              types={types}
+              narrativizedTypes={narrativizedTypes}
+            ></EventCheckboxes>
+          </Col>
+        </Row>
+      </Container>
+    );
+  } else {
+    return <h2>No events available for current selection!</h2>
+  }   
+  
 };
 
 export default EventsList;
