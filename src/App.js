@@ -27,6 +27,7 @@ const Viz = () => {
     societyView,
     selectEntity,
     setActiveView,
+    getActiveView,
   } = useDwarfViz();
 
   return (
@@ -40,19 +41,19 @@ const Viz = () => {
           <Row id='header'>DwarfViz</Row>
           <ul className='view-container'>
             <li
-              className={`view places ${placesView.isActive && `expanded`}`}
+              className={`view places ${getActiveView() === placesView && `expanded`}`}
               onClick={() => setActiveView('placesView')}
             >
               <Places />
             </li>
             <li
-              className={`view society ${societyView.isActive && `expanded`}`}
+              className={`view society ${getActiveView() === societyView && `expanded`}`}
               onClick={() => setActiveView('societyView')}
             >
               <Society />
             </li>
             <li
-              className={`view people ${peopleView.isActive && `expanded`}`}
+              className={`view people ${getActiveView() === peopleView && `expanded`}`}
               onClick={() => setActiveView('peopleView')}
             >
               <People />

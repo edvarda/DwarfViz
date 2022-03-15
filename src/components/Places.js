@@ -54,7 +54,7 @@ const Places = () => {
                   />
                 </Col>
                 <Col className={'flex-column col-sm-4'}>
-                  {selectedSite && (
+                  {selectedSite ? (
                     <>
                       <div className='view-element'>
                         <RegionDetails region={getRegionFromSite(selectedSite)} />
@@ -63,6 +63,8 @@ const Places = () => {
                         <SiteDetails site={selectedSite} />
                       </div>
                     </>
+                  ) : (
+                    <div className={'view-element noSelection'}>Select a site from the map</div>
                   )}
                 </Col>
               </Row>
