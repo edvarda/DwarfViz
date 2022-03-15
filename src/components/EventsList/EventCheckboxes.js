@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Checkbox from "./Checkbox";
+import styles from './Table.module.scss';
 
 const EventCheckboxes = ( {setTypes, types, narrativizedTypes} ) => {
     
@@ -17,7 +18,7 @@ const EventCheckboxes = ( {setTypes, types, narrativizedTypes} ) => {
         <h3>Select Events to filter on</h3>
         {narrativizedTypes.map((value, index) => {
             return (
-                <div className="eventFilterCheckboxes" key={index}>
+                <div className={styles.eventFilterCheckboxes} key={index}>
                     <Checkbox
                         id={`custom-checkbox-${index}`}
                         label={value}
