@@ -11,8 +11,15 @@ const GetEntityDetails = ({ entity }) => {
   const { data } = useDwarfViz();
 
   const getLeader = (entity) => {
+    let pos = { id: null, name: null };
     for (const position of Object.values(entity.entity_position)) {
-      return position ? { id: position.local_id, name: position.name } : { id: null, name: null };
+      pos = position ? { id: position.local_id, name: position.name } : { id: null, name: null };
+      break;
+    }
+    if (pos.id != null) {
+      if(entity.entity_position_assignment.filter((ass) => ass.position_id == pos.id).length == 1) {
+        return pos;
+      }
     }
     return { id: null, name: null };
   };
@@ -36,8 +43,9 @@ const GetEntityDetails = ({ entity }) => {
             (pers) => pers.position_id == localId,
           );
           if (leaderAssignment != undefined) {
-            return leaderAssignment.hf_id ? <HfLink id={leaderAssignment.hf_id} /> : 'Unoccupied';
+            return leaderAssignment.hf_id ? <HfLink id={leaderAssignment.hf_id} /> : 'Unknown individual';
           }
+          else return 'Unoccupied';
         },
       },
       {
@@ -101,11 +109,14 @@ const EntityDetails = ({ entity }) => {
     let parentCiv = undefined;
     let evalEntity = entity;
     while (parentCiv === undefined) {
-      if (evalEntity.entity_link.length == 0) break;
+      if (evalEntity.entity_link == undefined || evalEntity.entity_link.length == 0) break;
       for (const link of evalEntity.entity_link) {
         if (link.type === 'PARENT') {
           const parent = entities.find((ent) => ent.id == link.target);
-          if (parent.type === 'civilization') parentCiv = parent;
+          if (parent.type === 'civilization') {
+            parentCiv = parent;
+            break;
+          }
           else evalEntity = parent;
         }
       }
