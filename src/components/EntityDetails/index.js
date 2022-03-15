@@ -43,8 +43,9 @@ const GetEntityDetails = ({ entity }) => {
             (pers) => pers.position_id == localId,
           );
           if (leaderAssignment != undefined) {
-            return leaderAssignment.hf_id ? <HfLink id={leaderAssignment.hf_id} /> : 'Unoccupied';
+            return leaderAssignment.hf_id ? <HfLink id={leaderAssignment.hf_id} /> : 'Unknown individual';
           }
+          else return 'Unoccupied';
         },
       },
       {
