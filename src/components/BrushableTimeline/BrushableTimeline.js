@@ -105,7 +105,7 @@ const BrushableTimeline = ({ setYearRange, historicalEvents }) => {
       setHeight(width / widthToHeightRatio);
     }
   }, []);
-  console.log(historicalEvents)
+
   if (historicalEvents.length != 0){
     return (
       <svg ref={widthCallback} width={width} height={height}>
