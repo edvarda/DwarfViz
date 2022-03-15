@@ -43,15 +43,12 @@ const People = () => {
                   <Row>
                     <Col className={'col-sm-6'}>
                       <h1>{_.startCase(selectedFigure.name)}</h1>
-                      <div className={'view-element'}>
-                        <HfDetails hf={selectedFigure} />
-                      </div>
-                      <div className={'view-element'}>
-                        <HfDetailSkills hf={selectedFigure} />
-                      </div>
-                      <div className={'view-element'}>
-                        <RelatedEntitiesDetails hf={selectedFigure} />
-                      </div>
+
+                      <HfDetails hf={selectedFigure} />
+
+                      <HfDetailSkills hf={selectedFigure} />
+
+                      <RelatedEntitiesDetails hf={selectedFigure} />
                     </Col>
                     <Col className={'col-sm-6'}>
                       <div className={'view-element'}>{selectedFigure && <FamilyTree />}</div>
