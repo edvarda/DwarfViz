@@ -451,7 +451,7 @@ const Hf_died_desc = ({ he }) => {
         if (hf.birth_year !== -1 && hf.death_year !== -1) {
           eventDesc = (
             <>
-              <HfLink id={hf.id} /> died naturally at the ripe age of
+              <HfLink id={hf.id} /> died naturally at the ripe age of 
               {Math.abs(hf.death_year - hf.birth_year)}
             </>
           );
@@ -473,7 +473,7 @@ const Hf_died_desc = ({ he }) => {
       case 'bled':
         eventDesc = (
           <>
-            <HfLink id={hf.id} /> bled to death;
+            <HfLink id={hf.id} /> bled to death
           </>
         ); //TODO: get wounds caused by
         break;
@@ -487,14 +487,14 @@ const Hf_died_desc = ({ he }) => {
       case 'crushed_by_a_bridge':
         eventDesc = (
           <>
-            <HfLink id={hf.id} /> was crushed by a lowering drawbridge;
+            <HfLink id={hf.id} /> was crushed by a lowering drawbridge
           </>
         ); //TODO: get site of drawbridge
         break;
       case 'drowned':
         eventDesc = (
           <>
-            <HfLink id={hf.id} /> drowned;
+            <HfLink id={hf.id} /> drowned
           </>
         ); //TODO: get name of water body
         break;
@@ -508,7 +508,7 @@ const Hf_died_desc = ({ he }) => {
       case 'infection':
         eventDesc = (
           <>
-            <HfLink id={hf.id} /> succumbed to infection;
+            <HfLink id={hf.id} /> succumbed to infection
           </>
         ); //TODO: find out if being treated / what disease if possible?
         break;
@@ -543,7 +543,7 @@ const Hf_died_desc = ({ he }) => {
       case 'cave_in':
         eventDesc = (
           <>
-            <HfLink id={hf.id} /> was crushed by falling rocks;
+            <HfLink id={hf.id} /> was crushed by falling rocks
           </>
         ); //TODO: find out if in fortress or not
         break;

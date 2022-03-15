@@ -38,8 +38,8 @@ const Society = () => {
                 <div className='view-element'>
                   <CirclePacking />
                 </div>
-                <div className='view-element' style={{ width: '675px' }}>
-                  <CivPopulation width={650} height={300} className={'barchart'} />
+                <div className='view-element' style={{ width: '650px' }}>
+                  <CivPopulation width={625} height={300} className={'barchart'} />
                 </div>
               </Col>
               <Col className={'col-sm-4'}>
