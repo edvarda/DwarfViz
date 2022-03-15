@@ -38,6 +38,9 @@ const Society = () => {
                 <div className='view-element'>
                   <CirclePacking />
                 </div>
+                <div className='view-element' style={{ width: '675px' }}>
+                  <CivPopulation width={650} height={300} className={'barchart'} />
+                </div>
               </Col>
               <Col className={'col-sm-4'}>
                 {selectedEntity ? (
@@ -50,13 +53,6 @@ const Society = () => {
                     Select an entity from the Circle graph
                   </div>
                 )}
-              </Col>
-            </Row>
-            <Row>
-              <Col className={'col-sm-6'}>
-                <div className='view-element' style={{ width: '700px' }}>
-                  <CivPopulation width={650} height={300} className={'barchart'} />
-                </div>
               </Col>
             </Row>
             <Row>{selectedEntity && <Events />}</Row>
