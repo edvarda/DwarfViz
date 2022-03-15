@@ -1,45 +1,36 @@
-import { useDwarfViz } from '../../hooks/useDwarfViz';
+import ItemDetails from '../ItemDetails.js';
 import { HfLink } from '../ItemLink.js';
 import _ from 'lodash';
 
 const EntityPositionDetails = ({ entity }) => {
-  const { data } = useDwarfViz();
-
-  const getEntries = (position) => {
-    const hfs_in_position = entity.entity_position_assignment.filter(
-      (ass) => ass.position_id == position.local_id,
-    );
-    if (hfs_in_position.length == 0) {
-      return (
-        <li>
-          <div className='propName'>{_.startCase(position.name)}:</div>
-          <div className='value'>Unassigned</div>
-        </li>
-      );
-    } else {
-      const group = hfs_in_position.map((hf_in_pos) => {
-        return (
-          <li>
-            <div className='propName'>{_.startCase(position.name)}:</div>
-            <div className='value'>
-              {hf_in_pos.hf_id ? <HfLink id={hf_in_pos.hf_id} /> : 'Unknown individual'}
-            </div>
-          </li>
+  const entityPositionsDefinition = {
+    header: `Entity positions`,
+    rows: _.flatten(
+      entity.entity_position.map((position) => {
+        const assignments = entity.entity_position_assignment.filter(
+          (x) => x.position_id === position.local_id && x.hf_id,
         );
-      });
-      return <>{group}</>;
-    }
+        if (_.isEmpty(assignments)) {
+          return [
+            {
+              displayName: _.startCase(position.name),
+              accessor: () => 'Unassigned',
+            },
+          ];
+        } else {
+          return assignments.map((assignment) => ({
+            displayName: _.startCase(position.name),
+            accessor: () => <HfLink id={assignment.hf_id} />,
+          }));
+        }
+      }),
+    ),
   };
 
   if (entity.entity_position.length === 0) {
     return null;
   }
-  return (
-    <div className='detailsView'>
-      <h3>Entity Positions</h3>
-      <ul>{entity.entity_position.map(getEntries)}</ul>
-    </div>
-  );
+  return <ItemDetails itemDetailsDefinition={entityPositionsDefinition} item={entity} />;
 };
 
 export { EntityPositionDetails };

@@ -26,7 +26,7 @@ const BasicEntityDetails = ({ entity }) => {
   };
 
   const entityDetailsDefinition = {
-    header: _.startCase(entity.name),
+    header: _.startCase('details'),
     rows: [
       //{ displayName: 'Name', accessor: (entity) => _.startCase(entity.name) },
       { displayName: 'Type', accessor: (entity) => _.startCase(entity.type) },
@@ -119,20 +119,11 @@ const EntityDetails = ({ entity }) => {
 
   return (
     <>
-      {parentCiv && (
-        <div className='view-element'>
-          <BasicEntityDetails entity={parentCiv} />
-        </div>
-      )}
-      <div className='view-element'>
-        <BasicEntityDetails entity={entity} />
-      </div>
-      <div className='view-element'>
-        <EntityPositionDetails entity={entity} />
-      </div>
-      <div className='view-element'>
-        <GovernedSitesDetails entity={entity} />
-      </div>
+      <BasicEntityDetails entity={entity} />
+
+      <EntityPositionDetails entity={entity} />
+
+      <GovernedSitesDetails entity={entity} />
     </>
   );
 };
