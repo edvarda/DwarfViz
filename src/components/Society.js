@@ -50,8 +50,8 @@ const Society = () => {
             </Row>
             <Row>
               <Col className={'col-sm-6'}>
-                <div className='view-element'>
-                  <CivPopulation width={450} height={300} className={'barchart'} />
+                <div className='view-element' style={{width: '700px'}}>
+                  <CivPopulation width={650} height={300} className={'barchart'} />
                 </div>
               </Col>
             </Row>

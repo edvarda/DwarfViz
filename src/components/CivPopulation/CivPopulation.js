@@ -132,6 +132,7 @@ const CivPopulation = ({ width, height }) => {
     xAxisG.selectAll('.tick text').call(wrap, xScale.bandwidth());
 
     const yAxisG = select(yAxisRef.current);
+    yAxisG.append('text').text('Population');
     const yAxis = axisLeft(yScale);
     yAxisG.call(yAxis);
   });
@@ -179,8 +180,9 @@ const CivPopulation = ({ width, height }) => {
   return (
     <svg width={width} height={height}>
       <g transform={`translate(${margin.left},${margin.top})`}>
+        <text className='title' y='-10'>Civilization population by race</text>
         <g ref={xAxisRef} transform={`translate(0,${innerHeight})`}></g>
-        <g ref={yAxisRef} />
+        <g ref={yAxisRef} ></g>
         <Marks
           data={population}
           xScale={xScale}
