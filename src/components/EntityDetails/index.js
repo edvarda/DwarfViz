@@ -112,7 +112,10 @@ const EntityDetails = ({ entity }) => {
       for (const link of evalEntity.entity_link) {
         if (link.type === 'PARENT') {
           const parent = entities.find((ent) => ent.id == link.target);
-          if (parent.type === 'civilization') parentCiv = parent;
+          if (parent.type === 'civilization') {
+            parentCiv = parent;
+            break;
+          }
           else evalEntity = parent;
         }
       }
