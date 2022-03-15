@@ -44,13 +44,15 @@ const Society = () => {
                     <EntityDetails entity={selectedEntity} />
                   </div>
                 ) : (
-                  <div className={'view-element noSelection'}>No entity selected</div>
+                  <div className={'view-element noSelection'}>
+                    Select an entity from the Circle graph
+                  </div>
                 )}
               </Col>
             </Row>
             <Row>
               <Col className={'col-sm-6'}>
-                <div className='view-element' style={{width: '700px'}}>
+                <div className='view-element' style={{ width: '700px' }}>
                   <CivPopulation width={650} height={300} className={'barchart'} />
                 </div>
               </Col>

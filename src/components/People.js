@@ -16,6 +16,7 @@ const People = () => {
     peopleView: { selectedItem: selectedFigure, isActive: isViewActive },
     VIEWS,
     selectHF,
+    setActiveView,
   } = useDwarfViz();
 
   useEffect(() => {
@@ -61,8 +62,20 @@ const People = () => {
                 </>
               ) : (
                 <Col>
-                  <div className={'view-element noSelection'} onClick={() => selectHF(1042)}>
-                    No person selected
+                  <div className={'view-element noSelection'}>
+                    {`Select a historical figure from `}
+                    <span className='site-link' onClick={() => setActiveView('placesView')}>
+                      Places
+                    </span>
+                    {` or `}
+                    <span
+                      className='entity-link'
+                      onClick={() => {
+                        setActiveView('societyView');
+                      }}
+                    >
+                      Society
+                    </span>
                   </div>
                 </Col>
               )}

@@ -2,6 +2,8 @@ import BrushableTimeline from './BrushableTimeline/BrushableTimeline.js';
 import EventsList from './EventsList/EventsList.js';
 import { useState } from 'react';
 import { useDwarfViz } from '../hooks/useDwarfViz.js';
+import _ from 'lodash';
+
 const Events = () => {
   const [yearRange, setYearRange] = useState();
   const {
@@ -13,7 +15,7 @@ const Events = () => {
     ? getActiveView().selectedItem.relatedEvents
     : historicalEvents;
 
-  return (
+  return events.length > 0 ? (
     <>
       <div className={'view-element'}>
         {<BrushableTimeline setYearRange={setYearRange} historicalEvents={events} />}
@@ -22,6 +24,10 @@ const Events = () => {
         <EventsList yearRange={yearRange} historicalEvents={events} />
       </div>
     </>
+  ) : (
+    <div className={'view-element noSelection'}>
+      {`${_.startCase(getActiveView().selectedItem.name)} has no associated events`}
+    </div>
   );
 };
 
