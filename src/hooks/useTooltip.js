@@ -51,8 +51,16 @@ const useTooltip = () => {
       { displayName: 'Name', accessor: (site) => _.startCase(site.name) },
       { displayName: 'Type', accessor: (site) => _.startCase(site.type) },
       { displayName: 'Region', accessor: (site) => `[${site.coord.x},${site.coord.y}]` },
-      { displayName: 'Civilization', accessor: (site) => site.civ_id },
-      { displayName: 'Current owner', accessor: (site) => site.cur_owner_id },
+      { displayName: 'Civilization', accessor: (site) => {
+          const civ = data.entities.find((ent) => ent.id == site.civ_id);
+          return civ ? _.startCase(civ.name) : null;
+        },
+      },
+      { displayName: 'Current owner', accessor: (site) => {
+          const civ = data.entities.find((ent) => ent.id == site.cur_owner_id);
+          return civ ? _.startCase(civ.name) : null;
+        },
+      },
     ],
   };
   const hfTooltipDefinition = {

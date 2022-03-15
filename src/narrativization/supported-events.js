@@ -109,7 +109,7 @@ const Add_hf_entity_link_desc = ({ he }) => {
       if (he.position !== undefined) {
         eventDesc = 
           <>
-            <HfLink id={hf.id}/> was given the position of ${he.position} within <EntityLink id={civ.id}/>
+            <HfLink id={hf.id}/> was given the position of {he.position} within <EntityLink id={civ.id}/>
           </>
       } else {
         eventDesc =
@@ -318,7 +318,7 @@ const Hf_died_desc = ({ he }) => {
       case 'executed_buried_alive':
         eventDesc = (
           <>
-            <HfLink id={hf.id} /> was buried alive by <HfLink id={slayer.id} /> for $
+            <HfLink id={hf.id} /> was buried alive by <HfLink id={slayer.id} /> for 
             {hf.pronouns.their} crimes
           </>
         );
@@ -326,7 +326,7 @@ const Hf_died_desc = ({ he }) => {
       case 'executed_burned_alive':
         eventDesc = (
           <>
-            <HfLink id={hf.id} /> was burned alive by <HfLink id={slayer.id} /> for $
+            <HfLink id={hf.id} /> was burned alive by <HfLink id={slayer.id} /> for 
             {hf.pronouns.their} crimes
           </>
         );
@@ -334,7 +334,7 @@ const Hf_died_desc = ({ he }) => {
       case 'executed_crucified':
         eventDesc = (
           <>
-            <HfLink id={hf.id} /> was crucified by <HfLink id={slayer.id} /> for $
+            <HfLink id={hf.id} /> was crucified by <HfLink id={slayer.id} /> for 
             {hf.pronouns.their} crimes
           </>
         );
@@ -342,7 +342,7 @@ const Hf_died_desc = ({ he }) => {
       case 'executed_drowned':
         eventDesc = (
           <>
-            <HfLink id={hf.id} /> was drowned by <HfLink id={slayer.id} /> for ${hf.pronouns.their}{' '}
+            <HfLink id={hf.id} /> was drowned by <HfLink id={slayer.id} /> for {hf.pronouns.their}{' '}
             crimes
           </>
         );
@@ -350,7 +350,7 @@ const Hf_died_desc = ({ he }) => {
       case 'executed_fed_to_beasts':
         eventDesc = (
           <>
-            <HfLink id={hf.id} /> was fed to beasts by <HfLink id={slayer.id} /> for $
+            <HfLink id={hf.id} /> was fed to beasts by <HfLink id={slayer.id} /> for 
             {hf.pronouns.their} crimes
           </>
         );
@@ -358,7 +358,7 @@ const Hf_died_desc = ({ he }) => {
       case 'executed_hacked_to_pieces':
         eventDesc = (
           <>
-            <HfLink id={hf.id} /> was hacked to pieces by <HfLink id={slayer.id} /> for $
+            <HfLink id={hf.id} /> was hacked to pieces by <HfLink id={slayer.id} /> for 
             {hf.pronouns.their} crimes
           </>
         );
@@ -366,14 +366,14 @@ const Hf_died_desc = ({ he }) => {
       case 'executed_beheaded':
         eventDesc = (
           <>
-            <HfLink id={hf.id} /> was buried alive for ${hf.pronouns.their} crimes
+            <HfLink id={hf.id} /> was buried alive for {hf.pronouns.their} crimes
           </>
         );
         break;
       case 'drained_blood':
         eventDesc = (
           <>
-            <HfLink id={hf.id} /> was drained of ${hf.pronouns.their} blood by{' '}
+            <HfLink id={hf.id} /> was drained of {hf.pronouns.their} blood by{' '}
             <HfLink id={slayer.id} />
           </>
         );
