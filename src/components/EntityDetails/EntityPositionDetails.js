@@ -35,6 +35,9 @@ const EntityPositionDetails = ({ entity }) => {
         }
     }
 
+    if (entity.entity_position.length == 0) {
+        return null;
+    }
     return (
         <div className='detailsView'>
             <h3>Entity Positions</h3>
