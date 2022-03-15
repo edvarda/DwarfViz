@@ -13,16 +13,6 @@ const GovernedSitesDetails = ({entity}) => {
             </ul>
         </div>
     );
-    const entityGovernedSitesDefinition = {
-        header: 'Governed Sites',
-        rows: governedSites.map((site) => {
-            console.log(site)
-            return {
-                displayName: '',
-                accessor: () => (<SiteLink id={site.id} />),
-            };
-        }),
-    };
 };
 
 export { GovernedSitesDetails };

@@ -1,5 +1,6 @@
 import { useDwarfViz } from '../../hooks/useDwarfViz';
 import { GovernedSitesDetails } from './GovernedSitesDetails.js';
+import { EntityPositionDetails } from './EntityPositionDetails.js';
 import { EntityLink, HfLink, SiteLink } from '../ItemLink.js';
 import ItemDetails from '../ItemDetails.js';
 import { Col } from 'react-bootstrap';
@@ -92,6 +93,7 @@ const EntityDetails = ({ entity }) => {
     return (
       <Col>
         <GetEntityDetails entity={entity} />
+        <EntityPositionDetails entity={entity} />
         <GovernedSitesDetails entity={entity} />
       </Col>
     );
@@ -114,6 +116,7 @@ const EntityDetails = ({ entity }) => {
         <Col>
           <GetEntityDetails entity={parentCiv} />
           <GetEntityDetails entity={entity} />
+          <EntityPositionDetails entity={entity} />
         </Col>
       );
     } else
@@ -121,6 +124,7 @@ const EntityDetails = ({ entity }) => {
         //Selected an entity without parent civilization
         <Col>
           <GetEntityDetails entity={entity} />
+          <EntityPositionDetails entity={entity} />
           <GovernedSitesDetails entity={entity} />
         </Col>
       );
