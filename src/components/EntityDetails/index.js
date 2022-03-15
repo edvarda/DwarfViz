@@ -3,11 +3,10 @@ import { GovernedSitesDetails } from './GovernedSitesDetails.js';
 import { EntityPositionDetails } from './EntityPositionDetails.js';
 import { EntityLink, HfLink, SiteLink } from '../ItemLink.js';
 import ItemDetails from '../ItemDetails.js';
-import { Col } from 'react-bootstrap';
 
 import _ from 'lodash';
 
-const GetEntityDetails = ({ entity }) => {
+const BasicEntityDetails = ({ entity }) => {
   const { data } = useDwarfViz();
 
   const getLeader = (entity) => {
@@ -17,7 +16,9 @@ const GetEntityDetails = ({ entity }) => {
       break;
     }
     if (pos.id != null) {
-      if(entity.entity_position_assignment.filter((ass) => ass.position_id == pos.id).length == 1) {
+      if (
+        entity.entity_position_assignment.filter((ass) => ass.position_id == pos.id).length == 1
+      ) {
         return pos;
       }
     }
@@ -43,9 +44,12 @@ const GetEntityDetails = ({ entity }) => {
             (pers) => pers.position_id == localId,
           );
           if (leaderAssignment != undefined) {
-            return leaderAssignment.hf_id ? <HfLink id={leaderAssignment.hf_id} /> : 'Unknown individual';
-          }
-          else return 'Unoccupied';
+            return leaderAssignment.hf_id ? (
+              <HfLink id={leaderAssignment.hf_id} />
+            ) : (
+              'Unknown individual'
+            );
+          } else return 'Unoccupied';
         },
       },
       {
@@ -94,53 +98,43 @@ const GetEntityDetails = ({ entity }) => {
 
 const EntityDetails = ({ entity }) => {
   const {
-    data: { entities, entityPopulations },
+    data: { entities },
   } = useDwarfViz();
-  if (entity.type === 'civilization') {
-    //Selected a civilization
-    return (
-      <Col>
-        <GetEntityDetails entity={entity} />
-        <EntityPositionDetails entity={entity} />
-        <GovernedSitesDetails entity={entity} />
-      </Col>
-    );
-  } else {
-    let parentCiv = undefined;
-    let parentEntities = [entity];
-    while (parentCiv === undefined && parentEntities.length > 0) {
-      let evalEntity = parentEntities.pop();
-      if (evalEntity.entity_link.length == 0) break;
-      for (const link of evalEntity.entity_link) {
-        if (link.type === 'PARENT') {
-          const parent = entities.find((ent) => ent.id == link.target);
-          if (parent.type === 'civilization') {
-            parentCiv = parent;
-            break;
-          }
-          else parentEntities.push(parent);
-        }
+
+  let parentCiv = undefined;
+  let parentEntities = [entity];
+  while (parentCiv === undefined && parentEntities.length > 0) {
+    let evalEntity = parentEntities.pop();
+    if (evalEntity.entity_link.length == 0) break;
+    for (const link of evalEntity.entity_link) {
+      if (link.type === 'PARENT') {
+        const parent = entities.find((ent) => ent.id == link.target);
+        if (parent.type === 'civilization') {
+          parentCiv = parent;
+          break;
+        } else parentEntities.push(parent);
       }
     }
-    if (parentCiv != undefined) {
-      //Selected an entity that belongs to a civilization
-      return (
-        <Col>
-          <GetEntityDetails entity={parentCiv} />
-          <GetEntityDetails entity={entity} />
-          <EntityPositionDetails entity={entity} />
-        </Col>
-      );
-    } else
-      return (
-        //Selected an entity without parent civilization
-        <Col>
-          <GetEntityDetails entity={entity} />
-          <EntityPositionDetails entity={entity} />
-          <GovernedSitesDetails entity={entity} />
-        </Col>
-      );
   }
+
+  return (
+    <>
+      {parentCiv && (
+        <div className='view-element'>
+          <BasicEntityDetails entity={parentCiv} />
+        </div>
+      )}
+      <div className='view-element'>
+        <BasicEntityDetails entity={entity} />
+      </div>
+      <div className='view-element'>
+        <EntityPositionDetails entity={entity} />
+      </div>
+      <div className='view-element'>
+        <GovernedSitesDetails entity={entity} />
+      </div>
+    </>
+  );
 };
 
 export { EntityDetails };

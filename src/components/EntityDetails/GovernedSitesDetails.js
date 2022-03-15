@@ -1,25 +1,25 @@
 import { useDwarfViz } from '../../hooks/useDwarfViz';
 import { SiteLink } from '../ItemLink.js';
 import ItemDetails from '../ItemDetails.js';
+import _ from 'lodash';
 
 const GovernedSitesDetails = ({ entity }) => {
-  const { data } = useDwarfViz();
-  const governedSites = data.sites.filter((s) => s.civ_id == entity.id);
-  if (governedSites.length == 0) {
-    return null;
-  }
-  return (
-    <div className='detailsView'>
-      <h3>Governed Sites</h3>
-      <ul>
-        {governedSites.map((site) => (
-          <li className='govSiteList'>
-            <SiteLink id={site.id} />
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+  const {
+    data: { sites },
+  } = useDwarfViz();
+
+  const governedSitesDetailsDefinition = {
+    header: `Governed sites`,
+    rows: sites
+      .filter((site) => site.civ_id === entity.id)
+      .map((site) => {
+        return {
+          displayName: _.startCase(site.type),
+          accessor: () => <SiteLink id={site.id} />,
+        };
+      }),
+  };
+  return <ItemDetails itemDetailsDefinition={governedSitesDetailsDefinition} item={entity} />;
 };
 
 export { GovernedSitesDetails };

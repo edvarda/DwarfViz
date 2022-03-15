@@ -7,6 +7,7 @@ import { EntityDetails } from './EntityDetails';
 import HistoryControls from './HistoryControls.js';
 import ReactTooltip from 'react-tooltip';
 import { useEffect } from 'react';
+import _ from 'lodash';
 
 const Society = () => {
   const {
@@ -40,9 +41,10 @@ const Society = () => {
               </Col>
               <Col className={'col-sm-4'}>
                 {selectedEntity ? (
-                  <div className='view-element'>
+                  <>
+                    <h1>{_.startCase(selectedEntity.name)}</h1>
                     <EntityDetails entity={selectedEntity} />
-                  </div>
+                  </>
                 ) : (
                   <div className={'view-element noSelection'}>
                     Select an entity from the Circle graph
