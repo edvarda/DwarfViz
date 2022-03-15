@@ -54,7 +54,6 @@ const useTooltip = () => {
       { displayName: 'Builder',
         accessor: (site) => {
           const site_creation = data.historicalEvents.find((he) => (he.type === 'created_site' && he.site_id == site.id));
-          console.log(site_creation)
           const builder_hf = site_creation ? site_creation.builder_hf_id : null;
           const builder = data.historicalFigures.find((hf) => hf.id == builder_hf);
           return builder ? _.startCase(builder.name) : null;
