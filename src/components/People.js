@@ -9,6 +9,7 @@ import HfDetailSkills from './HfDetailSkills';
 import FamilyTree from './FamilyTree.js';
 import RelationshipGraph from './RelationshipGraph.js';
 import HistoryControls from './HistoryControls.js';
+import _ from 'lodash';
 import { Events } from './';
 
 const People = () => {
@@ -41,9 +42,14 @@ const People = () => {
                 <>
                   <Row>
                     <Col className={'col-sm-6'}>
+                      <h1>{_.startCase(selectedFigure.name)}</h1>
                       <div className={'view-element'}>
                         <HfDetails hf={selectedFigure} />
+                      </div>
+                      <div className={'view-element'}>
                         <HfDetailSkills hf={selectedFigure} />
+                      </div>
+                      <div className={'view-element'}>
                         <RelatedEntitiesDetails hf={selectedFigure} />
                       </div>
                     </Col>

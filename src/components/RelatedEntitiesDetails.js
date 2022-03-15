@@ -1,11 +1,8 @@
-import { useDwarfViz } from '../hooks/useDwarfViz';
-import { EntityLink, HfLink } from './ItemLink.js';
+import { EntityLink } from './ItemLink.js';
 import ItemDetails from './ItemDetails.js';
 import _ from 'lodash';
 
 const RelatedEntitiesDetails = ({ hf }) => {
-  const { data } = useDwarfViz();
-
   const relatedEntitiesDetailsDefinition = {
     header: `Related entities`,
     rows: hf.entity_link.map((link) => {

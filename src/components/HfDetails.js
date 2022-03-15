@@ -7,7 +7,7 @@ const HfDetails = ({ hf }) => {
   const { data, artifacts, find } = useDwarfViz();
 
   const hfDetailsDefinition = {
-    header: _.startCase(hf.name),
+    header: _.startCase('details'),
     rows: [
       { displayName: 'Name', accessor: (hf) => _.startCase(hf.name) },
       // TODO add diety status
@@ -26,14 +26,23 @@ const HfDetails = ({ hf }) => {
       },
       { displayName: 'Profession', accessor: (hf) => _.startCase(hf.associated_type) },
       { displayName: 'Life goal', accessor: (hf) => _.capitalize(hf.goal) },
-      { displayName: 'Pet', accessor: (hf) => hf.journey_pet[0] ? _.startCase(hf.journey_pet[0]) : null },
+      {
+        displayName: 'Pet',
+        accessor: (hf) => (hf.journey_pet[0] ? _.startCase(hf.journey_pet[0]) : null),
+      },
       { displayName: 'Deity', accessor: (hf) => _.capitalize(hf.deity) },
       { displayName: 'Sphere', accessor: (hf) => _.capitalize(hf.sphere[0]) },
-      { displayName: 'Owns Artifact', accessor: (hf) => hf.holds_artifact ? _.startCase(find.artifact(hf.holds_artifact).name) : null },
-      { displayName: 'Animated String', accessor: (hf) => hf.animated_string ? _.startCase(hf.animated_string) : null },
+      {
+        displayName: 'Owns Artifact',
+        accessor: (hf) =>
+          hf.holds_artifact ? _.startCase(find.artifact(hf.holds_artifact).name) : null,
+      },
+      {
+        displayName: 'Animated String',
+        accessor: (hf) => (hf.animated_string ? _.startCase(hf.animated_string) : null),
+      },
       // Following are technically lists
       // { displayName: 'Skills', accessor: (hf) => hf.skills[0] ? hfDetailSkills(hf) : null },
-
     ],
   };
 
