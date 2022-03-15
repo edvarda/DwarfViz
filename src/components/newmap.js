@@ -25,7 +25,7 @@ const Map = () => {
   const mapRef = useRef(null);
   const geoJSONRef = useRef(null);
   const geoJSONSitesRef = useRef(null);
-  const siteTypes = useMemo(() => _.uniq(sites.map((x) => x.type)).slice(1), [sites]);
+  const siteTypes = useMemo(() => _.uniq(sites.map((x) => x.type)), [sites]);
   const { colorScale, ColorLegend } = useColorLegend(siteTypes);
 
   const sitesAsGeoJSONFeatures = (sites) => {
@@ -51,58 +51,31 @@ const Map = () => {
     return features;
   };
 
-  const viewBg = '#edebe3';
-  const backgroundColor = '#868374';
-  const bodyColor = '#212529';
-  const shadowColor = '#4d4b49';
-
   const site = (type) => ({
-    radius: 10,
-    color: 'white',
-    weight: 3,
-    opacity: 1,
-    fill: true,
-    fillColor: colorScale(type),
-    fillOpacity: 1,
+    radius: 7,
+    color: colorScale(type),
+    className: 'map-site',
   });
 
-  const siteHover = (type) => ({
-    radius: 13,
-    color: 'white',
-    weight: 4,
-    opacity: 1,
-    fill: true,
-    fillColor: colorScale(type),
-    fillOpacity: 1,
-  });
-
-  const siteSelected = (type) => ({
-    radius: 16,
-    stroke: true,
-    color: 'black',
-    weight: 3,
-    fill: true,
-    fillColor: colorScale(type),
-    fillOpacity: 1,
-  });
+  const siteSelected = {
+    className: 'map-site-selected',
+  };
 
   const biome = {
     className: 'map-biome',
-    color: bodyColor,
-    weight: 2,
-    opacity: 1,
-    fill: true,
-    fillColor: backgroundColor,
-    fillOpacity: 0.5,
   };
 
   const biomeHighlight = {
-    color: bodyColor,
-    weight: 2,
+    fillOpacity: 0,
+    stroke: true,
+    className: 'map-biome-highlight',
+  };
+
+  const hoverRegionStyle = {
+    stroke: true,
+    color: 'black',
+    weight: 1,
     opacity: 1,
-    fill: true,
-    fillColor: backgroundColor,
-    fillOpacity: 0.2,
   };
 
   useEffect(() => {
@@ -129,9 +102,6 @@ const Map = () => {
               }
             });
           },
-          mouseout: (e) => {
-            geoJSONRef.current.resetStyle();
-          },
         });
       },
     }).addTo(mapRef.current);
@@ -148,10 +118,13 @@ const Map = () => {
         }
         thisLayer.on({
           mouseover: (e) => {
-            e.target.setStyle(siteHover(e.target.feature.properties.type));
-          },
-          mouseout: (e) => {
-            e.target.setStyle(site(e.target.feature.properties.type));
+            geoJSONRef.current.eachLayer((layer) => {
+              if (+layer.feature.properties.regionId === feature.properties.regionId) {
+                layer.setStyle(hoverRegionStyle);
+              } else {
+                layer.setStyle(hoverRegionStyle);
+              }
+            });
           },
           click: (e) => {
             selectSite(e.target.feature.properties.id);
@@ -172,14 +145,6 @@ const Map = () => {
       <div id='map' style={{ width: '100%', height: 'auto' }} />
     </div>
   );
-  // <>
-  //   <div className={'map-container'}>
-  //     <div id='map' style={{ width: '100%', height: 'auto' }} />
-  //   </div>
-  //   <div style={{ width: '20%', height: 'auto', paddingLeft: '1em' }}>
-  //     <ColorLegend height={400} />
-  //   </div>
-  // </>
 };
 
 export default Map;

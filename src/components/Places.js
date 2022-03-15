@@ -11,7 +11,7 @@ import _ from 'lodash';
 
 const Places = () => {
   const {
-    data: { mapImageURL, regions, regionsGeoJSON },
+    data: { regions },
     placesView: { selectedItem: selectedSite, isActive: isViewActive },
     VIEWS,
   } = useDwarfViz();
@@ -40,24 +40,12 @@ const Places = () => {
               </Row>
               <Row>
                 <Col className={'view-element col-sm-7'}>
-                  <Map
-                    mapImage={mapImageURL}
-                    mapSize={{
-                      width: 528,
-                      height: 528,
-                      bounds: [
-                        [0, 0],
-                        [527, 527],
-                      ],
-                    }}
-                    data={regionsGeoJSON}
-                    regions={regions}
-                  />
+                  <Map />
                 </Col>
                 <Col className={'flex-column col-sm-4'}>
                   {selectedSite ? (
                     <>
-                      <h2>{`${_.startCase(selectedSite.name)}`}</h2>
+                      <h1>{`${_.startCase(selectedSite.name)}`}</h1>
                       <RegionDetails region={getRegionFromSite(selectedSite)} />
 
                       <SiteDetails site={selectedSite} />
