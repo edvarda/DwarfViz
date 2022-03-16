@@ -15,7 +15,7 @@ const useColorLegend = (keys) => {
   const svgRef = useRef(null);
 
   const [categories, setCategories] = useState(createInitialState(keys));
-  const colors = d3.schemeCategory10.slice(0, keys.length);
+  const colors = d3.schemeTableau10.slice(0, keys.length);
   const colorScale = d3.scaleOrdinal().domain(Object.keys(categories)).range(colors);
 
   const toggleCategory = (category) =>

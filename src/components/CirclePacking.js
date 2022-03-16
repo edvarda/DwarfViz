@@ -147,6 +147,8 @@ const CirclePacking = () => {
           }
         });
 
+      node.style('stroke-width', (d) => (d === focus ? '0.5rem' : '0.1rem'));
+
       label
         .filter(function (d) {
           return d.parent === focus || this.style.display === 'inline';
