@@ -5,6 +5,7 @@ import React from 'react';
 import ReactTooltip from 'react-tooltip';
 
 import { Places, People, Society } from './components';
+import WorldInfo from './components/WorldInfo.js';
 import { useDwarfViz, WorldDataProvider } from './hooks/useDwarfViz';
 
 function App() {
@@ -38,7 +39,14 @@ const Viz = () => {
       ) : (
         <Container fluid>
           <ReactTooltip html={true} className={'dwarfviz-tooltip'} />
-          <Row id='header'>DwarfViz</Row>
+          <Row className={'align-items-center'}>
+            <Col id='header' className={'col-sm-6'}>
+              DwarfViz
+            </Col>
+            <Col className={'col-sm-4'}>
+              <WorldInfo />
+            </Col>
+          </Row>
           <ul className='view-container'>
             <li className={`view places ${getActiveView() === placesView && `expanded`}`}>
               <Places />

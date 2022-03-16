@@ -30,6 +30,23 @@ body {
   font-weight: 900;
   font-size: 8rem;
 }
+.worldInfo {
+  li {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.3rem;
+    border-bottom: 0.05rem solid var(--bs-body-color);
+  }
+  .prop {
+    text-align: left;
+  }
+  .value {
+    text-align: right;
+  }
+  font-weight: 900;
+  font-size: 1.3rem;
+  list-style-type: none;
+}
 
 .view-element {
   padding: 0.3rem;
