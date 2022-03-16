@@ -151,10 +151,14 @@ const Map = () => {
         }
         thisLayer.on({
           mouseover: (e) => {
-            e.target.setStyle(siteHover(e.target.feature.properties.type));
+            if (selectedSite && feature.properties.id !== selectedSite.id) {
+              e.target.setStyle(siteHover(e.target.feature.properties.type));
+            }
           },
           mouseout: (e) => {
-            e.target.setStyle(site(e.target.feature.properties.type));
+            if (selectedSite && feature.properties.id !== selectedSite.id) {
+              e.target.setStyle(site(e.target.feature.properties.type));
+            }
           },
           click: (e) => {
             selectSite(e.target.feature.properties.id);
