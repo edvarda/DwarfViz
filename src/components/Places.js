@@ -40,8 +40,10 @@ const Places = () => {
                 </Col>
               </Row>
               <Row>
-                <Col className={'view-element col-sm-7'}>
-                  <Map />
+                <Col className={'col-sm-7'}>
+                  <div className={'view-element'}>
+                    <Map />
+                  </div>
                 </Col>
                 <Col className={'flex-column col-sm-4'}>
                   {selectedSite ? (

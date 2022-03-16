@@ -1,6 +1,7 @@
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import React, { useEffect, useRef, useMemo } from 'react';
+import React, { useEffect, useRef, useMemo, useState } from 'react';
+import { Row, Col } from 'react-bootstrap';
 import _ from 'lodash';
 import { useDwarfViz } from '../hooks/useDwarfViz';
 import useTooltip from '../hooks/useTooltip';
@@ -22,7 +23,9 @@ const Map = () => {
     selectSite,
     placesView: { selectedItem: selectedSite },
   } = useDwarfViz();
+  const [size, setSize] = useState(null);
   const mapRef = useRef(null);
+  const containerRef = useRef(null);
   const geoJSONRef = useRef(null);
   const geoJSONSitesRef = useRef(null);
   const siteTypes = useMemo(() => _.uniq(sites.map((x) => x.type)).slice(1), [sites]);
@@ -167,19 +170,25 @@ const Map = () => {
     };
   }, [mapImageURL, mapSize, regionsGeoJSON, regions, selectedSite]);
 
+  useEffect(() => {
+    setSize({
+      width: containerRef.current.parentElement.offsetWidth,
+      height: containerRef.current.parentElement.offsetWidth,
+    });
+  }, [containerRef]);
+
   return (
-    <div className={'map-container'}>
-      <div id='map' style={{ width: '100%', height: 'auto' }} />
-    </div>
+    <Row>
+      <Col className='col-sm-9'>
+        <div ref={containerRef} className={'map-container'}>
+          <div id='map' style={{ width: '100%', height: 'auto' }} />
+        </div>
+      </Col>
+      <Col className='col-sm-3'>
+        <ColorLegend height={size ? size.height : 0} />
+      </Col>
+    </Row>
   );
-  // <>
-  //   <div className={'map-container'}>
-  //     <div id='map' style={{ width: '100%', height: 'auto' }} />
-  //   </div>
-  //   <div style={{ width: '20%', height: 'auto', paddingLeft: '1em' }}>
-  //     <ColorLegend height={400} />
-  //   </div>
-  // </>
 };
 
 export default Map;
