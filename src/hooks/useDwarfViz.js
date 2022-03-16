@@ -122,7 +122,15 @@ const WorldDataProvider = ({ children }) => {
         return { ...state, data: action.payload, isDataLoaded: true };
       case ACTIONS.SELECT_SITE:
         if (isSelected(VIEWS.PLACES.name, action.payload.id)) {
-          return state;
+          return {
+            ...state,
+            placesView: {
+              ...state.placesView,
+              isActive: true,
+            },
+            societyView: { ...state.societyView, isActive: false },
+            peopleView: { ...state.peopleView, isActive: false },
+          };
         }
         return {
           ...state,
@@ -137,7 +145,15 @@ const WorldDataProvider = ({ children }) => {
         };
       case ACTIONS.SELECT_ENTITY:
         if (isSelected(VIEWS.SOCIETY.name, action.payload.id)) {
-          return state;
+          return {
+            ...state,
+            societyView: {
+              ...state.societyView,
+              isActive: true,
+            },
+            peopleView: { ...state.peopleView, isActive: false },
+            placesView: { ...state.placesView, isActive: false },
+          };
         }
         return {
           ...state,
@@ -152,7 +168,15 @@ const WorldDataProvider = ({ children }) => {
         };
       case ACTIONS.SELECT_HISTORICAL_FIGURE:
         if (isSelected(VIEWS.PEOPLE.name, action.payload.id)) {
-          return state;
+          return {
+            ...state,
+            peopleView: {
+              ...state.peopleView,
+              isActive: true,
+            },
+            societyView: { ...state.societyView, isActive: false },
+            placesView: { ...state.placesView, isActive: false },
+          };
         }
         return {
           ...state,

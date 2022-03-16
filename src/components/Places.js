@@ -14,6 +14,7 @@ const Places = () => {
     data: { regions },
     placesView: { selectedItem: selectedSite, isActive: isViewActive },
     VIEWS,
+    setActiveView,
   } = useDwarfViz();
 
   useEffect(() => {
@@ -26,7 +27,7 @@ const Places = () => {
 
   return (
     <>
-      <div className='view-title'>
+      <div className='view-title' onClick={() => setActiveView('placesView')}>
         <h2>Places</h2>
       </div>
       <div className={'view-content'}>

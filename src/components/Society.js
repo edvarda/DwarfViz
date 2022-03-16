@@ -13,6 +13,7 @@ const Society = () => {
   const {
     societyView: { selectedItem: selectedEntity, isActive: isViewActive },
     VIEWS,
+    setActiveView,
   } = useDwarfViz();
 
   useEffect(() => {
@@ -21,7 +22,7 @@ const Society = () => {
 
   return (
     <>
-      <div className='view-title'>
+      <div className='view-title' onClick={() => setActiveView('societyView')}>
         <h2>Society</h2>
       </div>
       <div className={'view-content'}>

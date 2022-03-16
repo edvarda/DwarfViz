@@ -26,7 +26,7 @@ const People = () => {
 
   return (
     <>
-      <div className='view-title'>
+      <div className='view-title' onClick={() => setActiveView('peopleView')}>
         <h2>People</h2>
       </div>
       <div className={'view-content'}>

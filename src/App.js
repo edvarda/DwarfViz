@@ -40,22 +40,13 @@ const Viz = () => {
           <ReactTooltip html={true} className={'dwarfviz-tooltip'} />
           <Row id='header'>DwarfViz</Row>
           <ul className='view-container'>
-            <li
-              className={`view places ${getActiveView() === placesView && `expanded`}`}
-              onClick={() => setActiveView('placesView')}
-            >
+            <li className={`view places ${getActiveView() === placesView && `expanded`}`}>
               <Places />
             </li>
-            <li
-              className={`view society ${getActiveView() === societyView && `expanded`}`}
-              onClick={() => setActiveView('societyView')}
-            >
+            <li className={`view society ${getActiveView() === societyView && `expanded`}`}>
               <Society />
             </li>
-            <li
-              className={`view people ${getActiveView() === peopleView && `expanded`}`}
-              onClick={() => setActiveView('peopleView')}
-            >
+            <li className={`view people ${getActiveView() === peopleView && `expanded`}`}>
               <People />
             </li>
           </ul>
