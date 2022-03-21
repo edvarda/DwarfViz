@@ -1,24 +1,24 @@
 {
   "files": {
-    "main.css": "/pages/edvarda/DwarfViz/static/css/main.26506021.css",
-    "main.js": "/pages/edvarda/DwarfViz/static/js/main.1f9e2070.js",
-    "static/js/660.9bc655bd.chunk.js": "/pages/edvarda/DwarfViz/static/js/660.9bc655bd.chunk.js",
-    "static/js/921.08f48d75.chunk.js": "/pages/edvarda/DwarfViz/static/js/921.08f48d75.chunk.js",
-    "static/js/485.09c97608.chunk.js": "/pages/edvarda/DwarfViz/static/js/485.09c97608.chunk.js",
-    "static/js/640.8a8e0bef.chunk.js": "/pages/edvarda/DwarfViz/static/js/640.8a8e0bef.chunk.js",
-    "static/js/294.6ce6168a.chunk.js": "/pages/edvarda/DwarfViz/static/js/294.6ce6168a.chunk.js",
-    "static/js/931.c479ae8d.chunk.js": "/pages/edvarda/DwarfViz/static/js/931.c479ae8d.chunk.js",
-    "static/js/93.c1b15a58.chunk.js": "/pages/edvarda/DwarfViz/static/js/93.c1b15a58.chunk.js",
-    "static/js/330.9d0b9b03.chunk.js": "/pages/edvarda/DwarfViz/static/js/330.9d0b9b03.chunk.js",
-    "static/js/126.25161959.chunk.js": "/pages/edvarda/DwarfViz/static/js/126.25161959.chunk.js",
-    "static/js/787.66ebd713.chunk.js": "/pages/edvarda/DwarfViz/static/js/787.66ebd713.chunk.js",
-    "index.html": "/pages/edvarda/DwarfViz/index.html",
-    "main.26506021.css.map": "/pages/edvarda/DwarfViz/static/css/main.26506021.css.map",
-    "main.1f9e2070.js.map": "/pages/edvarda/DwarfViz/static/js/main.1f9e2070.js.map",
-    "787.66ebd713.chunk.js.map": "/pages/edvarda/DwarfViz/static/js/787.66ebd713.chunk.js.map"
+    "main.css": "/DwarfViz/static/css/main.26506021.css",
+    "main.js": "/DwarfViz/static/js/main.bbb33615.js",
+    "static/js/660.9bc655bd.chunk.js": "/DwarfViz/static/js/660.9bc655bd.chunk.js",
+    "static/js/921.08f48d75.chunk.js": "/DwarfViz/static/js/921.08f48d75.chunk.js",
+    "static/js/485.09c97608.chunk.js": "/DwarfViz/static/js/485.09c97608.chunk.js",
+    "static/js/640.8a8e0bef.chunk.js": "/DwarfViz/static/js/640.8a8e0bef.chunk.js",
+    "static/js/294.6ce6168a.chunk.js": "/DwarfViz/static/js/294.6ce6168a.chunk.js",
+    "static/js/931.c479ae8d.chunk.js": "/DwarfViz/static/js/931.c479ae8d.chunk.js",
+    "static/js/93.c1b15a58.chunk.js": "/DwarfViz/static/js/93.c1b15a58.chunk.js",
+    "static/js/330.9d0b9b03.chunk.js": "/DwarfViz/static/js/330.9d0b9b03.chunk.js",
+    "static/js/126.25161959.chunk.js": "/DwarfViz/static/js/126.25161959.chunk.js",
+    "static/js/787.66ebd713.chunk.js": "/DwarfViz/static/js/787.66ebd713.chunk.js",
+    "index.html": "/DwarfViz/index.html",
+    "main.26506021.css.map": "/DwarfViz/static/css/main.26506021.css.map",
+    "main.bbb33615.js.map": "/DwarfViz/static/js/main.bbb33615.js.map",
+    "787.66ebd713.chunk.js.map": "/DwarfViz/static/js/787.66ebd713.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.26506021.css",
-    "static/js/main.1f9e2070.js"
+    "static/js/main.bbb33615.js"
   ]
 }
