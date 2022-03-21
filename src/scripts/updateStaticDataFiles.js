@@ -1,6 +1,6 @@
 const fs = require('fs');
 const axios = require('axios');
-const storytellerURL = 'http://192.168.0.10:20350/api';
+const storytellerURL = 'http://178.62.223.248/api';
 
 const fetchFromStoryteller = async (endpoint, resourceId = null) => {
   const items = [];
