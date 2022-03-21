@@ -1,22 +1,24 @@
 {
   "files": {
-    "main.css": "/pages/edvarda/DwarfViz/static/css/main.c831621d.css",
-    "main.js": "/pages/edvarda/DwarfViz/static/js/main.ea95fef0.js",
+    "main.css": "/pages/edvarda/DwarfViz/static/css/main.26506021.css",
+    "main.js": "/pages/edvarda/DwarfViz/static/js/main.3752753d.js",
     "static/js/660.9bc655bd.chunk.js": "/pages/edvarda/DwarfViz/static/js/660.9bc655bd.chunk.js",
-    "static/js/921.30292fdd.chunk.js": "/pages/edvarda/DwarfViz/static/js/921.30292fdd.chunk.js",
-    "static/js/582.bd30c307.chunk.js": "/pages/edvarda/DwarfViz/static/js/582.bd30c307.chunk.js",
-    "static/js/30.d5ae29cb.chunk.js": "/pages/edvarda/DwarfViz/static/js/30.d5ae29cb.chunk.js",
-    "static/js/163.b12770bc.chunk.js": "/pages/edvarda/DwarfViz/static/js/163.b12770bc.chunk.js",
-    "static/js/394.b3109e09.chunk.js": "/pages/edvarda/DwarfViz/static/js/394.b3109e09.chunk.js",
+    "static/js/921.0200ce27.chunk.js": "/pages/edvarda/DwarfViz/static/js/921.0200ce27.chunk.js",
+    "static/js/485.ef132c5b.chunk.js": "/pages/edvarda/DwarfViz/static/js/485.ef132c5b.chunk.js",
+    "static/js/640.88894b17.chunk.js": "/pages/edvarda/DwarfViz/static/js/640.88894b17.chunk.js",
+    "static/js/294.c6d2a9bb.chunk.js": "/pages/edvarda/DwarfViz/static/js/294.c6d2a9bb.chunk.js",
+    "static/js/931.8ec81e81.chunk.js": "/pages/edvarda/DwarfViz/static/js/931.8ec81e81.chunk.js",
+    "static/js/93.d8fab37f.chunk.js": "/pages/edvarda/DwarfViz/static/js/93.d8fab37f.chunk.js",
+    "static/js/330.e19e2570.chunk.js": "/pages/edvarda/DwarfViz/static/js/330.e19e2570.chunk.js",
+    "static/js/126.25161959.chunk.js": "/pages/edvarda/DwarfViz/static/js/126.25161959.chunk.js",
     "static/js/787.66ebd713.chunk.js": "/pages/edvarda/DwarfViz/static/js/787.66ebd713.chunk.js",
-    "static/media/image.png": "/pages/edvarda/DwarfViz/static/media/image.ffc9a9d246064d983fae.png",
     "index.html": "/pages/edvarda/DwarfViz/index.html",
-    "main.c831621d.css.map": "/pages/edvarda/DwarfViz/static/css/main.c831621d.css.map",
-    "main.ea95fef0.js.map": "/pages/edvarda/DwarfViz/static/js/main.ea95fef0.js.map",
+    "main.26506021.css.map": "/pages/edvarda/DwarfViz/static/css/main.26506021.css.map",
+    "main.3752753d.js.map": "/pages/edvarda/DwarfViz/static/js/main.3752753d.js.map",
     "787.66ebd713.chunk.js.map": "/pages/edvarda/DwarfViz/static/js/787.66ebd713.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.c831621d.css",
-    "static/js/main.ea95fef0.js"
+    "static/css/main.26506021.css",
+    "static/js/main.3752753d.js"
   ]
 }

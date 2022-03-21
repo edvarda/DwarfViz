@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdwarfviz=self.webpackChunkdwarfviz||[]).push([[93],{2093:function(e){e.exports=JSON.parse('{"data":[{"_type":"world_info","_links":{"self":"http://192.168.0.10:20350/api/worlds_info/1"},"id":1,"save_name":"region1-00125-01-01","name":"Lathonroth","alternative_name":"The Mythical Domain","region_number":1,"year":125,"month":1,"day":1}]}')}}]);
