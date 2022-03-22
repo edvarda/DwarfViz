@@ -5,7 +5,7 @@ import { AxisBottom } from './AxisBottom';
 import { AxisLeft } from './AxisLeft';
 import { Marks } from './Marks';
 import { useDwarfViz } from '../../hooks/useDwarfViz';
-
+import ColorLegend from './ColorLegend';
 import './Timeline.scss';
 
 const d3 = { max };
@@ -32,6 +32,7 @@ const BrushableTimeline = ({ setYearRange, historicalEvents }) => {
   } = useDwarfViz();
   const [width, setWidth] = useState(null);
   const [height, setHeight] = useState(null);
+
 
   const maxYears = worldsInfo[0].year;
   const xValueExtent = useMemo(() => {
@@ -137,6 +138,11 @@ const BrushableTimeline = ({ setYearRange, historicalEvents }) => {
               tooltipFormat={(d) => d}
               innerHeight={innerHeight}
               colorScale={colorScale}
+            />
+            <ColorLegend
+              innerHeight={innerHeight}
+              yOffset={25}
+              xRectOffset={30}
             />
             <g ref={brushRef} />
           </g>
