@@ -22,6 +22,7 @@ const xAxisLabelOffset = 50;
 const yAxisLabelOffset = 40;
 const xAxisLabel = 'Year';
 const yAxisLabel = 'Number of events';
+const [timeLineColor1, timeLineColor2] = ['red', 'blue']
 
 const yValue = (d) => +1; // +1 per event
 const xValue = (d) => d['year'];
@@ -68,7 +69,7 @@ const BrushableTimeline = ({ setYearRange, historicalEvents }) => {
           return d['y'];
         }),
       ])
-      .range(['red', 'blue'])
+      .range([timeLineColor1, timeLineColor2])
       .interpolate(interpolateRgb.gamma(2.2))(d);
 
   const yScale = useMemo(
@@ -143,6 +144,8 @@ const BrushableTimeline = ({ setYearRange, historicalEvents }) => {
               innerHeight={innerHeight}
               yOffset={25}
               xRectOffset={30}
+              timeLineColor1={timeLineColor1}
+              timeLineColor2={timeLineColor2}
             />
             <g ref={brushRef} />
           </g>

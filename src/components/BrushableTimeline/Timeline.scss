@@ -2,6 +2,13 @@ line {
   stroke: var(--shadow-color);
   opacity: 0.2;
 }
+.textLabel {
+  padding: 2px;
+  font-weight: 600;
+  font-size: 0.8em;
+  color: #2c3e50;
+}
+
 
 .axis-label {
   font-size: 0.9em;
