@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/DwarfViz/static/css/main.26506021.css",
-    "main.js": "/DwarfViz/static/js/main.b1ffa8e7.js",
+    "main.js": "/DwarfViz/static/js/main.246c3453.js",
     "static/js/660.9bc655bd.chunk.js": "/DwarfViz/static/js/660.9bc655bd.chunk.js",
     "static/js/921.08f48d75.chunk.js": "/DwarfViz/static/js/921.08f48d75.chunk.js",
     "static/js/485.09c97608.chunk.js": "/DwarfViz/static/js/485.09c97608.chunk.js",
@@ -14,11 +14,11 @@
     "static/js/787.66ebd713.chunk.js": "/DwarfViz/static/js/787.66ebd713.chunk.js",
     "index.html": "/DwarfViz/index.html",
     "main.26506021.css.map": "/DwarfViz/static/css/main.26506021.css.map",
-    "main.b1ffa8e7.js.map": "/DwarfViz/static/js/main.b1ffa8e7.js.map",
+    "main.246c3453.js.map": "/DwarfViz/static/js/main.246c3453.js.map",
     "787.66ebd713.chunk.js.map": "/DwarfViz/static/js/787.66ebd713.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.26506021.css",
-    "static/js/main.b1ffa8e7.js"
+    "static/js/main.246c3453.js"
   ]
 }
