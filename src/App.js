@@ -7,7 +7,6 @@ import ReactTooltip from 'react-tooltip';
 import { Places, People, Society } from './components';
 import WorldInfo from './components/WorldInfo.js';
 import { useDwarfViz, WorldDataProvider } from './hooks/useDwarfViz';
-import { MembersButton } from './MembersButton';
 
 function App() {
   return (
@@ -32,14 +31,6 @@ const Viz = () => {
     getActiveView,
   } = useDwarfViz();
 
-  function demo() {
-    window.location.href='https://streamable.com/v8fm61';
-  }
-  function members() {
-    // Dont know how to make this show up
-    window.location.href=('/members.html');
-  }
-
   return (
     <>
       {isError && <div>Error fetching data</div>}
@@ -47,10 +38,6 @@ const Viz = () => {
         <div>Loading data...</div>
       ) : (
         <Container fluid>
-          <div>
-            <MembersButton onClick={members}>Members</MembersButton>
-            <MembersButton onClick={demo}>Demo</MembersButton>
-          </div>
           <ReactTooltip html={true} className={'dwarfviz-tooltip'} />
           <Row className={'align-items-center'}>
             <Col id='header' className={'col-sm-6'}>
