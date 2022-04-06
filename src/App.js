@@ -58,6 +58,27 @@ const Viz = () => {
               <People />
             </li>
           </ul>
+          <Row className={'pt-4 about-section'}>
+            <h2>We made this:</h2>
+            <Col className={'col-sm-4 px-3'}>
+              <h3>Edvard</h3>
+              <p>Edvard is a boy. He likes frogs. Sometimes he eats frogs too.</p>
+              <p>edvarda@kth.se</p>
+            </Col>
+            <Col className={'col-sm-4 px-3'}>
+              <h3>Pere</h3>
+              <p>About Pere</p>
+            </Col>
+            <Col className={'col-sm-4 px-3'}>
+              <h3>Love</h3>
+              <p>About Love</p>
+            </Col>
+          </Row>
+          <Row className={'mb-2 about-section'}>
+            <h2>
+              Confused? Watch this <a href='https://streamable.com/v8fm61'>demo</a>
+            </h2>
+          </Row>
         </Container>
       )}
     </>
