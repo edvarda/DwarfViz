@@ -313,6 +313,11 @@ h3 {
     text-decoration: underline;
   }
 }
+.social {
+  color: #fff;
+  margin: 0 5px;
+  text-decoration: inherit;
+}
 
 :export {
   peopleColor: var(--people-color);
